@@ -97,7 +97,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function refreshToken(Request $request) // not tested yet
+    public function refreshToken(Request $request) // tested and working 
     {
         // Get the authenticated user
         $user = auth()->user();
