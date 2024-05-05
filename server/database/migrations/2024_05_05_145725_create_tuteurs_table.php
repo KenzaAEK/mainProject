@@ -13,7 +13,7 @@ return new class extends Migration
             ->constrained('users', 'idUser')
             ->onDelete('cascade');
             $table->string('fonction')->nullable();
-            $table->timestamps();
+            
         });
     }
 

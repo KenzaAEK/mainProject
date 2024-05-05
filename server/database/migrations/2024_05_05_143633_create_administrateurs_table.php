@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')
             ->constrained('users', 'idUser')
             ->onDelete('cascade');  // Spécifiez 'idUser' comme colonne de référence
-            $table->timestamps();
+            
     });
 }
     /**

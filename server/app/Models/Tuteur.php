@@ -12,7 +12,7 @@ class Tuteur extends Model
     protected $primaryKey = 'idTuteur'; // Définir la clé primaire personnalisée
     public $incrementing = true; // Assumer que la clé primaire est auto-incrémentée
     protected $keyType = 'int'; // Assumer que la clé primaire est un entier
-
+    public $timestamps = false;
     protected $fillable = [
         'user_id', // La clé étrangère vers le modèle User
         'idTuteur',
