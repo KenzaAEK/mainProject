@@ -21,4 +21,11 @@ class Administrateur extends Model
         return $this->belongsTo(User::class, 'idUser');
       
     }
+    public function offre() {
+        return $this->belongsToMany(User::class, 'idUser');
+      
+    }
+    public function demandesInscription() {
+        return $this->belongsToMany(demandeInscription::class, 'traiter', 'idAdmin', 'idDemande');
+    }
 }

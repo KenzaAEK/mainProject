@@ -13,12 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('demande_inscriptions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('demandeInscriptions', function (Blueprint $table) {
+            $table->id('idDemande'); // ID de la demande
+            $table->foreignId('idTuteur')
+            ->constrained('tuteurs')
+            ->onDelete('cascade');
+            $table->string('optionsPaiement'); // Options de paiement choisies
+            $table->string('status'); // Statut de la demande
+            $table->timestamp('dateDemande')->default(DB::raw('CURRENT_TIMESTAMP')); // Date de la demande
+            
         });
     }
-
     /**
      * Reverse the migrations.
      *
@@ -26,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('demande_inscriptions');
+        Schema::dropIfExists('demandeInscriptions');
     }
 };
