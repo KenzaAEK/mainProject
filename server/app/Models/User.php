@@ -16,6 +16,7 @@ class User extends Authenticatable
     protected $keyType = 'int'; // Assuming the primary key is an integer
 
     protected $fillable = [
+        
         'nom', 
         'prenom',
         'email',
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'password',
         'role', 
         'photo',
+        'id'
     ];
     
 
@@ -47,6 +49,6 @@ class User extends Authenticatable
     }
     public function notifications()
     {
-        return $this->hasMany(Notification::class, 'user_id');
+        return $this->hasMany(Notification::class, 'id');
     }
 }
