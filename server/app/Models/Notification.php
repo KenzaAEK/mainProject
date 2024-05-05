@@ -11,7 +11,7 @@ class Notification extends Model
     protected $table = 'notifications';  // S'assurer que le nom de la table est correct
     protected $primaryKey = 'idNotification'; // Définir la clé primaire personnalisée
     public $incrementing = true; // Assumer que la clé primaire est auto-incrémentée
-    protected $keyType = 'int'; // A
+    protected $keyType = 'int'; 
 
     protected $fillable = [
         'user_id', 
