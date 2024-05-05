@@ -8,17 +8,18 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tuteurs', function (Blueprint $table) {
-            $table->id('idTuteur');
-            $table->foreignId('user_id')
-            ->constrained('users', 'idUser')
-            ->onDelete('cascade');
+            // Utilisation de la clé primaire auto-incrémentée par défaut
+            $table->id('idTuteur'); 
+            // Ajout de la colonne user_id comme clé étrangère
+            $table->foreignId('idUser')
+                  ->constrained('users') // Utilisation de la clé primaire par défaut de la table users
+                  ->onDelete('cascade');
             $table->string('fonction')->nullable();
-            
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('parents');
+        Schema::dropIfExists('tuteurs');
     }
 };
