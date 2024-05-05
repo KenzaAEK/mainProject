@@ -18,9 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')
             ->constrained('users', 'idUser')
             ->onDelete('cascade');
-            $table->string('domaineCompetence');
-            $table->integer('experience')->nullable(); 
-            $table->timestamps();
+        
         });
     }
 

@@ -17,7 +17,7 @@ class Administrateur extends Model
         'user_id', // La clé étrangère vers le modèle User
         'idAdmin'
     ];
-
+    public $timestamps = false;
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'idUser'); // Spécifiez le nom de la clé étrangère si nécessaire
     }
