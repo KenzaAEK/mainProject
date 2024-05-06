@@ -14,7 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('horaires', function (Blueprint $table) {
-            $table->id();
+            $table->id('idHoraire');
+            $table->string('jour');
+            $table->time('heureDebut');
+            $table->time('heureFin');
             $table->timestamps();
         });
     }

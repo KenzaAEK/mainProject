@@ -15,11 +15,10 @@ return new class extends Migration
     {
         Schema::create('demandeInscriptions', function (Blueprint $table) {
             $table->id('idDemande'); // ID de la demande
-            $table->foreignId('idTuteur')
-            ->constrained('tuteurs')
-            ->onDelete('cascade');
+            $table->foreignId('idTuteur')->constrained('tuteurs','idTuteur')->onDelete('cascade');
+            $table->foreignId('idPack')->constrained('packs','idPack')->onDelete('cascade');
             $table->string('optionsPaiement'); // Options de paiement choisies
-            $table->string('status'); // Statut de la demande
+            $table->enum('status', ['en attente', 'acceptée', 'refusée'])->default('en attente');
             $table->timestamp('dateDemande')->default(DB::raw('CURRENT_TIMESTAMP')); // Date de la demande
             
         });

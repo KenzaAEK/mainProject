@@ -14,7 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('type_activites', function (Blueprint $table) {
-            $table->id();
+            $table->id('idTypeActivite');
+            $table->string('activite_type');
+            $table->string('domaine');
             $table->timestamps();
         });
     }

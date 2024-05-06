@@ -14,7 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('activites', function (Blueprint $table) {
-            $table->id();
+            $table->id('idActivite');
+            $table->string('titre');
+            $table->string('description');
+            $table->integer('ageMin');
+            $table->integer('ageMax');
+            $table->string('imagePub');
+            $table->integer('lienYtb');
+            $table->string('programmePdf');
             $table->timestamps();
         });
     }

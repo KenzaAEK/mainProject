@@ -14,7 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('enfant_groupes', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('idEnfant')->constrained('enfants', 'idEnfant');
+            $table->foreignId('idGroupe')->constrained('groupes', 'idGroupe');
+            $table->primary(['idEnfant', 'idGroupe']);
             $table->timestamps();
         });
     }
