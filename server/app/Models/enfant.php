@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Enfant extends Model
 {
     use HasFactory;
+
+    protected $table = 'enfants';
+    protected $primaryKey = 'idEnfant';
+    protected $fillable = ['prenom',
+      'nom',
+      'dateNaissance',
+       'niveauEtude', 
+       'idTuteur'];
+
+    public function Tuteur() {
+        return $this->belongsTo(Tuteur::class, 'idTuteur');
+    }
 }

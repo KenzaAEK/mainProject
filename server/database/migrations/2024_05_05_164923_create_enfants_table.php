@@ -14,8 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('enfants', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('idEnfant');
+            $table->string('prenom');
+            $table->string('nom');
+            $table->date('dateNaissance');
+            $table->string('niveauEtude');
+            $table->foreignId('idTuteur')
+            ->constrained('tuteurs','idTuteur')
+            ->onDelete('cascade');
+            
         });
     }
 

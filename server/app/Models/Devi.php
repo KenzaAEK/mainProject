@@ -27,4 +27,7 @@ class Devi extends Model
     public function facture() {
         return $this->hasOne(Facture::class, 'idDevis');
     }
+    public function demandeInscription() {
+        return $this->belongsTo(demandeInscription::class, 'idDemande');
+    }
 }

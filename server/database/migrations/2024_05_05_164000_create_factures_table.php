@@ -14,7 +14,6 @@ class CreateFacturesTable extends Migration
             $table->decimal('totalTTC', 10, 2);
             $table->date('dateFacture')->default(DB::raw('CURRENT_DATE'));;
             $table->string('facturePdf')->nullable();
-
             $table->foreignId('idNotif')->nullable()
             ->constrained('notifications','idNotif')
             ->onDelete('set null');
