@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('disponibilite_animateur', function (Blueprint $table) {
+        Schema::create('disponibilite_animateurs', function (Blueprint $table) {
             $table->foreignId('idAnim')->constrained('animateurs','idAnim');  
             $table->foreignId('idHoraire')->constrained('horaires','idHoraire');    
-            //$table->primary(['idAnim', 'idHoraire']);   
+            $table->primary(['idAnim', 'idHoraire']);   
             $table->timestamps();
         });
     }

@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('traiter', function (Blueprint $table) {
-            $table->foreignId('idAdmin')->constrained('administrateurs');
-            $table->foreignId('idDemande')->constrained('demandeInscriptions');
+            $table->foreignId('idAdmin')->constrained('administrateurs','idAdmin');
+            $table->foreignId('idDemande')->constrained('demandeInscriptions','idDemande');
             $table->enum('statut', ['en cours de traitement', 'accepter', 'refuser']);
             $table->text('motifRefus')->nullable();
             $table->timestamp('dateTraitement')->nullable();

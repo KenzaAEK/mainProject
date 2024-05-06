@@ -29,5 +29,8 @@ class demandeInscription extends Model
     public function Tuteur() {
         return $this->belongsTo(Parent::class, 'idTuteur');
     }
+    public function devis() {
+        return $this->hasOne(Devis::class, 'idDemande');
+    }
 }
 

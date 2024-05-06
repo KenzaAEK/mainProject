@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('ageMin');
             $table->integer('ageMax');
             $table->string('imagePub');
-            $table->string('lienYtb');
+            $table->integer('lienYtb');
             $table->string('programmePdf');
             $table->timestamps();
         });
