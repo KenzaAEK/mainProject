@@ -12,6 +12,7 @@ class Animateur extends Model
     public $timestamps = false;
     protected $fillable = [
         'idUser',
+        'domaineCompetence'
         
     ];
 
