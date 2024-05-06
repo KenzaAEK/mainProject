@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('animateur_groupes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('animateur_id')->constrained('animateurs', 'animateur_id');
+            $table->foreignId('groupe_id')->constrained('groupes', 'groupe_id');
             $table->timestamps();
         });
     }

@@ -14,13 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('administrateurs', function (Blueprint $table) {
-            $table->id('idAdmin'); // Si 'idAdmin' est la clé primaire dans la table admins
-            $table->foreignId('user_id')
-            ->constrained('users', 'idUser')
-            ->onDelete('cascade');  // Spécifiez 'idUser' comme colonne de référence
-            
-    });
-}
+            // Utilisation de la clé primaire auto-incrémentée par défaut
+            $table->id('idAdmin'); 
+            // Ajout de la colonne user_id comme clé étrangère
+            $table->foreignId('idUser')
+                  ->constrained('users') // Utilisation de la clé primaire par défaut de la table users
+                  ->onDelete('cascade');
+        });
+    }
+
     /**
      * Reverse the migrations.
      *

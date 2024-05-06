@@ -10,11 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    protected $table = 'users';  // S'assurer que le nom de la table est correct
-    protected $primaryKey = 'idUser'; // Here you specify your custom primary key
-    public $incrementing = true; // If your primary key is auto-incrementing
-    protected $keyType = 'int'; // Assuming the primary key is an integer
-
+    protected $primaryKey = 'idUser';
     protected $fillable = [
         
         'nom', 
@@ -24,7 +20,7 @@ class User extends Authenticatable
         'password',
         'role', 
         'photo',
-        'id'
+        
     ];
     
 
@@ -49,6 +45,8 @@ class User extends Authenticatable
     }
     public function notifications()
     {
-        return $this->hasMany(Notification::class, 'id');
+        return $this->hasMany(Notification::class, 'idUser');
     }
+  
+    
 }

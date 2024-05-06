@@ -14,7 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('competance_activites', function (Blueprint $table) {
-            $table->id();
+            $table->id('competance_activite_id');
+            $table->foreignId('type_activite_id')->constrained('type_activites', 'type_activite_id');
+            $table->foreignId('competence_id')->constrained('competences', 'id_competence');
+            $table->integer('niveau_requis');
             $table->timestamps();
         });
     }

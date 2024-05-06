@@ -9,13 +9,10 @@ class Notification extends Model
 {
     use HasFactory;
     protected $table = 'notifications';  // S'assurer que le nom de la table est correct
-    protected $primaryKey = 'idNotification'; // Définir la clé primaire personnalisée
-    public $incrementing = true; // Assumer que la clé primaire est auto-incrémentée
-    protected $keyType = 'int'; 
-
+     
+    protected $primaryKey = 'idNotif';
     protected $fillable = [
-        'user_id', 
-        'idNotification',
+        'idUser', 
         'objet', // Supposons que 'objet' contienne le contenu ou le sujet de la notification
         'isRead' // Un booléen qui indique si la notification a été lue
     ];
@@ -36,7 +33,7 @@ class Notification extends Model
     // Relier les notifications aux utilisateurs
     public function users()
     {
-        return $this->belongsToMany(User::class,'user_id','idUser');
+        return $this->belongsTo(User::class,'idUser');
     }
 }
 

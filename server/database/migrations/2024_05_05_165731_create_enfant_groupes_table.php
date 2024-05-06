@@ -13,8 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('enfant_groupes', function (Blueprint $table) {
-            $table->id();
+        Schema::create('enfant_groupe', function (Blueprint $table) {
+            $table->foreignId('enfant_id')->constrained('enfant');
+            $table->foreignId('groupe_id')->constrained('groupe');
+            $table->primary(['enfant_id', 'groupe_id']);
             $table->timestamps();
         });
     }

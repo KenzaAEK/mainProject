@@ -13,8 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('offre_activites', function (Blueprint $table) {
+        Schema::create('offre_activite', function (Blueprint $table) {
             $table->id();
+            $table->decimal('tarif', 8, 2);
+            $table->integer('effmax');
+            $table->integer('effmin');
+            $table->integer('nbrSeance');
+            $table->integer('Duree');
+            $table->foreignId('offre_id')->nullable()->constrained('offre')->onDelete('cascade');
+            $table->foreignId('payment_id')->nullable()->constrained('payment_gateway')->onDelete('set null');
             $table->timestamps();
         });
     }
@@ -26,6 +33,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offre_activites');
+        Schema::table('offre_activite', function (Blueprint $table) {
+            $table->dropForeign(['offre_id']);
+            $table->dropForeign(['payment_id']);
+            $table->dropColumn(['offre_id', 'payment_id']);
+        });
     }
 };
