@@ -24,5 +24,13 @@ class Enfant extends Model
     public function groupes() {
         return $this->belongsToMany(Groupe::class, 'enfant_groupes', 'idEnfant', 'idGroupe');
     }
+    public function inscriptionEnfantOffreActivite() {
+        return $this->hasOne(InscriptionEnfantOffreActivite::class, 'idEnfant');
+    }
+    public function offreActivite() {
+        return $this->belongsToMany(OffreActivite::class, 'planning', 'idEnfant', 'idOffreActivite');
+        
+    }
+
     
 }

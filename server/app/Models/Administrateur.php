@@ -22,7 +22,7 @@ class Administrateur extends Model
       
     }
     public function offre() {
-        return $this->belongsToMany(User::class, 'idUser');
+        return $this->hasOne(Offre::class, 'idUser');
       
     }
     public function demandesInscription() {

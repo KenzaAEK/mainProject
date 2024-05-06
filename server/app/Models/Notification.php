@@ -37,7 +37,7 @@ class Notification extends Model
     }
     public function facture()
     {
-        return $this->hasone(facture::class,'idNotif');
+        return $this->hasone(Facture::class,'idNotif');
     }
 }
 

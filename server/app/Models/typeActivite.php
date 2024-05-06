@@ -23,7 +23,7 @@ class typeActivite extends Model
     }
     public function competance()
     {
-        return $this->belongsTo(competence::class, 'idTypeActivite');
+        return $this->belongsTo(competence::class,'competance_activites','idTypeActivite','idCompetence');	
     }
    
 }

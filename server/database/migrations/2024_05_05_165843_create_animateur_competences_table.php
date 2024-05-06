@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id('idAnimateurCompetences');
             $table->foreignId('idAnim')->constrained('animateurs', 'idAnim');
             $table->foreignId('idCompetence')->constrained('competences', 'idCompetence');
-            $table->integer('maitrise');
+            $table->primary(['idAnim', 'idCompetence']);
+            $table->string('maitrise');
             $table->timestamps();
         });
     }

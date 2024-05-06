@@ -14,9 +14,9 @@ class Horaire extends Model
 
 
     public function animateur(){
-        return $this->belongsToMany(Animateur::class, 'idAnim');
+        return $this->belongsToMany(Animateur::class,'disponibilite_animateurs','idHoraire','idAnim');
     }
     public function offreActivite(){
-        return $this->belongsToMany(offreActivite::class, 'idAnim');
+        return $this->belongsToMany(offreActivite::class,'disponibilites','idHoraire','idOffreActivite' );
     }
 }

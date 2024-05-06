@@ -13,7 +13,11 @@ class Competence extends Model
 
     public function TypeActivite()
     {
-        return $this->hasMany(typeActivite::class,  'idCompetence');
+        return $this->belongsToMany(typeActivite::class,  'competance_activites', 'idCompetence', 'idTypeActivite');
+    }
+    public function animateur()
+    {
+        return $this->belongsToMany(Animateur::class,  'animateur_competences', 'idCompetence', 'idAnim');
     }
    
 }

@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class demandeInscription extends Model
 {
     use HasFactory;
-      public $timestamps = false;
+    public $timestamps = false;
     protected $table = 'demandeInscriptions';
     protected $primaryKey = 'idDemande';
     protected $fillable = [
         'optionsPaiement',
         'status',
+        'idTuteur',
         'dateDemande'
     ];
 
@@ -31,6 +32,9 @@ class demandeInscription extends Model
     }
     public function devis() {
         return $this->hasOne(Devi::class, 'idDemande');
+    }
+    public function inscriptionEnfantOffreActivite() {
+        return $this->hasOne(inscriptionEnfantOffreActivite::class, 'idInscriptionEnfantOffreActivite');
     }
 }
 
