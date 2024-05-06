@@ -18,7 +18,9 @@ class Devi extends Model
         'totalTTC',
         'TVA',
         'devisPdf',
-        'datedevis'
+        'datedevis',
+        'idFacture',
+        'idDemande'
     ];
 
 

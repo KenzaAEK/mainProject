@@ -35,5 +35,10 @@ class Notification extends Model
     {
         return $this->belongsTo(User::class,'idUser');
     }
+    public function facture()
+    {
+        return $this->hasone(facture::class,'idNotif');
+    }
 }
+
 

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class typeActivite extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'type_activite_id';
+    protected $primaryKey = 'idTypeActivite';
     protected $fillable = [
         'activite_type',
         'domaine'
@@ -19,11 +19,11 @@ class typeActivite extends Model
 
     public function activites()
     {
-        return $this->hasMany(Activite::class, 'type_activite_id');
+        return $this->hasMany(Activite::class, 'idTypeActivite');
     }
     public function competance()
     {
-        return $this->hasMany(competence::class, 'type_activite_id');
+        return $this->belongsTo(competence::class, 'idTypeActivite');
     }
    
 }

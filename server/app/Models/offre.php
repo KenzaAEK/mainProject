@@ -8,4 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Offre extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idOffre';
+    protected $fillable = [
+        'idAdmin',
+        'remise',
+        'dateDebutOffre',
+        'dateFinOffre',
+        'description',
+    ];
+     public function administrateur()
+    {
+        return $this->belongsTo(Administrateur::class, 'idAdmin');
+    }
+
+    public function offreActivites()
+    {
+        return $this->hasMany(OffreActivite::class, 'idOffre');
+    }
 }

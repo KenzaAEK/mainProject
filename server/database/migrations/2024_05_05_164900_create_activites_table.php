@@ -17,11 +17,14 @@ return new class extends Migration
             $table->id('idActivite');
             $table->string('titre');
             $table->string('description');
+            $table->string('objectif');
             $table->integer('ageMin');
             $table->integer('ageMax');
             $table->string('imagePub');
             $table->integer('lienYtb');
             $table->string('programmePdf');
+            $table->foreignId('idTypeActivite')->constrained('type_activites','idTypeActivite')->onDelete('set null');
+
             $table->timestamps();
         });
     }

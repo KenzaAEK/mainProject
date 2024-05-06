@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Competence extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'competence_id';
+    protected $primaryKey = 'idCompetence';
     protected $fillable = ['nom_competence'];
 
-    public function competanceActivites()
+    public function TypeActivite()
     {
-        return $this->hasMany(TypeActivite::class, 'competence_id', 'competence_id');
+        return $this->hasMany(typeActivite::class,  'idCompetence');
     }
    
 }

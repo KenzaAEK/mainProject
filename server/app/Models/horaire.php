@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Horaire extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idHoraire';
+
+    protected $fillable = ['jour', 'heureDebut', 'heureFin'];
+
+
+    public function animateur(){
+        return $this->belongsToMany(Animateur::class, 'idAnim');
+    }
+    public function offreActivite(){
+        return $this->belongsToMany(offreActivite::class, 'idAnim');
+    }
 }

@@ -11,13 +11,18 @@ class Enfant extends Model
 
     protected $table = 'enfants';
     protected $primaryKey = 'idEnfant';
-    protected $fillable = ['prenom',
-      'nom',
-      'dateNaissance',
-       'niveauEtude', 
-       'idTuteur'];
+    protected $fillable = [
+    'prenom',
+    'nom',
+    'dateNaissance',
+    'niveauEtude', 
+    'idTuteur'];
 
     public function Tuteur() {
         return $this->belongsTo(Tuteur::class, 'idTuteur');
     }
+    public function groupes() {
+        return $this->belongsToMany(Groupe::class, 'enfant_groupes', 'idEnfant', 'idGroupe');
+    }
+    
 }
