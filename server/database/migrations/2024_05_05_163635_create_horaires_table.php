@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('horaire', function (Blueprint $table) {
+        Schema::create('horaires', function (Blueprint $table) {
             $table->id('idHoraire');
             $table->string('jour');
             $table->time('heureDebut');

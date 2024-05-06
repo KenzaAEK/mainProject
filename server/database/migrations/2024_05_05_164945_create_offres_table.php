@@ -16,11 +16,10 @@ return new class extends Migration
         Schema::create('offres', function (Blueprint $table) {
             $table->id('idOffre');
             $table->decimal('remise', 8, 2)->nullable();
-            $table->timestamp('dateCreation')->useCurrent();
-            $table->timestamp('dateUpdate')->nullable();
             $table->date('dateDebutOffre')->nullable();
             $table->date('dateFinOffre')->nullable();
             $table->text('description')->nullable();
+            $table->foregnId('idAdmin')->constrained('admins', 'idAdmin')->onDelete('cascade');
             $table->timestamps();
         });
     }

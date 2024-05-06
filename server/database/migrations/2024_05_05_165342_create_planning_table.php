@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('planning', function (Blueprint $table) {
             $table->id('idPlanning');
-            $table->foreignId('idOffreActivite')->constrained('offre_activite', 'idOffreActivite')->onDelete('cascade');
-            $table->foreignId('idEnfant')->constrained('enfant', 'idEnfant')->onDelete('cascade');
-            $table->unique(['offreActivite_id', 'enfant_id']);
+            $table->foreignId('idOffreActivite')->constrained('offre_activites', 'idOffreActivite')->onDelete('cascade');
+            $table->foreignId('idEnfant')->constrained('enfants', 'idEnfant')->onDelete('cascade');
+            $table->unique(['idOffreActivite', 'idEnfant']);
             $table->timestamps();
         });
     }
