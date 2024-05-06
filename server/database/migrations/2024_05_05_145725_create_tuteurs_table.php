@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id('idTuteur'); 
             // Ajout de la colonne user_id comme clé étrangère
             $table->foreignId('idUser')
-                 ->constrained('users', 'idUser') // Utilisation de la clé primaire par défaut de la table users
-                  ->onDelete('cascade');
+                ->constrained('users', 'idUser') // Utilisation de la clé primaire par défaut de la table users
+                ->onDelete('cascade');
             $table->string('fonction')->nullable();
         });
     }

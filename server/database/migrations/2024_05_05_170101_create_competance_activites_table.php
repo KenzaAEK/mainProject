@@ -17,7 +17,7 @@ return new class extends Migration
            
             $table->foreignId('idTypeActivite')->constrained('type_activites', 'idTypeActivite');
             $table->foreignId('idCompetence')->constrained('competences', 'idCompetence');
-            $table->integer('niveau_requis');
+            $table->string('niveau_requis');
             $table->primary(['idCompetence', 'idTypeActivite']);
             $table->timestamps();
         });

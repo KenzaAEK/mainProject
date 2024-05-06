@@ -12,24 +12,22 @@ class Groupe extends Model
 
     protected $fillable = [
         'Nomgrp',
-        'idOffreActivite'];
+        'idOffreActivite'
+    ];
 
     public function animateur()
     {
-        return $this->belongsToMany(Animateur::class, 'idAnimateur');
+        return $this->belongsToMany(Animateur::class, 'Animateur_groupes', 'idGroupe', 'idAnim');
     }
-   // public function enfant()
-    //{
-    //    return $this->belongsToMany(Enfant::class, 'idEnfant');
-   // }
-   //???????????????????????¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+   
     public function offreActivite()
     {
-        return $this->hasOne(offreActivite::class, 'idOffreActivite');
+        return $this->belongsTo(offreActivite::class, 'idOffreActivite');
     }
-    public function enfants() {
+    public function enfant() {
         return $this->belongsToMany(Enfant::class, 'enfant_groupes', 'idGroupe', 'idEnfant');
     }
+    
 
   
 }

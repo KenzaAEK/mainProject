@@ -16,15 +16,18 @@ class Facture extends Model
         'totalHT', 
         'totalTTC', 
         'dateFacture', 
+        'idNotif',
         'facturePdf'
     ];
 
     // Relation avec FactureNotif (si nécessaire selon le contexte de l'application)
-    public function Notification()
+    public function Notofication()
     {
         return $this->hasOne(Notification::class,'idNotif');
     }
 
+    
+    // Relation avec Devis (supposée générer une Facture)
     public function devis() {
         return $this->belongsTo(Devi::class, 'idDevis');
     }

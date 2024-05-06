@@ -19,7 +19,7 @@ class offreActivite extends Model
         'idOffre',
         'idPayment',
         'idActivite'
-            ];
+        ];
     
     
     
@@ -45,12 +45,17 @@ class offreActivite extends Model
     }
     public function enfant()
     {
-        return $this->belongsToMany(Enfant::class, 'idActivite');
+        return $this->belongsToMany(Enfant::class, 'planning', 'idOffreActivite', 'idEnfant');
     }
-    public function demandeInscription()
+    public function inscriptionEnfantOffreActivite()
     {
-        return $this->belongsToMany(demandeInscription::class, 'idActivite');
+        return $this->hasOne(inscriptionEnfantOffreActivite::class, 'idInscriptionEnfantOffreActivite');
     }
+    public function groupe(){
+        return $this->hasOne(Groupe::class, 'idGroupe');
+    }
+
+    
     
 
     

@@ -14,8 +14,8 @@ class Pack extends Model
         'remise',
         'typePack',
     ];
-    public function demandeInscription()
+    public function inscriptionEnfantOffreActivite()
     {
-        return $this->hasMany(demandeInscription::class, 'idPack');
+        return $this->hasOne(inscriptionEnfantOffreActivite::class, 'idPack');
     }
 }

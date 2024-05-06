@@ -19,8 +19,6 @@ return new class extends Migration
             $table->foreignId('idOffreActivite')->constrained('offre_activites', 'idOffreActivite');
             $table->foreignId('idDemande')->constrained('demandeInscriptions', 'idDemande');
             $table->foreignId('idPack')->constrained('packs', 'idPack');
-            
-            
             $table->timestamps();
         });
     }

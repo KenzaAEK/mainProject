@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\TextUI\XmlConfiguration\Group;
 
 class Animateur extends Model
 {
@@ -13,15 +14,22 @@ class Animateur extends Model
     protected $fillable = [
         'idUser',
         'domaineCompetence'
-        
     ];
 
     public function user() {
         return $this->belongsTo(User::class, 'idUser');  
     }
-    public function offreActivite()
+    public function Competene()
     {
-        return $this->hasMany(offreActivite::class,'idAnim');
+        return $this->belongsToMany(Competence::class,'animateur_competences','idAnim','idCompetence');
+    }
+    public function horaire()
+    {
+        return $this->belongsToMany(Competence::class,'animateur_competences','idAnim','idCompetence');
+    }
+    public function Groupe()
+    {
+        return $this->belongsToMany(Groupe::class,'Animateur_groupes','idAnim','idGroupe');
     }
 
 }

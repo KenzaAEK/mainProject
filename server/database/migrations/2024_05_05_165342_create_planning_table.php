@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('planning', function (Blueprint $table) {
-            
             $table->foreignId('idOffreActivite')->constrained('offre_activites', 'idOffreActivite')->onDelete('cascade');
             $table->foreignId('idEnfant')->constrained('enfants', 'idEnfant')->onDelete('cascade');
             $table->primary(['idOffreActivite', 'idEnfant']);
+            // idH2   idH1 ?????????
             $table->timestamps();
         });
     }
