@@ -9,16 +9,15 @@ class CreateDemandeInscriptionNotifTable extends Migration
     public function up()
     {
         Schema::create('demande_inscription_notif', function (Blueprint $table) {
-            $table->foreignId('idNotif')->primary(); // Définir comme clé primaire
-            $table->foreign('idNotif')
-                  ->references('idNotif') // Assurez-vous que cela correspond à la colonne clé primaire dans `notifications`
-                  ->on('notifications')
-                  ->onDelete('cascade');
+             
+             $table->foreignId('idNotif')
+             ->primary()  // Cela définit idNotif comme clé primaire
+             ->constrained('notifications','idNotif')  // Pas besoin de spécifier 'idNotif' ici
+             ->onDelete('cascade');
 
             $table->foreignId('idDevis')
                   ->constrained('devis','idDevis')
                   ->onDelete('cascade');
-                   // Assurez-vous que la table `devis` existe
 
             $table->timestamps();
         });

@@ -12,8 +12,6 @@ class Groupe extends Model
 
     protected $fillable = [
         'Nomgrp',
-        'idActivite',
-        'idOffre',
         'idOffreActivite'];
 
     public function animateur()

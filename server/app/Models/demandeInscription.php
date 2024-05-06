@@ -14,6 +14,7 @@ class demandeInscription extends Model
     protected $fillable = [
         'optionsPaiement',
         'status',
+        'idTuteur',
         'dateDemande'
     ];
 
