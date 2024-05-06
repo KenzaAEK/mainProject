@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id('idAnim'); 
             // Ajout de la colonne user_id comme clé étrangère
             $table->foreignId('idUser')
-                  ->constrained('users') // Utilisation de la clé primaire par défaut de la table users
+                 ->constrained('users', 'idUser')// Utilisation de la clé primaire par défaut de la table users
                   ->onDelete('cascade');
         });
     }
