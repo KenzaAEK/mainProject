@@ -4,8 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDemandeInscriptionNotifTable extends Migration
+return new class extends Migration
 {
+    
+
     public function up()
     {
         Schema::create('demande_inscription_notif', function (Blueprint $table) {
@@ -29,4 +31,4 @@ class CreateDemandeInscriptionNotifTable extends Migration
     {
         Schema::dropIfExists('demande_inscription_notif');
     }
-}
+};

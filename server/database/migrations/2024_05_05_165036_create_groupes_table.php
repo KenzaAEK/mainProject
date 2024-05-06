@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('groupes', function (Blueprint $table) {
             $table->id('idGroupe');
             $table->string('Nomgrp');
-            $table->foregnId('idOffreActivite')->constrained('offre_activites', 'idOffreActivite');
+            $table->foreignId('idOffreActivite')->constrained('offre_activites', 'idOffreActivite');
                 // ?????????????????????????????????????????
             $table->timestamps();
         });

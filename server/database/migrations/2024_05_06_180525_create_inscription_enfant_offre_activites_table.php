@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('inscription_enfant_offre_activites', function (Blueprint $table) {
             $table->id('idInscriptionEnfantOffreActivite');
-            $table->fereignId('idEnfant')->constrained('enfants', 'idEnfant');
+            $table->foreignId('idEnfant')->constrained('enfants', 'idEnfant');
             $table->foreignId('idOffreActivite')->constrained('offre_activites', 'idOffreActivite');
             $table->foreignId('idDemande')->constrained('demandeInscriptions', 'idDemande');
             $table->foreignId('idPack')->constrained('packs', 'idPack');
