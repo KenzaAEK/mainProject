@@ -8,10 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Tuteur extends Model
 {
     use HasFactory;
-
-    protected $primaryKey = 'idTuteur'; // S'assurer que le nom de la table est correct
-    use HasFactory;
-
     protected $primaryKey = 'idTuteur'; // S'assurer que le nom de la table est correct
     
    

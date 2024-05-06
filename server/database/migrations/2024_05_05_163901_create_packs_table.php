@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('packs', function (Blueprint $table) {
             $table->id('idPack'); 
-            $table->decimal('remise', 8, 2)->nullable(); // Assuming remise is a discount which could be nullable
+            $table->decimal('remise', 8, 2)->nullable();
+            $table->string('typePack'); 
             $table->timestamps();
         });
     }

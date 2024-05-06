@@ -20,6 +20,6 @@ class Activite extends Model
     }
     public function typeActivite()
     {
-        return $this->belongsTo(TypeActivite::class, 'type_activite_id');
+        return $this->belongsTo(TypeActivite::class, 'idTypeActivite');
     }
 }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('Duree');
             $table->foreignId('idOffre')->nullable()->constrained('offres','idOffre')->onDelete('cascade');
             $table->foreignId('idPayment')->nullable()->constrained('payment_gateways','idPayment')->onDelete('set null');
+            $table->foreignId('idActivite')->constrained('activites','idActivite')->onDelete('cascade');
             $table->timestamps();
         });
     }

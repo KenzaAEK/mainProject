@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('planning', function (Blueprint $table) {
             $table->id('idPlanning');
+            //idH2 ????????????????idH1
             $table->foreignId('idOffreActivite')->constrained('offre_activites', 'idOffreActivite')->onDelete('cascade');
             $table->foreignId('idEnfant')->constrained('enfants', 'idEnfant')->onDelete('cascade');
             $table->unique(['idOffreActivite', 'idEnfant']);

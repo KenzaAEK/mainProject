@@ -30,7 +30,7 @@ class demandeInscription extends Model
         return $this->belongsTo(Parent::class, 'idTuteur');
     }
     public function devis() {
-        return $this->hasOne(Devis::class, 'idDemande');
+        return $this->hasOne(Devi::class, 'idDemande');
     }
 }
 

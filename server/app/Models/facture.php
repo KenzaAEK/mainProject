@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Facture extends Model
 {
     use HasFactory;
-    public $timestamps = false;
+    //public $timestamps = false;
     protected $table = 'factures';
     protected $primaryKey = 'idFacture';
 
@@ -20,14 +20,14 @@ class Facture extends Model
     ];
 
     // Relation avec FactureNotif (si nécessaire selon le contexte de l'application)
-    public function factureNotif() {
-        return $this->hasOne(FactureNotif::class, 'idFacture');
+    public function notofication() {
+        return $this->hasOne(Notification::class, 'idFacture');
     }
 
     // Relation avec DemandeInscriptionNotif (optionnelle)
-    public function demandeInscriptionNotif() {
-        return $this->hasOne(demandeInscriptionNotif::class, 'idFacture');
-    }
+    // public function demandeInscriptionNotif() {
+    //     return $this->hasOne(demandeInscriptionNotif::class, 'idFacture');
+    // }????????????????¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
 
     // Relation avec Devis (supposée générer une Facture)
     public function devis() {
