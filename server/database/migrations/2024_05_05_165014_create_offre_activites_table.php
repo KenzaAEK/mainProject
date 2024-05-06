@@ -20,12 +20,15 @@ return new class extends Migration
             $table->integer('effmin');
             $table->integer('nbrSeance');
             $table->integer('Duree');
-            $table->foreignId('idOffre')->nullable()->constrained('offres','idOffre')->onDelete('cascade');
-            //$table->foreignId('idPayment')->nullable()->constrained('payment_gateways','idPayment')->onDelete('set null');
+        
+            $table->foreignId('idOffre')->constrained('offres','idOffre')->onDelete('cascade');
             $table->foreignId('idActivite')->constrained('activites','idActivite')->onDelete('cascade');
-            $table->primary(['idOffre', 'idActivite']);
+        
+            $table->unique(['idOffre', 'idActivite']); // Définit la clé primaire composite
+        
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -39,6 +42,8 @@ return new class extends Migration
             $table->dropForeign(['offre_id']);
             $table->dropForeign(['payment_id']);
             $table->dropColumn(['offre_id', 'payment_id']);
+
         });
+        Schema::dropIfExists('offre_activites');
     }
 };
