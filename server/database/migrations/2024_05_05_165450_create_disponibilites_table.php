@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('disponibilites', function (Blueprint $table) {
-            $table->id();
+        Schema::create('disponibilite', function (Blueprint $table) {
+            $table->id('idDisponibilite'); 
+            $table->foreignId('idHoraire')->constrained('horaires', 'idHoraire')->onDelete('cascade');
+            $table->foreignId('idOffreActivite')->constrained('offre_activites', 'idOffreActivite')->onDelete('cascade');
+            $table->unique(['horaire_id', 'offreActivite_id']);
             $table->timestamps();
         });
     }

@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('demandeInscriptions', function (Blueprint $table) {
             $table->id('idDemande'); // ID de la demande
-            $table->foreignId('idTuteur')
-            ->constrained('tuteurs')
-            ->onDelete('cascade');
+            $table->foreignId('idTuteur')->constrained('tuteurs')->onDelete('cascade');
+            $table->foreignId('idPack')->constrained('pack','idPack')->onDelete('cascade');
             $table->string('optionsPaiement'); // Options de paiement choisies
             $table->string('status'); // Statut de la demande
             $table->timestamp('dateDemande')->default(DB::raw('CURRENT_TIMESTAMP')); // Date de la demande

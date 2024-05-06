@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('offres', function (Blueprint $table) {
-            $table->id();
+            $table->id('idOffre');
             $table->decimal('remise', 8, 2)->nullable();
             $table->timestamp('dateCreation')->useCurrent();
             $table->timestamp('dateUpdate')->nullable();

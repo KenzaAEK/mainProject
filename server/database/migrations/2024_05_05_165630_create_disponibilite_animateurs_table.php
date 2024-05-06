@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('disponibilite_animateur', function (Blueprint $table) {
-            $table->foreignId('animateur_id')->constrained();  
-            $table->foreignId('horaire_id')->constrained();    
-            $table->primary(['animateur_id', 'horaire_id']);   
+            $table->foreignId('idAnim')->constrained('animateurs','idAnim');  
+            $table->foreignId('idHoraire')->constrained('horaires','idHoraire');    
+            //$table->primary(['idAnim', 'idHoraire']);   
             $table->timestamps();
         });
     }

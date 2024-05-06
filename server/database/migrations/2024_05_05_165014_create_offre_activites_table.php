@@ -14,14 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('offre_activite', function (Blueprint $table) {
-            $table->id();
+            $table->id('idOffreActivite');
             $table->decimal('tarif', 8, 2);
             $table->integer('effmax');
             $table->integer('effmin');
             $table->integer('nbrSeance');
             $table->integer('Duree');
-            $table->foreignId('offre_id')->nullable()->constrained('offre')->onDelete('cascade');
-            $table->foreignId('payment_id')->nullable()->constrained('payment_gateway')->onDelete('set null');
+            $table->foreignId('idOffre')->nullable()->constrained('offre','idOffre')->onDelete('cascade');
+            $table->foreignId('idPayment')->nullable()->constrained('payment_gateway','idPayment')->onDelete('set null');
             $table->timestamps();
         });
     }

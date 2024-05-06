@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('animateur_competences', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('animateur_id')->constrained('animateurs', 'id_animateur');
-            $table->foreignId('competence_id')->constrained('competences', 'id_competence');
+            $table->id('idAnimateurCompetences');
+            $table->foreignId('idAnim')->constrained('animateurs', 'idAnim');
+            $table->foreignId('idCompetence')->constrained('competences', 'idCompetence');
             $table->integer('maitrise');
             $table->timestamps();
         });
