@@ -5,7 +5,32 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class facture extends Model
+class Facture extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+    protected $table = 'factures';
+    protected $primaryKey = 'idFacture';
+
+    protected $fillable = [
+        'totalHT', 
+        'totalTTC', 
+        'dateFacture', 
+        'facturePdf'
+    ];
+
+    // Relation avec FactureNotif (si nécessaire selon le contexte de l'application)
+    public function factureNotif() {
+        return $this->hasOne(FactureNotif::class, 'idFacture');
+    }
+
+    // Relation avec DemandeInscriptionNotif (optionnelle)
+    public function demandeInscriptionNotif() {
+        return $this->hasOne(demandeInscriptionNotif::class, 'idFacture');
+    }
+
+    // Relation avec Devis (supposée générer une Facture)
+    public function devis() {
+        return $this->belongsTo(Devi::class, 'idDevis');
+    }
 }

@@ -41,7 +41,7 @@ class User extends Authenticatable
     }
 
     public function parent() {
-        return $this->hasOne(Parent::class);
+        return $this->hasOne(Tuteur::class);
     }
     public function notifications()
     {

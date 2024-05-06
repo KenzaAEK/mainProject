@@ -15,13 +15,11 @@ return new class extends Migration
     {
         Schema::create('animateurs', function (Blueprint $table) {
             // Utilisation de la clé primaire auto-incrémentée par défaut
-            $table->id('animateur_id'); 
+            $table->id('idAnim'); 
             // Ajout de la colonne user_id comme clé étrangère
             $table->foreignId('idUser')
-                  ->constrained('users') // Utilisation de la clé primaire par défaut de la table users
+                 ->constrained('users', 'idUser')// Utilisation de la clé primaire par défaut de la table users
                   ->onDelete('cascade');
-            $table->string('domaine_competence');
-            $table->timestamps();
         });
     }
 

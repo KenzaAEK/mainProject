@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Animateur extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'id_animateur';
+    protected $primaryKey = 'idAnim';
     public $timestamps = false;
     protected $fillable = [
         'idUser',
