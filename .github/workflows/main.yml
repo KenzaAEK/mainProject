@@ -1,0 +1,54 @@
+name: CI/CD Pipeline 
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Tests and setup for Laravel
+      - name: Setup PHP with extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: mbstring, pdo, pdo_mysql, curl, gd, xml, zip
+          coverage: none
+
+      - name: Install Composer dependencies (Laravel)
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Setup Laravel Environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run Laravel migrations (using SQLite for testing)
+        run: |
+          touch database/database.sqlite
+          php artisan migrate
+
+      - name: Run Laravel tests
+        run: php artisan test
+
+      # Tests for Vue.js
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install npm dependencies (Vue.js)
+        run: npm install
+
+      - name: Run Vue.js tests
+        run: npm run test
+
+      
