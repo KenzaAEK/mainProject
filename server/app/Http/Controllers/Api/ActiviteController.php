@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Activite;
-
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreActiviteRequest;
+use App\Http\Requests\UpdateActiviteRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ActiviteController extends Controller
 {
     /**
@@ -25,26 +28,13 @@ class ActiviteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreActiviteRequest $request)
     {
-        $validated = $request->validate([
-            'titre' => 'required|string|max:255',
-            'description' => 'required|string',
-            'objectif' => 'required|string',
-            'ageMin' => 'required|integer',
-            'ageMax' => 'required|integer',
-            'imagePub' => 'required|string',
-            'lienYtb' => 'required|integer',
-            'programmePdf' => 'required|string',
-            'idTypeActivite' => 'required|exists:type_activites,idTypeActivite'
-        ]);
-
-        $activite = Activite::create($validated);
-        return response()->json($activite, 201);
-        //return response()->json('ok');
-
-
+        $activite = Activite::create($request->validated());
+        //return $this->success($activite, 'Activité ajoutée avec succès', 201);
+        return response()->json(['status' => 201, 'message' => 'Activité ajoutée avec succès', 'activite' => $activite], 201);
     }
+
 
     /**
      * Display the specified resource.
@@ -55,7 +45,11 @@ class ActiviteController extends Controller
     public function show($id)
     {
         
-        return Activite::find($id);
+        $activite = Activite::find($id);
+        return $activite
+            ? response()->json(['status' => 200, 'activite' => $activite], 200)
+            : response()->json(['status' => 404, 'message' => "Aucune activité trouvée"], 404);
+    
 
         
     }
@@ -67,9 +61,15 @@ class ActiviteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateActiviteRequest  $request, $id)
     {
-        //
+        try {
+            $activite = Activite::findOrFail($id);
+            $activite->update($request->validated());
+            return response()->json(['status' => 200, 'message' => 'Activité mise à jour avec succès', 'activite' => $activite], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['status' => 404, 'message' => 'Activité non trouvée'], 404);
+        }
     }
 
     /**
@@ -80,6 +80,12 @@ class ActiviteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $activite = Activite::find($id);
+        if (!$activite) {
+            return response()->json(['status' => 404, 'message' => "Aucune activité trouvée"], 404);
+        }
+
+        $activite->delete();
+        return response()->json(['status' => 200, 'message' => "Activité supprimée avec succès"], 200);
     }
 }
