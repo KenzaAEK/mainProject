@@ -3,19 +3,36 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/refresh', [AuthController::class, 'refreshToken']);
-    // add a group of routes here for filtering the user must be authenticated anddd role = admin or somthing else
-    //use  midlleware to do that
-});
-
+use App\Http\Controllers\Api\ActiviteController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+
+Route::apiResource('activites', ActiviteController::class);
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    // for authenticated users
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/refresh', [AuthController::class, 'refreshToken']);
+    
+    // for admins only and authenticated  
+    //add middlewear check role 
+    
+
+
+
+
+    //add middlewear check role 
+    // for parents only and authenticated 
+
+    
+
+
+    //add middlewear check role 
+    // for animators only and authenticated  
+
+
+
+});
+
+
+
