@@ -11,7 +11,7 @@ class Activite extends Model
     protected $primaryKey = 'idActivite';
 
     protected $fillable = [
-        'titre', 'description', 'prix', 'ageMin', 'ageMax', 'imagePub', 'lienYtb', 'programmePdf','idTypeActivite'
+        'titre', 'description', 'objectif', 'ageMin', 'ageMax', 'imagePub', 'lienYtb', 'programmePdf','idTypeActivite'
     ];
 
     public function offreActivite()

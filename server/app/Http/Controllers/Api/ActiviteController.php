@@ -30,7 +30,7 @@ class ActiviteController extends Controller
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'required|string',
-            'prix' => 'required|string',
+            'objectif' => 'required|string',
             'ageMin' => 'required|integer',
             'ageMax' => 'required|integer',
             'imagePub' => 'required|string',
@@ -41,6 +41,8 @@ class ActiviteController extends Controller
 
         $activite = Activite::create($validated);
         return response()->json($activite, 201);
+        //return response()->json('ok');
+
 
     }
 
@@ -52,7 +54,10 @@ class ActiviteController extends Controller
      */
     public function show($id)
     {
-        //
+        
+        return Activite::find($id);
+
+        
     }
 
     /**
