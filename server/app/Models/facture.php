@@ -23,7 +23,7 @@ class Facture extends Model
     // Relation avec FactureNotif (si nécessaire selon le contexte de l'application)
     public function Notofication()
     {
-        return $this->belongsTo(Notification::class,'idNotif');
+        return $this->hasOne(Notification::class,'idNotif');
     }
 
     
