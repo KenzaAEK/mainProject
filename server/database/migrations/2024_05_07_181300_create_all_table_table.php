@@ -62,7 +62,7 @@ return new class extends Migration
 
         Schema::create('type_activites', function (Blueprint $table) {
             $table->id('idTypeActivite');
-            $table->string('type', 50);
+            $table->string('type', 50)->unique();
             $table->string('domaine', 50);
         });
 

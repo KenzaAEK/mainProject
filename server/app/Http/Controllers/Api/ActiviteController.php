@@ -31,6 +31,9 @@ class ActiviteController extends Controller
     public function store(StoreActiviteRequest $request)
     {
         $activite = Activite::create($request->validated());
+        
+
+
         //return $this->success($activite, 'Activité ajoutée avec succès', 201);
         return response()->json(['status' => 201, 'message' => 'Activité ajoutée avec succès', 'activite' => $activite], 201);
     }
@@ -61,7 +64,7 @@ class ActiviteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateActiviteRequest  $request, $id)
+    public function update(UpdateActiviteRequest $request, $id)
     {
         try {
             $activite = Activite::findOrFail($id);

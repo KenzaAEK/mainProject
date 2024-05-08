@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Demande_inscription extends Model
+class demandeInscription extends Model
 {
     use HasFactory;
     protected $table = 'demande_inscription';
@@ -33,7 +33,7 @@ class Demande_inscription extends Model
     }
 
     public function offre_activite() {
-        return $this->belongsToMany(Offre_activite::class, 'inscriptionEnfant_offre_Activite', 'idDemande', 'idOffre','idActivite');
+        return $this->belongsToMany(OffreActivite::class, 'inscriptionEnfant_offre_Activite', 'idDemande', 'idOffre','idActivite');
     }
 
     public function enfants() {
