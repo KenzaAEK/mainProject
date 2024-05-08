@@ -12,11 +12,7 @@ class Activite extends Model
     protected $primaryKey = 'idActivite';
     protected $table = 'activites';
     protected $fillable = [
-<<<<<<< HEAD
-        'titre', 'description', 'objectif', 'ageMin', 'ageMax', 'imagePub', 'lienYtb', 'programmePdf','idTypeActivite'
-=======
         'titre', 'description', 'objectif', 'imagePub', 'lienYtb', 'programmePdf','id_Activite'
->>>>>>> 44640682812d6c5cdc5422d6f02a6666d659bc99
     ];
 
     public function offre_activite()
@@ -25,6 +21,6 @@ class Activite extends Model
     }
     public function typeActivite()
     {
-        return $this->belongsTo(TypeActivite::class);
+        return $this->belongsTo(Type_activite::class);
     }
 }
