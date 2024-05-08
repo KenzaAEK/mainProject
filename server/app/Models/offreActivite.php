@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class offreActivite extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idOffreActivite';
-
+    
     protected $fillable = [
         'tarif',
         'effmax',

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('offre_activites', function (Blueprint $table) {
-            $table->id('idOffreActivite');
+            $table->bigIncrements('idOffreActivite');
             $table->decimal('tarif', 8, 2);
             $table->integer('effmax');
             $table->integer('effmin');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignId('idOffre')->constrained('offres','idOffre')->onDelete('cascade');
             $table->foreignId('idActivite')->constrained('activites','idActivite')->onDelete('cascade');
         
-            $table->unique(['idOffre', 'idActivite']); // Définit la clé primaire composite
+            $table->primary(['idOffreActivite','idOffre', 'idActivite']); // Définit la clé primaire composite
         
             $table->timestamps();
         });
