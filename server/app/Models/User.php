@@ -32,21 +32,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function admin() {
-        return $this->hasOne(Administrateur::class);
+    public function adminisatrateurs() {
+        return $this->hasOne(Administrateur::class, 'idUser');
     }
 
-    public function anim() {
-        return $this->hasOne(Animateur::class);
+    public function animateurs() {
+        return $this->hasOne(Animateur::class, 'idUser');
     }
 
-    public function parent() {
-        return $this->hasOne(Tuteur::class);
+    public function tuteurs() {
+        return $this->hasOne(Tuteur::class, 'idUser');
     }
     public function notifications()
     {
         return $this->hasMany(Notification::class, 'idUser');
     }
-  
-    
 }

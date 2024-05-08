@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\offreActivite>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Offre_activite>
  */
 class OffreActiviteFactory extends Factory
 {
