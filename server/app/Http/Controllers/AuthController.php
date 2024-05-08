@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         if ($existingUser) {
             // User already exists
-            return $this->error('', 'User with this email already exists', 409); // 409 Conflict
+            return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
         }
 
         $user = User::create([
@@ -44,7 +44,7 @@ class AuthController extends Controller
         return $this->success([
             'user' => $user,
             'token' =>$token
-        ],'Registration successful');
+        ],'Inscription réussie. :)');
     }
 
 
@@ -54,7 +54,7 @@ class AuthController extends Controller
         $request->validated($request->all());
         if(!Auth::attempt($request->only(['email','password'])))
         {
-            return $this->error('','credentials do not match',401);
+            return $this->error('','Les informations d\'identification ne correspondent pas. :(',401);
         }
 
         
@@ -85,13 +85,13 @@ class AuthController extends Controller
         return $this->success([
             'user' => $user,
             'token' => $token
-        ],'logged in successfully');
+        ],'Connecté avec succès. :)');
     }
     public function logout()
     {
         auth()->user()->currentAccessToken()->delete();
         return $this->success([
-            'message' => 'logged out successfully and token deleted'
+            'message' => 'Déconnecté avec succès et jeton supprimé. :)'
         ]);
     }
 
@@ -116,7 +116,7 @@ class AuthController extends Controller
         // Return the new token
         return $this->success([
             'token' => $token
-        ], 'Token successfully refreshed');
+        ], 'Jeton rafraîchi avec succès. :)');
     }
 
 }
