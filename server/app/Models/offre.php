@@ -9,6 +9,8 @@ class Offre extends Model
 {
     use HasFactory;
     protected $primaryKey = 'idOffre';
+    protected $table = 'offres';
+    public $timestamps = false;
     protected $fillable = [
         'idAdmin',
         'remise',
@@ -16,13 +18,13 @@ class Offre extends Model
         'dateFinOffre',
         'description',
     ];
-     public function administrateur()
+     public function administrateurs()
     {
-        return $this->belongsTo(Administrateur::class, 'idAdmin');
+        return $this->belongsTo(Administrateur::class);
     }
 
-    public function offreActivites()
+    public function offre_activite()
     {
-        return $this->hasMany(OffreActivite::class, 'idOffre');
+        return $this->hasMany(Offre_activite::class, 'idOffre');
     }
 }

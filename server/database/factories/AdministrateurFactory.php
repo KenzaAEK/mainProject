@@ -2,9 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Administrateur;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Administrateur>
+ */
 class AdministrateurFactory extends Factory
 {
     /**
@@ -12,13 +14,10 @@ class AdministrateurFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    protected $model = Administrateur::class;
-
     public function definition()
     {
         return [
-            // Supposons que idUser doit être lié à des utilisateurs existants ou générés séparément
-            'idUser' => \App\Models\User::factory(),
+            //
         ];
     }
 }

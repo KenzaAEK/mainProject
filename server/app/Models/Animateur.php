@@ -4,32 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use PHPUnit\TextUI\XmlConfiguration\Group;
 
 class Animateur extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idAnim';
-    public $timestamps = false;
+    protected $primaryKey = 'idAnimateur';
+    protected $table = 'Animateurs';
+
     protected $fillable = [
         'idUser',
-        'domaineCompetence'
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class, 'idUser');  
+    public function users() {
+        return $this->belongsTo(User::class);  
     }
-    public function Competene()
+    public function Competences()
     {
-        return $this->belongsToMany(Competence::class,'animateur_competences','idAnim','idCompetence');
+        return $this->belongsToMany(Competence::class,'animateur_competence','idAnimateur','id_competence');
     }
-    public function horaire()
+    public function horaires()
     {
-        return $this->belongsToMany(Competence::class,'animateur_competences','idAnim','idCompetence');
+        return $this->belongsToMany(Horaire::class,'disponibilite_animateur','idAnimateur','idHoraire');
     }
-    public function Groupe()
+    public function groupes()
     {
-        return $this->belongsToMany(Groupe::class,'Animateur_groupes','idAnim','idGroupe');
+        return $this->belongsToMany(Groupe::class,'idAnimateur');
     }
-
 }

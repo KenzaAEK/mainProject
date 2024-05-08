@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Competence extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idCompetence';
+    protected $primaryKey = 'id_competence';
+    protected $table = 'competences';
+    public $timestamps = false;
     protected $fillable = ['nom_competence'];
 
-    public function TypeActivite()
+    public function type_activites()
     {
-        return $this->belongsToMany(typeActivite::class,  'competance_activites', 'idCompetence', 'idTypeActivite');
+        return $this->belongsToMany(Type_activite::class,  'competance_activite', 'id_competence', 'id_Activite');
     }
-    public function animateur()
+    public function animateurs()
     {
-        return $this->belongsToMany(Animateur::class,  'animateur_competences', 'idCompetence', 'idAnim');
+        return $this->belongsToMany(Animateur::class,  'animateur_competence', 'id_competence', 'idAnimateur');
     }
-   
 }

@@ -8,14 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Pack extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $primaryKey = 'idPack';
-
+    protected $table = 'packs';
     protected $fillable = [
         'remise',
-        'typePack',
+        'type',
+        'limite'
     ];
-    public function inscriptionEnfantOffreActivite()
+    public function demande_inscription()
     {
-        return $this->hasOne(inscriptionEnfantOffreActivite::class, 'idPack');
+        return $this->hasMany(Demande_inscription::class, 'idPack');
     }
 }

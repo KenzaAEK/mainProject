@@ -8,18 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Activite extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idActivite';
 
+    protected $primaryKey = 'idActivite';
+    protected $table = 'activites';
     protected $fillable = [
-        'titre', 'description', 'objectif', 'ageMin', 'ageMax', 'imagePub', 'lienYtb', 'programmePdf'
+        'titre', 'description', 'objectif', 'imagePub', 'lienYtb', 'programmePdf','id_Activite'
     ];
 
-    public function offreActivite()
+    public function offre_activite()
     {
-        return $this->hasOne(OffreActivite::class, 'idActivite');
+        return $this->hasMany(Offre_activite::class, 'idActivite');
     }
     public function typeActivite()
     {
-        return $this->belongsTo(TypeActivite::class, 'idTypeActivite');
+        return $this->belongsTo(TypeActivite::class);
     }
 }
