@@ -15,7 +15,8 @@ class Groupe extends Model
         'Nomgrp',
         'idActivite',
         'idOffre',
-        'idAnimateur'
+        'idAnimateur'  
+        
     ];
 
     public function animateurs()
