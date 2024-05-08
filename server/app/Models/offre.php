@@ -17,6 +17,7 @@ class Offre extends Model
         'dateDebutOffre',
         'dateFinOffre',
         'description',
+        'titre'
     ];
      public function administrateurs()
     {
