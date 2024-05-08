@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\horaire>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Horaire>
  */
 class HoraireFactory extends Factory
 {

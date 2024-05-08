@@ -9,14 +9,14 @@ class Horaire extends Model
 {
     use HasFactory;
     protected $primaryKey = 'idHoraire';
-
+    protected $table = 'horaires';
     protected $fillable = ['jour', 'heureDebut', 'heureFin'];
+    public $timestamps = false;
 
-
-    public function animateur(){
-        return $this->belongsToMany(Animateur::class,'disponibilite_animateurs','idHoraire','idAnim');
+    public function animateurs(){
+        return $this->belongsToMany(Animateur::class,'disponibilite_animateur','idHoraire','idAnimateur');
     }
-    public function offreActivite(){
-        return $this->belongsToMany(offreActivite::class,'disponibilites','idHoraire','idOffreActivite' );
+    public function offre_activite(){
+        return $this->belongsToMany(offreActivite::class,'disponibilite_offreactivite','idHoraire','id_offreActivite');
     }
 }

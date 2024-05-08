@@ -8,26 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class Groupe extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idGroupe';
-
+    protected $primaryKey = 'id_grp';
+    public $timestamps = false;
+    protected $table = 'groupes';
     protected $fillable = [
         'Nomgrp',
-        'idOffreActivite'
+        'idActivite',
+        'idOffre',
+        'idAnimateur'
     ];
 
-    public function animateur()
+    public function animateurs()
     {
-        return $this->belongsToMany(Animateur::class, 'Animateur_groupes', 'idGroupe', 'idAnim');
+        return $this->belongsTo(Animateur::class);
     }
    
-    public function offreActivite()
+    public function offre_activite()
     {
-        return $this->belongsTo(offreActivite::class, 'idOffreActivite');
+        return $this->belongsTo(Offre_activite::class);
     }
-    public function enfant() {
-        return $this->belongsToMany(Enfant::class, 'enfant_groupes', 'idGroupe', 'idEnfant');
+    public function enfants() {
+        return $this->belongsToMany(Enfant::class, 'enfant_groupe', 'id_grp', 'idEnfant','idTuteur');
     }
-    
-
-  
 }

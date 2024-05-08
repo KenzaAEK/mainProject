@@ -9,23 +9,19 @@ class Tuteur extends Model
 {
     use HasFactory;
 
-  
-    use HasFactory;
     protected $primaryKey = 'idTuteur'; // S'assurer que le nom de la table est correct
-   
-    public $timestamps = false;
+    protected $table = 'tuteurs';
     protected $fillable = [
         'idUser', // La clé étrangère vers le modèle User
         'fonction', // Je suppose que c'est le champ 'fonction' que vous avez ajouté
-        
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class, 'idUser');
+    public function users() {
+        return $this->belongsTo(User::class);
         
     }
-    public function demandeInscription() {
-        return $this->hasMany(demandeInscription::class, 'idTuteur');
+    public function demande_inscription() {
+        return $this->hasMany(Demande_inscription::class, 'idTuteur');
     }
     public function enfants() {
         return $this->hasMany(Enfant::class, 'idTuteur');
