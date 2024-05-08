@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -60,13 +61,13 @@ return new class extends Migration
         });
 
         Schema::create('type_activites', function (Blueprint $table) {
-            $table->id('id_Activite');
+            $table->id('idTypeActivite');
             $table->string('type', 50);
             $table->string('domaine', 50);
         });
 
         Schema::create('competences', function (Blueprint $table) {
-            $table->id('id_competence');
+            $table->id('idCompetence');
             $table->string('nom_competence', 50);
         });
 
@@ -103,8 +104,8 @@ return new class extends Migration
             $table->string('imagePub', 50)->nullable();
             $table->string('lienYtb');
             $table->longText('programmePdf');
-            $table->unsignedBigInteger('id_Activite');
-            $table->foreign('id_Activite')->references('id_Activite')->on('type_activites');
+            $table->unsignedBigInteger('idTypeActivite');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
             $table->timestamps();
         });
 
@@ -159,7 +160,6 @@ return new class extends Migration
             $table->integer('nbrSeance');
             $table->integer('Duree_en_heure');
             $table->unsignedBigInteger('idPaiment');
-
             $table->primary(['idOffre', 'idActivite']);
             $table->foreign('idOffre')->references('idOffre')->on('offres');
             $table->foreign('idActivite')->references('idActivite')->on('activites');
@@ -167,7 +167,7 @@ return new class extends Migration
         });
 
         Schema::create('groupes', function (Blueprint $table) {
-            $table->id('id_grp');
+            $table->id('idGroupe');
             $table->string('Nomgrp', 50);
             $table->unsignedBigInteger('idOffre');
             $table->unsignedBigInteger('idActivite');
@@ -225,31 +225,31 @@ return new class extends Migration
         Schema::create('enfant_groupe', function (Blueprint $table) {
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
-            $table->unsignedBigInteger('id_grp');
-            $table->primary(['idTuteur', 'idEnfant', 'id_grp']);
+            $table->unsignedBigInteger('idGroupe');
+            $table->primary(['idTuteur', 'idEnfant', 'idGroupe']);
 
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
-            $table->foreign('id_grp')->references('id_grp')->on('groupes');
+            $table->foreign('idGroupe')->references('idGroupe')->on('groupes');
         });
 
         Schema::create('animateur_competence', function (Blueprint $table) {
             $table->unsignedBigInteger('idAnimateur');
-            $table->unsignedBigInteger('id_competence');
+            $table->unsignedBigInteger('idCompetence');
             $table->string('Maitrise');
-            $table->primary(['idAnimateur', 'id_competence']);
+            $table->primary(['idAnimateur', 'idCompetence']);
 
             $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
-            $table->foreign('id_competence')->references('id_competence')->on('competences');
+            $table->foreign('idCompetence')->references('idCompetence')->on('competences');
         });
 
         Schema::create('competance_activite', function (Blueprint $table) {
-            $table->integer('id_Activite');
-            $table->integer('id_competence');
+            $table->integer('idTypeActivite');
+            $table->integer('idCompetence');
             $table->string('Niveau_requis', 50);
-            $table->primary(['id_Activite', 'id_competence']);
+            $table->primary(['idTypeActivite', 'idCompetence']);
 
-            $table->foreign('id_Activite')->references('id_Activite')->on('type_activites');
-            $table->foreign('id_competence')->references('id_competence')->on('competences');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+            $table->foreign('idCompetence')->references('idCompetence')->on('competences');
         });
 
         Schema::create('inscriptionEnfant_offre_Activite', function (Blueprint $table) {

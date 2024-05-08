@@ -17,7 +17,7 @@ class AuthController extends Controller
 {
     use HttpResponses;
    
-    public function register(StoreUserRequest $request)   // workingggg and already testeeed in postman
+    public function register(StoreUserRequest $request)   
     {
         $request->validated($request->all());
 
@@ -26,37 +26,35 @@ class AuthController extends Controller
 
         if ($existingUser) {
             // User already exists
-            return $this->error('', 'User with this email already exists', 409); // 409 Conflict
+            return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
         }
-
-
 
         $user = User::create([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'email' => $request->email,
             'tel' => $request->tel,
-            'password' => Hash::make($request->password) //or the  bcrypt($request->password)
+            'password' => Hash::make($request->password)    //or the  bcrypt($request->password)
         ]);
         $token = $user->createToken('token-name')->plainTextToken;
 
-        //$token = $user->createToken('token-name', [], now()->addMinutes(30))->plainTextToken;  // experation tiiiiiiimeeee of the token*****************
+        //$token = $user->createToken('token-name', [], now()->addMinutes(30))->plainTextToken;  // automated in the config/sanctum.php file
 
 
         return $this->success([
             'user' => $user,
             'token' =>$token
-        ]);
+        ],'Inscription réussie. :)');
     }
 
 
 
-    public function login(LoginUserRequest $request) // workingggg and already testeeed in postman
+    public function login(LoginUserRequest $request) 
     {
         $request->validated($request->all());
         if(!Auth::attempt($request->only(['email','password'])))
         {
-            return $this->error('','credentials do not match',401);
+            return $this->error('','Les informations d\'identification ne correspondent pas. :(',401);
         }
 
         
@@ -72,13 +70,10 @@ class AuthController extends Controller
         //     }
         // }
 
-        
-        // ghadi nzid hna l expiration DYAL  token besh n implementer l refresh token et khsni ndwi m3a lfront besh y regerererwha 9bel matexpira
-
         // simply i can change the config/sanctum.php file   change the expiration time bla had za3ter kameel
         $token = $user->createToken('token-name')->plainTextToken;
         // $personalAccessToken = PersonalAccessToken::findToken($token);
-        // $personalAccessToken->expires_at = Carbon::now()->addMinutes(30);                                                           // i can change the time here ask karima or discuss with the team
+        // $personalAccessToken->expires_at = Carbon::now()->addMinutes(30);  //or  simply change the config/sanctum.php file                                                          
         // $personalAccessToken->save();
 
 
@@ -90,13 +85,13 @@ class AuthController extends Controller
         return $this->success([
             'user' => $user,
             'token' => $token
-        ]);
+        ],'Connecté avec succès. :)');
     }
-    public function logout()  // workingggg and already testeeed in postman
+    public function logout()
     {
         auth()->user()->currentAccessToken()->delete();
         return $this->success([
-            'message' => 'logged out successfully and token deleted'
+            'message' => 'Déconnecté avec succès et jeton supprimé. :)'
         ]);
     }
 
@@ -105,22 +100,23 @@ class AuthController extends Controller
         // Get the authenticated user
         $user = auth()->user();
 
-        // Delete all existing tokens
-        $user->tokens()->delete();
-
+        // Delete all existing tokens (force the user to login again on all devices)
+        //$user->tokens()->delete();
+        // delete only the current token , (the current device)
+        auth()->user()->currentAccessToken()->delete();
         // Create a new token
         $token = $user->createToken('token-name')->plainTextToken;
 
         // Set an expiry time
         //or  simply change the config/sanctum.php file 
         // $personalAccessToken = PersonalAccessToken::findToken($token);
-        // $personalAccessToken->expires_at = Carbon::now()->addMinutes(30);   // swel les tuteurs et team 
+        // $personalAccessToken->expires_at = Carbon::now()->addMinutes(30);
         // $personalAccessToken->save();
 
         // Return the new token
         return $this->success([
             'token' => $token
-        ], 'Token successfully refreshed');
+        ], 'Jeton rafraîchi avec succès. :)');
     }
 
 }
