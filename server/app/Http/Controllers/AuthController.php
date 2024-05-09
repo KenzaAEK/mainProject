@@ -26,8 +26,8 @@ class AuthController extends Controller
 
         if ($existingUser) {
             // User already exists
-            // return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
-            return response()->json(['message' => 'Un utilisateur avec cet email existe déjà. :('], 409); // 409 Conflict
+            return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
+            // return response()->json(['message' => 'Un utilisateur avec cet email existe déjà. :('], 409); // 409 Conflict
 
         }
 
@@ -44,15 +44,15 @@ class AuthController extends Controller
         //$token = $user->createToken('token-name', [], now()->addMinutes(30))->plainTextToken;  // automated in the config/sanctum.php file
 
 
-        // return $this->success([
-        //     'user' => $user,
-        //     'token' =>$token,
-        // ],'Inscription réussie. :)');
-        return response()->json([
+        return $this->success([
             'user' => $user,
-            'token' => $token,
-            'message' => 'Inscription réussie. :)'
-        ],200);
+            'token' =>$token,
+        ],'Inscription réussie. :)');
+        // return response()->json([
+        //     'user' => $user,
+        //     'token' => $token,
+        //     'message' => 'Inscription réussie. :)'
+        // ],200);
         
     }
     public function login(LoginUserRequest $request) 
@@ -60,8 +60,8 @@ class AuthController extends Controller
         $request->validated($request->all());
         if(!Auth::attempt($request->only(['email','password'])))
         {
-            // return $this->error('','Les informations d\'identification ne correspondent pas. :(',401);
-            return response()->json(['message' => 'Les informations d\'identification ne correspondent pas. :('], 401);
+            return $this->error('','Les informations d\'identification ne correspondent pas. :(',401);
+            // return response()->json(['message' => 'Les informations d\'identification ne correspondent pas. :('], 401);
 
         }
 
@@ -90,24 +90,25 @@ class AuthController extends Controller
         // or simply i can implement a schedule to delete the expired tokens console/kernel.php  $schedule->command('sanctum:prune-expired --hours=24')->daily();
         // PersonalAccessToken::where('expires_at', '<', now())->delete();
 
-        // return $this->success([
-        //     'user' => $user,
-        //     'token' => $token,
-        // ],'Connecté avec succès. :)');
-        return response()->json([
+        return $this->success([
             'user' => $user,
             'token' => $token,
-            'message' => 'Connecté avec succès. :)'
-        ], 200);
+        ],'Connecté avec succès. :)');
+
+        // return response()->json([
+        //     'user' => $user,
+        //     'token' => $token,
+        //     'message' => 'Connecté avec succès. :)'
+        // ], 200);
 
     }
     public function logout()
     {
         auth()->user()->currentAccessToken()->delete();
-        // return $this->success([
-        //     'message' => 'Déconnecté avec succès et jeton supprimé. :)'
-        // ]);
-        return response()->json(['message' => 'Déconnecté avec succès et jeton supprimé. :)'], 200);
+        return $this->success([
+            'message' => 'Déconnecté avec succès et jeton supprimé. :)'
+        ]);
+        // return response()->json(['message' => 'Déconnecté avec succès et jeton supprimé. :)'], 200);
 
     }
 
@@ -130,13 +131,13 @@ class AuthController extends Controller
         // $personalAccessToken->save();
 
         // Return the new token
-        // return $this->success([
-        //     'token' => $token
-        // ], 'Jeton rafraîchi avec succès. :)');
-        return response()->json([
-            'token' => $token,
-            'message' => 'Jeton rafraîchi avec succès. :)'
-        ],200);
+        return $this->success([
+            'token' => $token
+        ], 'Jeton rafraîchi avec succès. :)');
+        // return response()->json([
+        //     'token' => $token,
+        //     'message' => 'Jeton rafraîchi avec succès. :)'
+        // ],200);
 
     }
 
