@@ -26,8 +26,8 @@ class AuthController extends Controller
 
         if ($existingUser) {
             // User already exists
-            // return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
-            return response()->json(['message' => 'Un utilisateur avec cet email existe déjà. :('], 409); // 409 Conflict
+            return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
+            // return response()->json(['message' => 'Un utilisateur avec cet email existe déjà. :('], 409); // 409 Conflict
 
         }
 
@@ -60,8 +60,8 @@ class AuthController extends Controller
         $request->validated($request->all());
         if(!Auth::attempt($request->only(['email','password'])))
         {
-            // return $this->error('','Les informations d\'identification ne correspondent pas. :(',401);
-            return response()->json(['message' => 'Les informations d\'identification ne correspondent pas. :('], 401);
+            return $this->error('','Les informations d\'identification ne correspondent pas. :(',401);
+            // return response()->json(['message' => 'Les informations d\'identification ne correspondent pas. :('], 401);
 
         }
 
@@ -94,6 +94,8 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
         ],'Connecté avec succès. :)');
+
+
         // return response()->json([
         //     'user' => $user,
         //     'token' => $token,
@@ -104,10 +106,10 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->user()->currentAccessToken()->delete();
-        // return $this->success([
-        //     'message' => 'Déconnecté avec succès et jeton supprimé. :)'
-        // ]);
-        return response()->json(['message' => 'Déconnecté avec succès et jeton supprimé. :)'], 200);
+        return $this->success([
+            'message' => 'Déconnecté avec succès et jeton supprimé. :)'
+        ]);
+        // return response()->json(['message' => 'Déconnecté avec succès et jeton supprimé. :)'], 200);
 
     }
 
@@ -130,13 +132,13 @@ class AuthController extends Controller
         // $personalAccessToken->save();
 
         // Return the new token
-        // return $this->success([
-        //     'token' => $token
-        // ], 'Jeton rafraîchi avec succès. :)');
-        return response()->json([
-            'token' => $token,
-            'message' => 'Jeton rafraîchi avec succès. :)'
-        ],200);
+        return $this->success([
+            'token' => $token
+        ], 'Jeton rafraîchi avec succès. :)');
+        // return response()->json([
+        //     'token' => $token,
+        //     'message' => 'Jeton rafraîchi avec succès. :)'
+        // ],200);
 
     }
 
