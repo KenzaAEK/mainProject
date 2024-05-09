@@ -44,15 +44,15 @@ class AuthController extends Controller
         //$token = $user->createToken('token-name', [], now()->addMinutes(30))->plainTextToken;  // automated in the config/sanctum.php file
 
 
-        // return $this->success([
-        //     'user' => $user,
-        //     'token' =>$token,
-        // ],'Inscription réussie. :)');
-        return response()->json([
+        return $this->success([
             'user' => $user,
-            'token' => $token,
-            'message' => 'Inscription réussie. :)'
-        ],200);
+            'token' =>$token,
+        ],'Inscription réussie. :)');
+        // return response()->json([
+        //     'user' => $user,
+        //     'token' => $token,
+        //     'message' => 'Inscription réussie. :)'
+        // ],201);
         
     }
     public function login(LoginUserRequest $request) 
@@ -90,15 +90,15 @@ class AuthController extends Controller
         // or simply i can implement a schedule to delete the expired tokens console/kernel.php  $schedule->command('sanctum:prune-expired --hours=24')->daily();
         // PersonalAccessToken::where('expires_at', '<', now())->delete();
 
-        // return $this->success([
-        //     'user' => $user,
-        //     'token' => $token,
-        // ],'Connecté avec succès. :)');
-        return response()->json([
+        return $this->success([
             'user' => $user,
             'token' => $token,
-            'message' => 'Connecté avec succès. :)'
-        ], 200);
+        ],'Connecté avec succès. :)');
+        // return response()->json([
+        //     'user' => $user,
+        //     'token' => $token,
+        //     'message' => 'Connecté avec succès. :)'
+        // ], 201);
 
     }
     public function logout()
