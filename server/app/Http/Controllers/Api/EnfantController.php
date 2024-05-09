@@ -31,9 +31,18 @@ class EnfantController extends Controller
      */
     public function store(StoreEnfantRequest $request)
     {
-        $enfant = Enfant::create($request->validated());
+        $user = auth()->user();
+
+            if (!$user || !$user->tuteur) {  // change to gate *********
+            return response()->json(['status' => 403, 'message' => 'Action non autorisée'], 403);
+        }
+
+        $data = $request->validated();
+        $data['idTuteur'] = $user->tuteur->idTuteur;
+
+        $enfant = Enfant::create($data);
+
         return response()->json(['status' => 201, 'message' => 'Enfant ajouté avec succès', 'enfant' => $enfant], 201);
-    
     }
 
     /**
@@ -60,6 +69,7 @@ class EnfantController extends Controller
      */
     public function update(UpdateEnfantRequest $request, $id)
     {
+        //use policies and gates ********
         try {
             $enfant = Enfant::findOrFail($id);
             $enfant->update($request->validated());

@@ -85,7 +85,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('demande_inscription', function (Blueprint $table) {
+        Schema::create('demandeInscription', function (Blueprint $table) {
             $table->id('idDemande');
             $table->string('optionsPaiement', 50);
             $table->enum('status', ['en attente', 'acceptée', 'refusée'])->default('en attente');

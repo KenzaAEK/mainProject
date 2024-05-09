@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\Auth\LoginUserRequest;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\Auth\StoreUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
@@ -34,7 +34,8 @@ class AuthController extends Controller
             'prenom' => $request->prenom,
             'email' => $request->email,
             'tel' => $request->tel,
-            'password' => Hash::make($request->password)    //or the  bcrypt($request->password)
+            'password' => Hash::make($request->password),    //or the  bcrypt($request->password)
+            'role' => "1", // 1 = parent , 2 = admin , 3 = animateur
         ]);
         $token = $user->createToken('token-name')->plainTextToken;
 
@@ -43,12 +44,10 @@ class AuthController extends Controller
 
         return $this->success([
             'user' => $user,
-            'token' =>$token
+            'token' =>$token,
         ],'Inscription réussie. :)');
+        
     }
-
-
-
     public function login(LoginUserRequest $request) 
     {
         $request->validated($request->all());
@@ -84,7 +83,7 @@ class AuthController extends Controller
 
         return $this->success([
             'user' => $user,
-            'token' => $token
+            'token' => $token,
         ],'Connecté avec succès. :)');
     }
     public function logout()
