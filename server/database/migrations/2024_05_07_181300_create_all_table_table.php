@@ -30,9 +30,6 @@ return new class extends Migration
             $table->time('heureFin');
         });
 
-        Schema::create('paiement_gateway', function (Blueprint $table) {
-            $table->id('idPaiment');
-        });
 
         Schema::create('packs', function (Blueprint $table) {
             $table->id('idPack');
@@ -60,7 +57,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('type_activites', function (Blueprint $table) {
+        Schema::create('typeactivites', function (Blueprint $table) {
             $table->id('idTypeActivite');
             $table->string('type', 50);
             $table->string('domaine', 50);
@@ -98,14 +95,14 @@ return new class extends Migration
 
         Schema::create('activites', function (Blueprint $table) {
             $table->id('idActivite');
-            $table->string('titre', 50);
+            $table->string('titre', 100);
             $table->text('description');
             $table->text('objectif');
             $table->string('imagePub', 50)->nullable();
             $table->string('lienYtb');
             $table->longText('programmePdf');
             $table->unsignedBigInteger('idTypeActivite');
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
         });
 
@@ -149,7 +146,7 @@ return new class extends Migration
             $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs')->nullable(); // pour tester sinon il faut enlever nullable !!!
         });
 
-        Schema::create('offre_activite', function (Blueprint $table) {
+        Schema::create('offreactivites', function (Blueprint $table) {
             $table->unsignedBigInteger('idOffre');
             $table->unsignedBigInteger('idActivite');
             $table->decimal('tarif', 15, 5);
@@ -163,7 +160,7 @@ return new class extends Migration
             $table->primary(['idOffre', 'idActivite']);
             $table->foreign('idOffre')->references('idOffre')->on('offres');
             $table->foreign('idActivite')->references('idActivite')->on('activites');
-            $table->foreign('idPaiment')->references('idPaiment')->on('paiement_gateway');
+           
         });
 
         Schema::create('groupes', function (Blueprint $table) {
@@ -174,7 +171,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idAnimateur');
 
             $table->unique(['idOffre', 'idActivite']);
-            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offre_activite');
+            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
             $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
         });
 
@@ -197,7 +194,7 @@ return new class extends Migration
 
             $table->primary(['idHoraire', 'idOffre', 'idActivite']);
             $table->foreign('idHoraire')->references('idHoraire')->on('horaires');
-            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offre_activite');
+            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
         });
 
         Schema::create('disponibilite_animateur', function (Blueprint $table) {
@@ -219,7 +216,7 @@ return new class extends Migration
             $table->primary(['idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
 
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
-            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offre_activite');
+            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
         });
 
         Schema::create('enfant_groupe', function (Blueprint $table) {
@@ -248,7 +245,7 @@ return new class extends Migration
             $table->string('Niveau_requis', 50);
             $table->primary(['idTypeActivite', 'idCompetence']);
 
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->foreign('idCompetence')->references('idCompetence')->on('competences');
         });
 
@@ -262,7 +259,7 @@ return new class extends Migration
 
             $table->foreign('idDemande')->references('idDemande')->on('demande_inscription');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
-            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offre_activite');
+            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
         });
     }
 
@@ -292,13 +289,13 @@ return new class extends Migration
         Schema::dropIfExists('packs');
         Schema::dropIfExists('tuteurs');
         Schema::dropIfExists('notifications');
-        Schema::dropIfExists('offre_activite');
+        Schema::dropIfExists('offreactivites');
         Schema::dropIfExists('paiement_gateway');
         Schema::dropIfExists('offres');
         Schema::dropIfExists('horaires');
         Schema::dropIfExists('administrateurs');
         Schema::dropIfExists('activites');
-        Schema::dropIfExists('type_activites');
+        Schema::dropIfExists('typeactivites');
 
         
     }

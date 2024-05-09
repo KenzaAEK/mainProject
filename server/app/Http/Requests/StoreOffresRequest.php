@@ -23,12 +23,13 @@ class StoreOffresRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'titre' => 'required|string|max:255',//
-            'remise' => 'nullable|numeric',//
-            'dateDebutOffre' => 'nullable|date|before_or_equal:dateFinOffre',//
-            'dateFinOffre' => 'nullable|date|after_or_equal:dateDebutOffre',//
-            'description' => 'nullable|string',//horaire+les ateliers+plage ages
+        return [ 
+            
+        'titre' => 'required|string|max:255',
+        'remise' => 'nullable|numeric',
+        'dateDebutOffre' => 'required|date',
+        'dateFinOffre' => 'required|date|after_or_equal:dateDebutOffre',
+        'description' => 'nullable|string',
         ];
     }
     public function messages()

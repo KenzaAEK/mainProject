@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Type_activite extends Model
+class Typeactivite extends Model
 {
     use HasFactory;
 
     protected $primaryKey = 'idTypeActivite';
-    protected $table = 'type_activites';
+    protected $table = 'typeactivites';
     protected $fillable = [
         'type',
         'domaine'

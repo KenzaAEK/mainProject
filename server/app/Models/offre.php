@@ -19,6 +19,9 @@ class Offre extends Model
         'description',
         'titre'
     ];
+
+
+
      public function administrateurs()
     {
         return $this->belongsTo(Administrateur::class);

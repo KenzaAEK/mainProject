@@ -8,18 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class offreActivite extends Model
 {
     use HasFactory;
+    protected $primaryKey = ['idOffre', 'idActivite'];
+    protected $table = 'offreactivite';
     
     protected $fillable = [
         'tarif',
         'effmax',
         'effmin',
         'nbrSeance',
-        'Duree',
+        'Duree_en_heure',
         'idOffre',
-        'idPayment',
-        'idActivite'
+        'idActivite',
+        'age_max',
+        'age_max'
         ];
-    
     
     
     public function offre()

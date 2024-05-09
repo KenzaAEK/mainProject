@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 use App\Models\Offre;
+use App\Models\offreActivite;
+use App\Models\horaire;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Activite;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreOffresRequest;
-use App\Http\Requests\UpdateActiviteRequest;
+use App\Http\Requests\StoreOffresActiviteRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -31,16 +33,45 @@ class OffreController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreOffresRequest $request)
+    public function store(Request $request)
     {
-        $offre = new Offre($request->validated());
+        // Valider les données de l'offre principale
+        $storeOffresRequest = new StoreOffresRequest();
+        $offreValidated = $request->validate($storeOffresRequest->rules(), $storeOffresRequest->messages());
+
+        // Créer et sauvegarder l'offre
+        $offre = new Offre($offreValidated);
         $offre->idAdmin = Auth::id();
         $offre->save();
-        //return $this->success($activite, 'Activité ajoutée avec succès', 201);
-        return response()->json(['status' => 201, 'message' => 'Offre ajoutée avec succès', 'offre' => $offre], 201);
+
+        // Traitement et validation des activités associées à l'offre
+        $activitesData = $request->input('activites');
+        foreach ($activitesData as $atelierData) {
+            $storeOffresActiviteRequest = new StoreOffresActiviteRequest();
+
+            // Valider chaque ensemble d'activités
+            $activiteValidated = Validator::make($atelierData, $storeOffresActiviteRequest->rules())->validate();
+
+            // Créer et sauvegarder chaque activité associée à l'offre
+            $offreActivite = new offreActivite([
+                'idOffre' => $offre->id,
+                'idActivite' => $activiteValidated['idActivite'],
+                'tarif' => $activiteValidated['tarif'],
+                'effmax' => $activiteValidated['effmax'],
+                'effmin' => $activiteValidated['effmin'],
+                'age_min' => $activiteValidated['age_min'],
+                'age_max' => $activiteValidated['age_max'],
+                'nbrSeance' => $activiteValidated['nbrSeance'],
+                'Duree_en_heure' => $activiteValidated['Duree_en_heure']
+            ]);
+            $offreActivite->save();
+        }
+
+        // Répondre avec un message de succès
+        return response()->json(['message' => 'Offre et activités créées avec succès', 'id' => $offre->id, 'idAdmin' => $offre->idAdmin]);
     }
 
-
+     
     /**
      * Display the specified resource.
      *
@@ -66,14 +97,14 @@ class OffreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateActiviteRequest  $request, $id)
+    public function update(StoreOffreRequest $request, $id)
     {
         try {
-            $activite = Activite::findOrFail($id);
+            $activite = Offre::findOrFail($id);
             $activite->update($request->validated());
-            return response()->json(['status' => 200, 'message' => 'Activité mise à jour avec succès', 'activite' => $activite], 200);
+            return response()->json(['status' => 200, 'message' => 'Offre mise à jour avec succès', 'offre' => $offre], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['status' => 404, 'message' => 'Activité non trouvée'], 404);
+            return response()->json(['status' => 404, 'message' => 'Offre non trouvée'], 404);
         }
     }
 
@@ -85,12 +116,12 @@ class OffreController extends Controller
      */
     public function destroy($id)
     {
-        $activite = Activite::find($id);
+        $activite = Offre::find($id);
         if (!$activite) {
-            return response()->json(['status' => 404, 'message' => "Aucune activité trouvée"], 404);
+            return response()->json(['status' => 404, 'message' => "Aucune offre trouvée"], 404);
         }
 
         $activite->delete();
-        return response()->json(['status' => 200, 'message' => "Activité supprimée avec succès"], 200);
+        return response()->json(['status' => 200, 'message' => "Offre supprimée avec succès"], 200);
     }
 }
