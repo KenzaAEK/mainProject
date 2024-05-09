@@ -45,7 +45,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
       .bg-custom-color {
         background-color: #F6F5F4 ;
       }
