@@ -146,7 +146,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('idAdmin');
 
-            $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs');
+            $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs')->nullable(); // pour tester sinon il faut enlever nullable !!!
         });
 
         Schema::create('offre_activite', function (Blueprint $table) {

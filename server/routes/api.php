@@ -20,6 +20,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
     Route::post('/offres',[OffreController::class,'store']);
+    Route::get('/offres/{offres}',[OffreController::class,'show']);
 
     // for admins only and authenticated  
     //add middlewear check role 

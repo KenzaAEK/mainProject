@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use App\Models\Offre;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Activite;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\Admin\StoreOffresRequest;
-use App\Http\Requests\Admin\UpdateActiviteRequest;
+use App\Http\Requests\StoreOffresRequest;
+use App\Http\Requests\UpdateActiviteRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -36,7 +37,7 @@ class OffreController extends Controller
         $offre->idAdmin = Auth::id();
         $offre->save();
         //return $this->success($activite, 'Activité ajoutée avec succès', 201);
-        return response()->json(['status' => 201, 'message' => 'Activité ajoutée avec succès', 'activite' => $activite], 201);
+        return response()->json(['status' => 201, 'message' => 'Offre ajoutée avec succès', 'offre' => $offre], 201);
     }
 
 
@@ -49,10 +50,10 @@ class OffreController extends Controller
     public function show($id)
     {
         
-        $activite = Activite::find($id);
-        return $activite
-            ? response()->json(['status' => 200, 'activite' => $activite], 200)
-            : response()->json(['status' => 404, 'message' => "Aucune activité trouvée"], 404);
+        $offre = Offre::find($id);
+        return $offre
+            ? response()->json(['status' => 200, 'offre' => $offre], 200)
+            : response()->json(['status' => 404, 'message' => "Aucun offre trouvée"], 404);
     
 
         
