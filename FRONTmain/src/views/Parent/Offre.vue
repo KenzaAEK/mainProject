@@ -34,12 +34,39 @@
                  <a class="btnn ">programme</a>
             </div>
         </div>
+        <a class="btn1 btn" onclick="my_modal_2.showModal()">Inscrivez votre enfant</a>
+                <dialog id="my_modal_2" class="modal">
+                    <AjouterOffre/>
+                  </dialog>
         
     </section>
     
     
 </template>
+<script>
+import AjouterOffre from './AjouterOffre.vue';
+
+export default {
+    name: 'App',
+    components: { 
+        AjouterOffre
+    }
+  }
+</script>
 <style scoped>
+.btn1{
+    margin-top: 1rem;
+    color: #FFFFFF;
+    background-color: #A3B18A;
+    padding: .5rem .8rem;
+    border-radius: 2rem;
+    transition: .7s ease;
+    margin-left: 34rem;
+}
+.btn1:hover {
+    transform: scale(1.03);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 section{
     padding-top: 8rem;
     background-color: #F6F5F4;
