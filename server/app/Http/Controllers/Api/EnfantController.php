@@ -8,6 +8,7 @@ use App\Http\Requests\Tuteur\UpdateEnfantRequest;
 use Illuminate\Http\Request;
 use App\Models\Enfant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Resources\EnfantResource;
 
 
 class EnfantController extends Controller
@@ -31,18 +32,26 @@ class EnfantController extends Controller
      */
     public function store(StoreEnfantRequest $request)
     {
-        $user = auth()->user();
+         $request->validated(); // Ensure all data is validated
+     // Example static id, ideally this should be dynamic or from logged-in user
+     // Example static id, ideally this should be dynamic or from logged-in user
 
-            if (!$user || !$user->tuteur) {  // change to gate *********
-            return response()->json(['status' => 403, 'message' => 'Action non autorisée'], 403);
-        }
+    $enfant = Enfant::create([
+        'nom' => $request->nom,
+        'prenom' => $request->prenom,
+        'dateNaissance' => $request->dateNaissance,
+        'niveauEtude' => $request->niveauEtude,
+        'idTuteur' => $request->idTuteur
+        
 
-        $data = $request->validated();
-        $data['idTuteur'] = $user->tuteur->idTuteur;
+    ]);
 
-        $enfant = Enfant::create($data);
 
-        return response()->json(['status' => 201, 'message' => 'Enfant ajouté avec succès', 'enfant' => $enfant], 201);
+    return response()->json([
+        'status' => 201,
+        'message' => 'Enfant ajouté avec succès',
+        'enfant' => $enfant
+    ], 201);
     }
 
     /**
@@ -55,9 +64,9 @@ class EnfantController extends Controller
     {
         $enfant = Enfant::find($id);
         return $enfant
-            ? response()->json(['status' => 200, 'enfant' => $enfant], 200)
-            : response()->json(['status' => 404, 'message' => "Aucun enfant trouvé"], 404);
-    
+        ? new EnfantResource($enfant)
+        : response()->json(['status' => 404, 'message' => "Aucun enfant trouvé"], 404);
+
     }
 
     /**

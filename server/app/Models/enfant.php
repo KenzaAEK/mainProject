@@ -10,6 +10,7 @@ class Enfant extends Model
     use HasFactory;
     protected $table = 'enfants';
     protected $primaryKey = 'idEnfant';
+
     protected $fillable = [
     'idEnfant',
     'prenom',
@@ -18,7 +19,7 @@ class Enfant extends Model
     'niveauEtude', 
     'idTuteur'];
     public $timestamps = false;
-    public function tuteurs() {
+    public function tuteur() {
         return $this->belongsTo(Tuteur::class); // cest le parent
     }
     public function groupes() {

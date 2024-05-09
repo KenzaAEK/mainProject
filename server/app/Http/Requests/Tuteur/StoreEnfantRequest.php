@@ -28,7 +28,7 @@ class StoreEnfantRequest extends FormRequest
             'nom' => 'required|string|max:100',
             'dateNaissance' => 'required|date|before:today',
             'niveauEtude' => 'required|string|max:100',
-            'idTuteur' => 'required'  // add (the id should exist in tuteurs table)
+             // add (the id should exist in tuteurs table)
         ];
     }
     public function messages()

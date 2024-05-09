@@ -16,8 +16,9 @@ class Pack extends Model
         'type',
         'limite'
     ];
+    
     public function demande_inscription()
     {
-        return $this->hasMany(Demande_inscription::class, 'idPack');
+        return $this->hasMany(DemandeInscription::class, 'idPack');
     }
 }
