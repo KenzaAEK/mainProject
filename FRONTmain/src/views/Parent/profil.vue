@@ -76,10 +76,10 @@
                         </div>
                     </div>
                 </div>
-                <a class="btn1 btn" onclick="my_modal_2.showModal()">Ajouter offre</a>
-                <dialog id="my_modal_2" class="modal">
+                <a class="btn1 btn"  href="#offres">Ajouter offre</a>
+                <!--<dialog id="my_modal_2" class="modal">
                     <AjouterOffre/>
-                  </dialog>   
+                  </dialog>   -->
             </div>
         </div>
     </section>
@@ -165,13 +165,10 @@
 </style>
 <script>
 import AjouterEnfant from './AjouterEnfant.vue'
-import AjouterOffre from './AjouterOffre.vue';
-
 export default {
     name: 'App',
     components: { 
-        AjouterEnfant,
-        AjouterOffre
+        AjouterEnfant
     }
   }
 </script>
