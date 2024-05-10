@@ -87,7 +87,7 @@ return new class extends Migration
 
         Schema::create('demandeInscriptions', function (Blueprint $table) {
             $table->id('idDemande');
-            $table->string('optionsPaiement', 50);
+            $table->enum('optionsPaiement', ['mois', 'trimestre', 'semestre', 'annee'])->default('mois')->change();
             $table->enum('status', ['en attente', 'acceptée', 'refusée'])->default('en attente');
             $table->date('dateDemande')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->unsignedBigInteger('idPack');

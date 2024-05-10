@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Enfant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\EnfantResource;
-
+use Illuminate\Support\Facades\Log;
 
 class EnfantController extends Controller
 {
@@ -32,26 +32,24 @@ class EnfantController extends Controller
      */
     public function store(StoreEnfantRequest $request)
     {
-         $request->validated(); // Ensure all data is validated
-     // Example static id, ideally this should be dynamic or from logged-in user
-     // Example static id, ideally this should be dynamic or from logged-in user
+        // use policies and gates ********
+        $request->validated(); 
 
-    $enfant = Enfant::create([
-        'nom' => $request->nom,
-        'prenom' => $request->prenom,
-        'dateNaissance' => $request->dateNaissance,
-        'niveauEtude' => $request->niveauEtude,
-        'idTuteur' => $request->idTuteur
-        
-
-    ]);
-
-
-    return response()->json([
-        'status' => 201,
-        'message' => 'Enfant ajouté avec succès',
-        'enfant' => $enfant
-    ], 201);
+        $user = auth()->user();
+        $tuteur = $user->tuteur;
+        $enfant = Enfant::create([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'dateNaissance' => $request->dateNaissance,
+            'niveauEtude' => $request->niveauEtude,
+            'idTuteur' => $tuteur->idTuteur
+        ]);
+    
+        return response()->json([
+            'status' => 201,
+            'message' => 'Enfant ajouté avec succès',
+            'enfant' => $enfant
+        ], 201);
     }
 
     /**

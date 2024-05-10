@@ -21,7 +21,7 @@ class Tuteur extends Model
         
     }
     public function demande_inscription() {
-        return $this->hasMany(Demande_inscription::class, 'idTuteur');
+        return $this->hasMany(DemandeInscription::class, 'idTuteur');
     }
     public function enfants() {
         return $this->hasMany(Enfant::class, 'idTuteur');
