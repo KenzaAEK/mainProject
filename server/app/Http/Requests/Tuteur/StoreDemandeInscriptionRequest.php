@@ -24,11 +24,8 @@ class StoreDemandeInscriptionRequest extends FormRequest
     public function rules()
     {
         return [
-            'optionsPaiement' => 'required|string|max:50',
-            'status' => 'required|in:en attente,acceptée,refusée',
-            'idTuteur' => 'required', // the idTuteur should be in tuteurs table
-            'idPack' => 'required', // the idPack should be in packs table
-            'dateDemande' => 'required|date' 
+            'optionsPaiement' => 'required|in:mois,trimestre,semestre,annee',
+            'typePack' => 'required|in:ateliers,enfants,pack_ateliers', 
         ];
     }
     public function messages()

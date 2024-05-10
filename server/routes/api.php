@@ -11,7 +11,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 
-Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
@@ -19,6 +18,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
     Route::apiResource('enfants', EnfantController::class);
+    Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+
 
     
 

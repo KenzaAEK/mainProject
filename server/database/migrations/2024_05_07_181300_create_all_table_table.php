@@ -36,7 +36,7 @@ return new class extends Migration
 
         Schema::create('packs', function (Blueprint $table) {
             $table->id('idPack');
-            $table->integer('type');
+            $table->string('type');
             $table->decimal('remise', 5, 2)->nullable();;
             $table->date('limite')->nullable();
         });
