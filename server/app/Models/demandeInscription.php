@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class demandeInscription extends Model
+class DemandeInscription extends Model
 {
     use HasFactory;
-    protected $table = 'demandeInscriptions';
+    protected $table = 'demande_inscriptions';
     protected $primaryKey = 'idDemande';
     protected $fillable = [
         'optionsPaiement',

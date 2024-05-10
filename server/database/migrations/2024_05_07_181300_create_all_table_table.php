@@ -85,9 +85,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('demandeInscriptions', function (Blueprint $table) {
+        Schema::create('demande_inscriptions', function (Blueprint $table) {
             $table->id('idDemande');
-            $table->enum('optionsPaiement', ['mois', 'trimestre', 'semestre', 'annee'])->default('mois')->change();
+            $table->enum('optionsPaiement', ['mois', 'trimestre', 'semestre', 'annee']);
             $table->enum('status', ['en attente', 'acceptée', 'refusée'])->default('en attente');
             $table->date('dateDemande')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->unsignedBigInteger('idPack');
@@ -295,7 +295,7 @@ return new class extends Migration
         Schema::dropIfExists('devis');
         Schema::dropIfExists('factures');
         Schema::dropIfExists('competences');
-        Schema::dropIfExists('demandeInscriptions');
+        Schema::dropIfExists('demande_inscriptions');
         Schema::dropIfExists('packs');
         Schema::dropIfExists('tuteurs');
         Schema::dropIfExists('notifications');
