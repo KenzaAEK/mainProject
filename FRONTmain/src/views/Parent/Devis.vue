@@ -24,9 +24,9 @@
             <!-- head -->
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Job</th>
-                <th>Favorite Color</th>
+                <th>Ateliers</th>
+                <th>nombre d’enfants</th>
+                <th>Pack inscription</th>
               </tr>
             </thead>
             <tbody>
@@ -54,7 +54,10 @@
         <div class="btns">
           <h4 class="valable">Offre valable jusq’au ..../..../.....</h4>
           <a class="btn btn-success" style="border-radius: 1.2rem; margin-right:.2rem">accepter</a>
-          <a class="btn btn-error" style="margin-right: -18rem;border-radius: 1.2rem;">refuser</a> 
+          <a class="btn btn-error" style="margin-right: -18rem;border-radius: 1.2rem;" onclick="my_modal_re.showModal()">refuser</a> 
+          <dialog id="my_modal_re" class="modal">
+            <Refus/>
+          </dialog>
         </div>
         <a class="btn" style="background-color:#3A5A40; border-radius: 1.2rem;margin-right: 17rem;margin-top: 2rem;">Devis PDF</a>
         <button class="btn" style="margin-top:2rem; background-color:black; color:antiquewhite;border-radius: 1.2rem;">Close</button>
@@ -105,8 +108,13 @@
 
 <script>
 import axios from 'axios';
+import Refus from './Refus.vue';
 
 export default {
+  name: 'App',
+    components: { 
+      Refus
+    },
   methods: {
     async downloadPDF() {
       try {
