@@ -9,10 +9,12 @@ use Illuminate\Http\Request;
 use App\Models\Enfant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\EnfantResource;
+use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Log;
 
 class EnfantController extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      *
@@ -21,8 +23,7 @@ class EnfantController extends Controller
     public function index()
     {
         $enfants = Enfant::paginate(10);  
-        return response()->json($enfants);
-    }
+        return $this->success($enfants, 'Liste des enfants récupérée avec succès', 200);    }
 
     /**
      * Store a newly created resource in storage.
@@ -45,11 +46,8 @@ class EnfantController extends Controller
             'idTuteur' => $tuteur->idTuteur
         ]);
     
-        return response()->json([
-            'status' => 201,
-            'message' => 'Enfant ajouté avec succès',
-            'enfant' => $enfant
-        ], 201);
+        return $this->success($enfant, 'Enfant ajouté avec succès', 201);
+
     }
 
     /**
@@ -80,9 +78,9 @@ class EnfantController extends Controller
         try {
             $enfant = Enfant::findOrFail($id);
             $enfant->update($request->validated());
-            return response()->json(['status' => 200, 'message' => 'Enfant mis à jour avec succès', 'enfant' => $enfant], 200);
+            return $this->success($enfant, 'Enfant mis à jour avec succès', 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['status' => 404, 'message' => 'Enfant non trouvé'], 404);
+            return $this->error(null, 'Enfant non trouvé', 404);
         }
     }
 
@@ -96,11 +94,11 @@ class EnfantController extends Controller
     {
         $enfant = Enfant::find($id);
         if (!$enfant) {
-            return response()->json(['status' => 404, 'message' => "Aucun enfant trouvé"], 404);
+            return $this->error(null, 'Aucun enfant trouvé', 404);
         }
 
         $enfant->delete();
-        return response()->json(['status' => 200, 'message' => "Enfant supprimé avec succès"], 200);
+        return $this->success(null, 'Enfant supprimé avec succès', 200);
     
     }
 }
