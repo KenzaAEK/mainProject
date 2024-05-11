@@ -12,7 +12,7 @@
       <div class="w-full  lg:w-1/2 flex items-center justify-center">
         <div class="max-w-md w-full p-6">
           <h1 class="text-3xl  mb-6 conn text-center">S'inscrire</h1> 
-          <form @submit.prevent="handleSubmit" enctype="multipart/form-data" class="space-y-4">
+          <form @submit.prevent="registerUser" class="space-y-4">
             <!-- Your form elements go here -->
             <div>
               <input required placeholder="Nom" type="text" id="Nom" v-model="nom" name="Nom" class="mt-1 p-2 w-full border-b  focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
@@ -27,7 +27,7 @@
               <input required placeholder="Adresse e-mail" type="email" id="Email" v-model="email" name="Email" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
             </div>
             <div>
-              <input required placeholder="Fonction" type="text" id="Fonction" v-model="fonction" name="Fonction" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+              <input  placeholder="Fonction" type="text" id="Fonction" v-model="fonction" name="Fonction" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
             </div>
             <div class="relative">
               <input required placeholder="Mot de passe" type="password" id="password" v-model="password" name="password" 
@@ -77,22 +77,20 @@
   </template>
   <script>
   import axios from 'axios';
+  import VueCookies from 'vue-cookies';
   export default {
     name: 'Register',
     data() {
-      return {
-        nom: '',
-        prenom: '',
-        numero: '',
-        email: '',
-        fonction: '',
-        password: '',
-        confirmPassword: '',
-        photo: null,
-        showPassword1: false,
-        showPassword2: false
-      }
-    },
+    return {
+      nom: '',
+      prenom: '',
+      numero: '',
+      email: '',
+      fonction: '',
+      password: '',
+      confirmPassword: ''
+    }
+  },
     methods: {
       togglePasswordVisibility() {
       this.showPassword1 = !this.showPassword1;
@@ -104,29 +102,28 @@
       const passwordInput = document.getElementById('confirmPassword');
       passwordInput.type = this.showPassword2 ? 'text' : 'password';
       },
-      handleFileUpload(event) {
-        this.photo = event.target.files[0];
-      },
-      async handleSubmit() {
-        // Logique pour soumettre le formulaire
-        try{
-          if(this.password !== this.confirmPassword) {
-            throw new Error('Les mots de passe ne correspondent pas');
-          }
-          await this.$store.dispatch('auth/register', {
-            nom: this.nom,
-            prenom: this.prenom,
-            numero: this.numero,
-            email: this.email,
-            fonction: this.fonction,
-            password: this.password,
-            photo: this.photo,
-          });
-          this.$router.push('/login');
-        } catch (error){
-          console.error('Échec de lenregistrement:', error);
-        }
+      async registerUser() {
+      try {
+        const response = await axios.post('/register/', {
+          nom: this.nom,
+          prenom: this.prenom,
+          tel: this.numero,
+          email: this.email,
+          password: this.password,
+          password_confirmation: this.confirmPassword
+        });
+        console.log(response.data); // Handle successful registration
+        // Redirect user to login page or show success message
+        // Extract token from response data
+        const token = response.data.token;
+        VueCookies.set('token', token, { expires: '7d' }); // Token expires in 7 days
+        this.$router.push('/parent');
+      } catch (error) {
+        console.error('Registration error:', error.response.data); // Handle registration error
+        // Display error message to the user
       }
+    }
+      
     }
   };
   </script>
