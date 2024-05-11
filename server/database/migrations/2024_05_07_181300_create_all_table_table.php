@@ -156,7 +156,6 @@ return new class extends Migration
             $table->integer('age_max');
             $table->integer('nbrSeance');
             $table->integer('Duree_en_heure');
-            $table->unsignedBigInteger('idPaiment');
             $table->primary(['idOffre', 'idActivite']);
             $table->foreign('idOffre')->references('idOffre')->on('offres');
             $table->foreign('idActivite')->references('idActivite')->on('activites');

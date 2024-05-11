@@ -1,15 +1,18 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Offre;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class offreActivite extends Model
 {
     use HasFactory;
-    protected $primaryKey = ['idOffre', 'idActivite'];
-    protected $table = 'offreactivite';
+    
+    protected $table = 'offreactivites';
+    public $timestamps = false; 
+    public $incrementing = false;
+
     
     protected $fillable = [
         'tarif',
@@ -20,18 +23,13 @@ class offreActivite extends Model
         'idOffre',
         'idActivite',
         'age_max',
-        'age_max'
+        'age_min'
         ];
     
     
     public function offre()
     {
         return $this->belongsTo(Offre::class, 'idOffre');
-    }
-
-    public function paymentGateway()
-    {
-        return $this->belongsTo(PaymentGateway::class, 'idPayment')->withDefault();
     }
 
     public function activite()

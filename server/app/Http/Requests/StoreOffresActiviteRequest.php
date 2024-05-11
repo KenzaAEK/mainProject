@@ -24,16 +24,16 @@ class StoreOffresActiviteRequest extends FormRequest
     public function rules()
     {
         return [
+           
+            'idActivite' => 'required|exists:activites,idActivite',
             'tarif' => 'required|numeric',
             'effmax' => 'required|integer',
             'effmin' => 'required|integer',
-            'nbrSeance' => 'required|integer',
-            'Duree_en_heure' => 'required|integer',
-            'idActivite' => 'required|exists:activites,idActivite',
-            'age_max' => 'required|integer',
             'age_min' => 'required|integer',
+            'age_max' => 'required|integer',
+            'nbrSeance' => 'required|integer',
+            'Duree_en_heure' => 'required|numeric',  // Assurez-vous que cette règle accepte les décimales si nécessaire
         ];
     }
-
 
 }

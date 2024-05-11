@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+use Illuminate\Support\Facades\DB;
 use App\Models\Offre;
 use App\Models\offreActivite;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\horaire;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -33,44 +36,48 @@ class OffreController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // Valider les données de l'offre principale
-        $storeOffresRequest = new StoreOffresRequest();
-        $offreValidated = $request->validate($storeOffresRequest->rules(), $storeOffresRequest->messages());
 
-        // Créer et sauvegarder l'offre
-        $offre = new Offre($offreValidated);
-        $offre->idAdmin = Auth::id();
-        $offre->save();
+     
+     public function store(Request $request)
+     {
+         $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
+         if ($validator->fails()) {
+             return response()->json(['errors' => $validator->errors()], 422);
+         }
+     
+         DB::beginTransaction();
+         try {
+            $offreData = $validator->validated();
+            $offreData['idAdmin'] = Auth::id();  // Ajoutez idAdmin ici si c'est nécessaire
+            $offre = Offre::create($offreData);
+            
 
-        // Traitement et validation des activités associées à l'offre
-        $activitesData = $request->input('activites');
-        foreach ($activitesData as $atelierData) {
-            $storeOffresActiviteRequest = new StoreOffresActiviteRequest();
-
-            // Valider chaque ensemble d'activités
-            $activiteValidated = Validator::make($atelierData, $storeOffresActiviteRequest->rules())->validate();
-
-            // Créer et sauvegarder chaque activité associée à l'offre
-            $offreActivite = new offreActivite([
-                'idOffre' => $offre->id,
-                'idActivite' => $activiteValidated['idActivite'],
-                'tarif' => $activiteValidated['tarif'],
-                'effmax' => $activiteValidated['effmax'],
-                'effmin' => $activiteValidated['effmin'],
-                'age_min' => $activiteValidated['age_min'],
-                'age_max' => $activiteValidated['age_max'],
-                'nbrSeance' => $activiteValidated['nbrSeance'],
-                'Duree_en_heure' => $activiteValidated['Duree_en_heure']
-            ]);
-            $offreActivite->save();
-        }
-
-        // Répondre avec un message de succès
-        return response()->json(['message' => 'Offre et activités créées avec succès', 'id' => $offre->id, 'idAdmin' => $offre->idAdmin]);
-    }
-
+     
+            
+             // Comment out the activities processing to isolate the issue
+             
+             foreach ($request->activites as $activiteData) {
+                 $activiteValidator = Validator::make($activiteData, (new StoreOffresActiviteRequest)->rules());
+                 if ($activiteValidator->fails()) {
+                     
+                     return response()->json(['errors' => $activiteValidator->errors()], 422);
+                 }
+                 $activite = new OffreActivite($activiteValidator->validated());
+                 $activite->idOffre = $offre->idOffre;
+                 $activite->save();
+             }
+             
+     
+             DB::commit();
+             
+             return response()->json(['message' => 'Offre créée avec succès', 'id' => $offre->idOffre, 'idAdmin' => $offre->idAdmin]);
+         } catch (\Exception $e) {
+             DB::rollback();
+             return response()->json(['message' => 'Erreur lors de la création de l\'offre', 'error' => $e->getMessage()], 500);
+         }
+     }
+     
+    
      
     /**
      * Display the specified resource.
@@ -80,16 +87,28 @@ class OffreController extends Controller
      */
     public function show($id)
     {
-        
-        $offre = Offre::find($id);
-        return $offre
-            ? response()->json(['status' => 200, 'offre' => $offre], 200)
-            : response()->json(['status' => 404, 'message' => "Aucun offre trouvée"], 404);
+        try {
+            // Charger l'offre avec ses activités associées grâce à la méthode with()
+            $offre = Offre::with('offreActivite')->findOrFail($id);
     
-
-        
+            return response()->json([
+                'status' => 200,
+                'offre' => $offre,
+                'activites' => $offre->offreActivite  // Inclure les activités dans la réponse
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Offre non trouvée'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Erreur serveur : ' . $e->getMessage()
+            ], 500);
+        }
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -97,31 +116,72 @@ class OffreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreOffreRequest $request, $id)
+    public function update(StoreOffresRequest $request, $id)
     {
+        $validator = Validator::make($request->all(), $request->rules());
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+    
+        DB::beginTransaction();
         try {
-            $activite = Offre::findOrFail($id);
-            $activite->update($request->validated());
-            return response()->json(['status' => 200, 'message' => 'Offre mise à jour avec succès', 'offre' => $offre], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['status' => 404, 'message' => 'Offre non trouvée'], 404);
+        $offre = Offre::findOrFail($id);
+        $offre->update($request->validated());
+            
+        $activitesData = $request->activites;
+        foreach ($request->activites as $activiteData) {
+            $activite = OffreActivite::where('idOffre', $offre->idOffre)
+                                     ->where('idActivite', $activiteData['idActivite'])
+                                     ->first();
+
+            if ($activite) {
+                // Mise à jour de l'activité existante
+                $activite->update([
+                    'tarif' => $activiteData['tarif'],
+                    'effmax' => $activiteData['effmax'],
+                    'effmin' => $activiteData['effmin'],
+                    'age_min' => $activiteData['age_min'],
+                    'age_max' => $activiteData['age_max'],
+                    'nbrSeance' => $activiteData['nbrSeance'],
+                    'Duree_en_heure' => $activiteData['Duree_en_heure']
+                ]);
+            } 
         }
+
+        DB::commit();  // Engagement de toutes les opérations
+        return response()->json(['message' => 'Offre et activités mises à jour avec succès', 'id' => $offre->idOffre, 'idAdmin' => $offre->idAdmin]);
+    } catch (ModelNotFoundException $e) {
+        DB::rollback();
+        return response()->json(['status' => 404, 'message' => 'Offre non trouvée'], 404);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['message' => 'Erreur lors de la mise à jour de l\'offre', 'error' => $e->getMessage()], 500);
+    }
+}
+
+
+public function destroy($id)
+{
+    $offre = Offre::with('offreActivite')->find($id);  // Assurez-vous d'inclure toutes les relations nécessaires
+    if (!$offre) {
+        return response()->json(['status' => 404, 'message' => "Aucune offre trouvée"], 404);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $activite = Offre::find($id);
-        if (!$activite) {
-            return response()->json(['status' => 404, 'message' => "Aucune offre trouvée"], 404);
+    DB::beginTransaction();
+    try {
+        // Supprimer les activités liées ou d'autres entités dépendantes
+        foreach ($offre->offreActivite as $activite) {
+            $activite->delete();
         }
 
-        $activite->delete();
+        // Suppression de l'offre après la suppression de toutes les dépendances
+        $offre->delete();
+        DB::commit();
         return response()->json(['status' => 200, 'message' => "Offre supprimée avec succès"], 200);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['status' => 500, 'message' => "Erreur lors de la suppression de l'offre", 'error' => $e->getMessage()], 500);
     }
+}
+
 }
