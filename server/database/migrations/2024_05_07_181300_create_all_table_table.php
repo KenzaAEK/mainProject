@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id('idNotification');
             $table->string('contenu'); 
-            $table->boolean('statut')->default(false);;
+            $table->boolean('statut')->default(false);
             $table->unsignedBigInteger('idUser');
             $table->timestamp('read_at')->nullable();
             $table->foreign('idUser')->references('idUser')->on('users')->onDelete('cascade');
@@ -109,14 +109,13 @@ return new class extends Migration
         });
 
         Schema::create('enfants', function (Blueprint $table) {
-             $table->unsignedBigInteger('idTuteur');
-             $table->unsignedBigInteger('idEnfant');
-             $table->string('prenom', 100);
-             $table->date('dateNaissance');
-             $table->string('niveauEtude', 50);
-             $table->string('nom', 100);
-             $table->primary(['idTuteur', 'idEnfant']);
-             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
+            $table->id('idEnfant');
+            $table->unsignedBigInteger('idTuteur');
+            $table->string('prenom', 100);
+            $table->date('dateNaissance');
+            $table->string('niveauEtude', 50);
+            $table->string('nom', 100);
+            $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
 
           
         });
@@ -147,7 +146,7 @@ return new class extends Migration
              $table->date('dateDebutOffre')->nullable();
              $table->date('dateFinOffre')->nullable();
              $table->text('description')->nullable();
-         $table->unsignedBigInteger('idAdmin');
+             $table->unsignedBigInteger('idAdmin');
 
             $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs')->nullable(); // pour tester sinon il faut enlever nullable !!!
         });
