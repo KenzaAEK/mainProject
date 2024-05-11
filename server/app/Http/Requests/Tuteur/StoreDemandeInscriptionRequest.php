@@ -25,7 +25,7 @@ class StoreDemandeInscriptionRequest extends FormRequest
     {
         return [
             'optionsPaiement' => 'required|in:mois,trimestre,semestre,annee',
-            'typePack' => 'required|in:ateliers,enfants,pack_ateliers', 
+            'typePack' => 'required|exists:packs,type', 
         ];
     }
     public function messages()

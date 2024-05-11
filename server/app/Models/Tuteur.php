@@ -17,7 +17,7 @@ class Tuteur extends Model
     ];
 
     public function users() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'idUser');
         
     }
     public function demande_inscription() {
@@ -26,4 +26,5 @@ class Tuteur extends Model
     public function enfants() {
         return $this->hasMany(Enfant::class, 'idTuteur');
     }
+    
 }

@@ -34,17 +34,24 @@ class DemandeInscriptionController extends Controller
      */
     public function store(StoreDemandeInscriptionRequest $request)
     {
-        $user = auth()->user();
-        $tuteurId = $user->tuteur->idTuteur;
-        $pack = Pack::where('type', $request->typePack)->firstOrFail(); 
-
-        $demande = DemandeInscription::create([
-            'optionsPaiement' => $request->optionsPaiement,
-            'idTuteur' => $tuteurId,
-            'idPack' => $pack->idPack,
-        ]);
-        return $this->success(['demande' => $demande], 'Demande d\'inscription ajoutée avec succès', 201);
+        try {
+            $user = auth()->user();
+            $tuteurId = $user->tuteur->idTuteur;
+            $pack = Pack::where('type', $request->typePack)->firstOrFail();
     
+            $demande = DemandeInscription::create([
+                'optionsPaiement' => $request->optionsPaiement,
+                'idTuteur' => $tuteurId,
+                'idPack' => $pack->idPack,
+            ]);
+    
+           
+            //event(new NewDemandeInscriptionEvent($demande));***********************
+    
+            return $this->success(['demande' => $demande], 'Demande d\'inscription ajoutée avec succès', 201);
+        } catch (\Exception $e) {
+            return $this->error(null,'Failed to create demande. ' . $e->getMessage(), 422);
+        }
     }
 
     /**

@@ -14,14 +14,15 @@ return new class extends Migration
      */
     public function up()
     {
-        // Schema::create('notifications', function (Blueprint $table) {
-        //     $table->id('idNotification');
-        //     $table->text('contenu'); // Change to text for longer content
-        //     $table->boolean('statut')->default(false);;
-        //     $table->unsignedBigInteger('idUser');
-        //     $table->foreign('idUser')->references('idUser')->on('users')->onDelete('cascade');
-        //     $table->timestamps();
-        // });
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->id('idNotification');
+            $table->string('contenu'); 
+            $table->boolean('statut')->default(false);;
+            $table->unsignedBigInteger('idUser');
+            $table->timestamp('read_at')->nullable();
+            $table->foreign('idUser')->references('idUser')->on('users')->onDelete('cascade');
+            $table->timestamps();
+        });
 
         // Schema::create('horaires', function (Blueprint $table) {
         //     $table->id('idHoraire');
@@ -41,16 +42,16 @@ return new class extends Migration
             $table->date('limite')->nullable();
         });
 
-        // Schema::create('factures', function (Blueprint $table) {
-        //     $table->id('idFacture');
-        //     $table->decimal('totalHT', 15, 5);
-        //     $table->decimal('totalTTC', 15, 5);
-        //     $table->date('dateFacture')->default(now());
-        //     $table->text('facturePdf')->nullable();
-        //     $table->unsignedBigInteger('idNotification')->unique();
-        //     $table->foreign('idNotification')->references('idNotification')->on('notifications')->onDelete('cascade');
-        //     $table->timestamps();
-        // });
+        Schema::create('factures', function (Blueprint $table) {
+            $table->id('idFacture');
+            $table->decimal('totalHT', 15, 5);
+            $table->decimal('totalTTC', 15, 5);
+            $table->date('dateFacture')->default(now());
+            $table->text('facturePdf')->nullable();
+            $table->unsignedBigInteger('idNotification')->unique();
+            $table->foreign('idNotification')->references('idNotification')->on('notifications')->onDelete('cascade');
+            $table->timestamps();
+        });
 
         Schema::create('tuteurs', function (Blueprint $table) {
             $table->id('idTuteur');
@@ -94,20 +95,21 @@ return new class extends Migration
             $table->unsignedBigInteger('idTuteur');
             $table->foreign('idPack')->references('idPack')->on('packs');
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
+            
         });
 
         // Schema::create('activites', function (Blueprint $table) {
         //     $table->id('idActivite');
-        //     $table->string('titre', 50);
+        //     $table->string('titre', 100);
         //     $table->text('description');
         //     $table->text('objectif');
         //     $table->string('imagePub', 50)->nullable();
         //     $table->string('lienYtb');
         //     $table->longText('programmePdf');
         //     $table->unsignedBigInteger('idTypeActivite');
-        //     $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+        //     $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
         //     $table->timestamps();
-        // });
+        // }); 
 
         Schema::create('enfants', function (Blueprint $table) {
             // $table->unsignedBigInteger('idTuteur');
@@ -128,22 +130,24 @@ return new class extends Migration
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
         });
 
-        // Schema::create('devis', function (Blueprint $table) {
-        //     $table->id('idDevis');
-        //     $table->decimal('totalHT', 10, 3);
-        //     $table->date('dateDevis')->default(DB::raw('CURRENT_DATE'));;
-        //     $table->decimal('totalTTC', 10, 3);
-        //     $table->decimal('TVA', 10, 3);
-        //     $table->text('devisPdf')->nullable();
-        //     $table->unsignedBigInteger('idNotification');
-        //     $table->unsignedBigInteger('idFacture');
-        //     $table->unsignedBigInteger('idDemande');
-        //     $table->unique('idNotification');
-        //     $table->unique('idDemande');
-        //     $table->foreign('idNotification')->references('idNotification')->on('notifications');
-        //     $table->foreign('idFacture')->references('idFacture')->on('factures');
-        //     $table->foreign('idDemande')->references('idDemande')->on('demandeInscriptions');
-        // });
+        Schema::create('devis', function (Blueprint $table) {
+            $table->id('idDevis');
+            $table->decimal('totalHT', 10, 3);
+            $table->date('dateDevis')->default(DB::raw('CURRENT_DATE'));;
+            $table->decimal('totalTTC', 10, 3);
+            $table->decimal('TVA', 10, 3);
+            $table->text('devisPdf')->nullable();
+            $table->unsignedBigInteger('idNotification');
+            $table->unsignedBigInteger('idFacture');
+            $table->unsignedBigInteger('idDemande');
+            $table->enum('status', ['en_attente', 'accepté', 'refusé'])->default('en_attente');
+            $table->text('rejection_reason')->nullable();
+            $table->unique('idNotification');
+            $table->unique('idDemande');
+            $table->foreign('idNotification')->references('idNotification')->on('notifications');
+            $table->foreign('idFacture')->references('idFacture')->on('factures');
+            $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
+        });
 
         // Schema::create('offres', function (Blueprint $table) {
         //     $table->id('idOffre');
@@ -154,10 +158,10 @@ return new class extends Migration
         //     $table->text('description')->nullable();
         //     $table->unsignedBigInteger('idAdmin');
 
-        //     $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs');
+        //     $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs')->nullable(); // pour tester sinon il faut enlever nullable !!!
         // });
 
-        // Schema::create('offre_activite', function (Blueprint $table) {
+        // Schema::create('offreactivites', function (Blueprint $table) {
         //     $table->unsignedBigInteger('idOffre');
         //     $table->unsignedBigInteger('idActivite');
         //     $table->decimal('tarif', 15, 5);
@@ -167,11 +171,10 @@ return new class extends Migration
         //     $table->integer('age_max');
         //     $table->integer('nbrSeance');
         //     $table->integer('Duree_en_heure');
-        //     $table->unsignedBigInteger('idPaiment');
         //     $table->primary(['idOffre', 'idActivite']);
         //     $table->foreign('idOffre')->references('idOffre')->on('offres');
         //     $table->foreign('idActivite')->references('idActivite')->on('activites');
-        //     $table->foreign('idPaiment')->references('idPaiment')->on('paiement_gateway');
+           
         // });
 
         // Schema::create('groupes', function (Blueprint $table) {
@@ -195,7 +198,7 @@ return new class extends Migration
 
         //     $table->primary(['idAdmin', 'idDemande']);
         //     $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs');
-        //     $table->foreign('idDemande')->references('idDemande')->on('demandeInscriptions');
+        //     $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
         // });
 
         // Schema::create('disponibilite_offreactivite', function (Blueprint $table) {
@@ -267,7 +270,7 @@ return new class extends Migration
         //     $table->integer('idOffre');
         //     $table->integer('idActivite');
         //     $table->primary(['idDemande', 'idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
-        //     $table->foreign('idDemande')->references('idDemande')->on('demandeInscriptions');
+        //     $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
         //     $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
         //     $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offre_activite');
         // });
