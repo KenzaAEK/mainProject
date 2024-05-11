@@ -10,6 +10,7 @@ class Enfant extends Model
     use HasFactory;
     protected $table = 'enfants';
     protected $primaryKey = 'idEnfant';
+
     protected $fillable = [
     'idEnfant',
     'prenom',
@@ -18,21 +19,22 @@ class Enfant extends Model
     'niveauEtude', 
     'idTuteur'];
     public $timestamps = false;
-    public function tuteurs() {
-        return $this->belongsTo(Tuteur::class);
+    public function tuteur() {
+        return $this->belongsTo(Tuteur::class); // cest le parent
     }
     public function groupes() {
         return $this->belongsToMany(Groupe::class, 'enfant_groupes', 'idEnfant', 'idGroupe');
     }
-    public function inscriptionEnfant_offre_Activite() {
-        return $this->hasOne(InscriptionEnfantOffreActivite::class, 'idEnfant');
-    }
+    // public function inscriptionEnfant_offre_Activite() {
+    //     return $this->hasOne(InscriptionEnfantOffreActivite::class, 'idEnfant');
+    // }
     public function offre_activite()
     {
-        return $this->belongsToMany(Offre_activite::class, 'planning_enfant', 'idActivite', 'idEnfant','idTuteur','idOffre');
+        return $this->belongsToMany(offreActivite::class, 'planning_enfant', 'idActivite', 'idEnfant','idTuteur','idOffre');
     }
-    public function offreActivite() {
-        return $this->belongsToMany(OffreActivite::class, 'planning', 'idEnfant', 'idOffreActivite');
+    // public function offreActivite() {
+    //     return $this->belongsToMany(OffreActivite::class, 'planning', 'idEnfant', 'idOffreActivite');
         
-    }
+    // }
+
 }

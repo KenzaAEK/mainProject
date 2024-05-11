@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Demande_inscription extends Model
+class DemandeInscription extends Model
 {
     use HasFactory;
-    protected $table = 'demande_inscription';
+    protected $table = 'demande_inscriptions';
+    public $timestamps = false;
     protected $primaryKey = 'idDemande';
     protected $fillable = [
         'optionsPaiement',
@@ -17,13 +18,13 @@ class Demande_inscription extends Model
         'dateDemande',
         'idPack'
     ];
-    public $timestamps = false;
+    
 
      public function administrateurs() {
         return $this->belongsToMany(Administrateur::class, 'admin_traiter', 'idDemande', 'idAdmin');
     }
-    public function tuteurs() {
-        return $this->belongsTo(Tuteur::class);
+    public function tuteur() {
+        return $this->belongsTo(Tuteur::class, 'idTuteur');
     }
     public function packs() {
         return $this->belongsTo(Pack::class);
@@ -33,7 +34,7 @@ class Demande_inscription extends Model
     }
 
     public function offre_activite() {
-        return $this->belongsToMany(Offre_activite::class, 'inscriptionEnfant_offre_Activite', 'idDemande', 'idOffre','idActivite');
+        return $this->belongsToMany(OffreActivite::class, 'inscriptionEnfant_offre_Activite', 'idDemande', 'idOffre','idActivite');
     }
 
     public function enfants() {

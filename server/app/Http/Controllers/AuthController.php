@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\Auth\LoginUserRequest;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\Auth\StoreUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
+use App\Models\Tuteur;
 
 
 class AuthController extends Controller
@@ -23,7 +24,7 @@ class AuthController extends Controller
 
 
         $existingUser = User::where('email', $request->email)->first();
-
+        
         if ($existingUser) {
             // User already exists
             return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
@@ -34,8 +35,10 @@ class AuthController extends Controller
             'prenom' => $request->prenom,
             'email' => $request->email,
             'tel' => $request->tel,
-            'password' => Hash::make($request->password)    //or the  bcrypt($request->password)
+            'password' => Hash::make($request->password),    //or the  bcrypt($request->password)
+            'role' => "1", // 1 = parent , 2 = admin , 3 = animateur
         ]);
+        Tuteur::create(['idUser' => $user->idUser]);
         $token = $user->createToken('token-name')->plainTextToken;
 
         //$token = $user->createToken('token-name', [], now()->addMinutes(30))->plainTextToken;  // automated in the config/sanctum.php file
@@ -43,12 +46,10 @@ class AuthController extends Controller
 
         return $this->success([
             'user' => $user,
-            'token' =>$token
+            'token' =>$token,
         ],'Inscription réussie. :)');
+        
     }
-
-
-
     public function login(LoginUserRequest $request) 
     {
         $request->validated($request->all());
@@ -84,7 +85,7 @@ class AuthController extends Controller
 
         return $this->success([
             'user' => $user,
-            'token' => $token
+            'token' => $token,
         ],'Connecté avec succès. :)');
     }
     public function logout()

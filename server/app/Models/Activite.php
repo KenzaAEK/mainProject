@@ -17,10 +17,10 @@ class Activite extends Model
 
     public function offre_activite()
     {
-        return $this->hasMany(Offre_activite::class, 'idActivite');
+        return $this->hasMany(OffreActivite::class, 'idActivite');
     }
     public function typeActivite()
     {
-        return $this->belongsTo(Type_activite::class);
+        return $this->belongsTo(TypeActivite::class);
     }
 }

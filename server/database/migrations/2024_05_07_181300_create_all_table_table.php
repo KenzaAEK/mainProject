@@ -16,24 +16,25 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id('idNotification');
-            $table->text('contenu'); // Change to text for longer content
+            $table->string('contenu'); 
             $table->boolean('statut')->default(false);;
             $table->unsignedBigInteger('idUser');
+            $table->timestamp('read_at')->nullable();
             $table->foreign('idUser')->references('idUser')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
 
-        Schema::create('horaires', function (Blueprint $table) {
-            $table->id('idHoraire');
-            $table->string('jour', 50);
-            $table->time('heureDebut');
-            $table->time('heureFin');
-        });
+         Schema::create('horaires', function (Blueprint $table) {
+             $table->id('idHoraire');
+             $table->string('jour', 50);
+             $table->time('heureDebut');
+             $table->time('heureFin');
+         });
 
 
         Schema::create('packs', function (Blueprint $table) {
             $table->id('idPack');
-            $table->integer('type');
+            $table->string('type');
             $table->decimal('remise', 5, 2)->nullable();;
             $table->date('limite')->nullable();
         });
@@ -57,11 +58,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('typeactivites', function (Blueprint $table) {
-            $table->id('idTypeActivite');
-            $table->string('type', 50);
-            $table->string('domaine', 50);
-        });
+         Schema::create('typeactivites', function (Blueprint $table) {
+             $table->id('idTypeActivite');
+             $table->string('type', 50)->unique();
+             $table->string('domaine', 50);
+         });
 
         Schema::create('competences', function (Blueprint $table) {
             $table->id('idCompetence');
@@ -82,15 +83,16 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('demande_inscription', function (Blueprint $table) {
+        Schema::create('demande_inscriptions', function (Blueprint $table) {
             $table->id('idDemande');
-            $table->string('optionsPaiement', 50);
+            $table->enum('optionsPaiement', ['mois', 'trimestre', 'semestre', 'annee']);
             $table->enum('status', ['en attente', 'acceptée', 'refusée'])->default('en attente');
             $table->date('dateDemande')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->unsignedBigInteger('idPack');
             $table->unsignedBigInteger('idTuteur');
             $table->foreign('idPack')->references('idPack')->on('packs');
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
+            
         });
 
         Schema::create('activites', function (Blueprint $table) {
@@ -107,14 +109,16 @@ return new class extends Migration
         });
 
         Schema::create('enfants', function (Blueprint $table) {
-            $table->unsignedBigInteger('idTuteur');
-            $table->unsignedBigInteger('idEnfant');
-            $table->string('prenom', 100);
-            $table->date('dateNaissance');
-            $table->string('niveauEtude', 50);
-            $table->string('nom', 100);
-            $table->primary(['idTuteur', 'idEnfant']);
-            $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
+             $table->unsignedBigInteger('idTuteur');
+             $table->unsignedBigInteger('idEnfant');
+             $table->string('prenom', 100);
+             $table->date('dateNaissance');
+             $table->string('niveauEtude', 50);
+             $table->string('nom', 100);
+             $table->primary(['idTuteur', 'idEnfant']);
+             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
+
+          
         });
 
         Schema::create('devis', function (Blueprint $table) {
@@ -127,21 +131,23 @@ return new class extends Migration
             $table->unsignedBigInteger('idNotification');
             $table->unsignedBigInteger('idFacture');
             $table->unsignedBigInteger('idDemande');
+            $table->enum('status', ['en_attente', 'accepté', 'refusé'])->default('en_attente');
+            $table->text('rejection_reason')->nullable();
             $table->unique('idNotification');
             $table->unique('idDemande');
             $table->foreign('idNotification')->references('idNotification')->on('notifications');
             $table->foreign('idFacture')->references('idFacture')->on('factures');
-            $table->foreign('idDemande')->references('idDemande')->on('demande_inscription');
+            $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
         });
 
-        Schema::create('offres', function (Blueprint $table) {
-            $table->id('idOffre');
-            $table->string('titre', 50);
-            $table->decimal('remise', 5, 2)->nullable();
-            $table->date('dateDebutOffre')->nullable();
-            $table->date('dateFinOffre')->nullable();
-            $table->text('description')->nullable();
-            $table->unsignedBigInteger('idAdmin');
+         Schema::create('offres', function (Blueprint $table) {
+             $table->id('idOffre');
+             $table->string('titre', 50);
+             $table->decimal('remise', 5, 2)->nullable();
+             $table->date('dateDebutOffre')->nullable();
+             $table->date('dateFinOffre')->nullable();
+             $table->text('description')->nullable();
+         $table->unsignedBigInteger('idAdmin');
 
             $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs')->nullable(); // pour tester sinon il faut enlever nullable !!!
         });
@@ -162,87 +168,87 @@ return new class extends Migration
            
         });
 
-        Schema::create('groupes', function (Blueprint $table) {
-            $table->id('idGroupe');
-            $table->string('Nomgrp', 50);
-            $table->unsignedBigInteger('idOffre');
-            $table->unsignedBigInteger('idActivite');
-            $table->unsignedBigInteger('idAnimateur');
+         Schema::create('groupes', function (Blueprint $table) {
+             $table->id('idGroupe');
+             $table->string('Nomgrp', 50);
+             $table->unsignedBigInteger('idOffre');
+             $table->unsignedBigInteger('idActivite');
+             $table->unsignedBigInteger('idAnimateur');
 
-            $table->unique(['idOffre', 'idActivite']);
-            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
-            $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
-        });
+             $table->unique(['idOffre', 'idActivite']);
+             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
+             $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
+         });
 
-        Schema::create('admin_traiter', function (Blueprint $table) {
-            $table->unsignedBigInteger('idAdmin');
-            $table->unsignedBigInteger('idDemande');
-            $table->dateTime('dateTraitement');
-            $table->text('motifRefus')->nullable();
-            $table->enum('statut', ['en cours de traitement', 'accepter', 'refuser']);
+         Schema::create('admin_traiter', function (Blueprint $table) {
+             $table->unsignedBigInteger('idAdmin');
+             $table->unsignedBigInteger('idDemande');
+             $table->dateTime('dateTraitement');
+             $table->text('motifRefus')->nullable();
+             $table->enum('statut', ['en cours de traitement', 'accepter', 'refuser']);
 
-            $table->primary(['idAdmin', 'idDemande']);
-            $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs');
-            $table->foreign('idDemande')->references('idDemande')->on('demande_inscription');
-        });
+             $table->primary(['idAdmin', 'idDemande']);
+             $table->foreign('idAdmin')->references('idAdmin')->on('administrateurs');
+             $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
+         });
 
-        Schema::create('disponibilite_offreactivite', function (Blueprint $table) {
-            $table->unsignedBigInteger('idHoraire');
-            $table->unsignedBigInteger('idOffre');
-            $table->unsignedBigInteger('idActivite');
+         Schema::create('disponibilite_offreactivite', function (Blueprint $table) {
+             $table->unsignedBigInteger('idHoraire');
+             $table->unsignedBigInteger('idOffre');
+             $table->unsignedBigInteger('idActivite');
 
-            $table->primary(['idHoraire', 'idOffre', 'idActivite']);
-            $table->foreign('idHoraire')->references('idHoraire')->on('horaires');
-            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
-        });
+             $table->primary(['idHoraire', 'idOffre', 'idActivite']);
+             $table->foreign('idHoraire')->references('idHoraire')->on('horaires');
+             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
+         });
 
-        Schema::create('disponibilite_animateur', function (Blueprint $table) {
-            $table->integer('idAnimateur');
-            $table->integer('idHoraire');
-            $table->primary(['idAnimateur', 'idHoraire']);
+         Schema::create('disponibilite_animateur', function (Blueprint $table) {
+             $table->integer('idAnimateur');
+             $table->integer('idHoraire');
+             $table->primary(['idAnimateur', 'idHoraire']);
 
-            $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
-            $table->foreign('idHoraire')->references('idHoraire')->on('horaires');
-        });
+             $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
+             $table->foreign('idHoraire')->references('idHoraire')->on('horaires');
+         });
 
-        Schema::create('planning_enfant', function (Blueprint $table) {
-            $table->integer('idTuteur');
-            $table->integer('idEnfant');
-            $table->integer('idOffre');
-            $table->integer('idActivite');
-            $table->integer('idH2');
-            $table->integer('idH1');
-            $table->primary(['idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
-
-            $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
-            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
-        });
-
-        Schema::create('enfant_groupe', function (Blueprint $table) {
-            $table->unsignedBigInteger('idTuteur');
-            $table->unsignedBigInteger('idEnfant');
-            $table->unsignedBigInteger('idGroupe');
-            $table->primary(['idTuteur', 'idEnfant', 'idGroupe']);
+         Schema::create('planning_enfant', function (Blueprint $table) {
+             $table->integer('idTuteur');
+             $table->integer('idEnfant');
+             $table->integer('idOffre');
+             $table->integer('idActivite');
+             $table->integer('idH2');
+             $table->integer('idH1');
+             $table->primary(['idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
 
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
-            $table->foreign('idGroupe')->references('idGroupe')->on('groupes');
+            $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
         });
 
-        Schema::create('animateur_competence', function (Blueprint $table) {
-            $table->unsignedBigInteger('idAnimateur');
-            $table->unsignedBigInteger('idCompetence');
-            $table->string('Maitrise');
-            $table->primary(['idAnimateur', 'idCompetence']);
+         Schema::create('enfant_groupe', function (Blueprint $table) {
+             $table->unsignedBigInteger('idTuteur');
+             $table->unsignedBigInteger('idEnfant');
+             $table->unsignedBigInteger('idGroupe');
+             $table->primary(['idTuteur', 'idEnfant', 'idGroupe']);
 
-            $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
-            $table->foreign('idCompetence')->references('idCompetence')->on('competences');
-        });
+             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
+             $table->foreign('idGroupe')->references('idGroupe')->on('groupes');
+         });
 
-        Schema::create('competance_activite', function (Blueprint $table) {
-            $table->integer('idTypeActivite');
-            $table->integer('idCompetence');
-            $table->string('Niveau_requis', 50);
-            $table->primary(['idTypeActivite', 'idCompetence']);
+         Schema::create('animateur_competence', function (Blueprint $table) {
+             $table->unsignedBigInteger('idAnimateur');
+             $table->unsignedBigInteger('idCompetence');
+             $table->string('Maitrise');
+             $table->primary(['idAnimateur', 'idCompetence']);
+
+             $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
+             $table->foreign('idCompetence')->references('idCompetence')->on('competences');
+         });
+
+         Schema::create('competance_activite', function (Blueprint $table) {
+             $table->integer('idTypeActivite');
+             $table->integer('idCompetence');
+             $table->string('Niveau_requis', 50);
+             $table->primary(['idTypeActivite', 'idCompetence']);
 
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->foreign('idCompetence')->references('idCompetence')->on('competences');
@@ -284,7 +290,7 @@ return new class extends Migration
         Schema::dropIfExists('devis');
         Schema::dropIfExists('factures');
         Schema::dropIfExists('competences');
-        Schema::dropIfExists('demande_inscription');
+        Schema::dropIfExists('demande_inscriptions');
         Schema::dropIfExists('packs');
         Schema::dropIfExists('tuteurs');
         Schema::dropIfExists('notifications');
