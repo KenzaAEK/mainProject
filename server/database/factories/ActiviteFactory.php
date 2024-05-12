@@ -13,7 +13,7 @@ class ActiviteFactory extends Factory
     public function definition()
     {
         return [
-            'idTypeActivite' => \App\Models\TypeActivite::query()->whereIn('idTypeActivite', [1, 2])->inRandomOrder()->first()->id,
+            'idTypeActivite' => 2,
             'titre' => $this->faker->text(50),
             'description' => $this->faker->paragraph,
             'objectif' => $this->faker->sentence,

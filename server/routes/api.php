@@ -5,9 +5,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
+use App\Http\Controllers\Api\OffreController;
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\DevisController;
+use App\Http\Controllers\Api\GroupeController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -31,6 +33,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/offres/{offres}',[OffreController::class,'show']);
     Route::put('/offres/{offres}',[OffreController::class,'update']);
     Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
+    Route::get('/animateurs', [GroupeController::class, 'index']);
+
 
     // for admins only and authenticated  
     //add middlewear check role 

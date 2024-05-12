@@ -2,22 +2,19 @@
 
 namespace Database\Factories;
 
+use App\Models\Tuteur;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tuteur>
- */
 class TuteurFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Tuteur::class;
+
     public function definition()
     {
         return [
-            //
+            'idUser' => User::factory(), // Crée automatiquement un utilisateur et utilise son ID
+            'fonction' => $this->faker->jobTitle
         ];
     }
 }

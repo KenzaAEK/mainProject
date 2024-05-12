@@ -14,10 +14,14 @@ class TypeActiviteFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
-    {
-        return [
-            //
-        ];
+    public function run()
+{
+    $types = [ 'Musique', 'Science'];
+    foreach ($types as $type) {
+        TypeActivite::firstOrCreate([
+            'type' => $type,
+            'domaine' => 'Exterieur' // ou une logique pour assigner le domaine
+        ]);
     }
+}
 }

@@ -32,24 +32,29 @@ class offreActivite extends Model
         return $this->belongsTo(Offre::class, 'idOffre');
     }
 
+   
     public function activite()
     {
         return $this->belongsTo(Activite::class, 'idActivite');
     }
     //enfant + demande inscription + groupe ???????????????????
     //¿????????????????????????????????????¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿?????????????¿¿¿¿¿¿¿¿¿¿¿¿¿¿???????????
+   
     public function horaire()
     {
-        return $this->belongsToMany(Horaire::class, 'idActivite');
+        return $this->belongsToMany(Horaire::class, 'disponibilite_offreactivite', 'idOffreactivite', 'idHoraire');
     }
+   
     public function enfant()
     {
         return $this->belongsToMany(Enfant::class, 'planning', 'idOffreActivite', 'idEnfant');
     }
+   
     public function inscriptionEnfantOffreActivite()
     {
         return $this->hasOne(inscriptionEnfantOffreActivite::class, 'idInscriptionEnfantOffreActivite');
     }
+   
     public function groupe(){
         return $this->hasOne(Groupe::class, 'idGroupe');
     }

@@ -100,22 +100,25 @@ return new class extends Migration
             $table->string('titre', 100);
             $table->text('description');
             $table->text('objectif');
-            $table->string('imagePub', 50)->nullable();
-            $table->string('lienYtb');
-            $table->longText('programmePdf');
+            $table->string('imagePub', 255)->nullable();
+            $table->string('lienYtb',255);
+            $table->longText('programmePdf',255);
             $table->unsignedBigInteger('idTypeActivite');
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
         });
 
         Schema::create('enfants', function (Blueprint $table) {
-            $table->id('idEnfant');
+            
             $table->unsignedBigInteger('idTuteur');
+            $table->unsignedBigInteger('idEnfant');
             $table->string('prenom', 100);
             $table->date('dateNaissance');
             $table->string('niveauEtude', 50);
             $table->string('nom', 100);
+            $table->primary(['idTuteur', 'idEnfant']);
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
+
 
           
         });
@@ -211,13 +214,13 @@ return new class extends Migration
          });
 
          Schema::create('planning_enfant', function (Blueprint $table) {
-             $table->integer('idTuteur');
-             $table->integer('idEnfant');
-             $table->integer('idOffre');
-             $table->integer('idActivite');
-             $table->integer('idH2');
-             $table->integer('idH1');
-             $table->primary(['idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
+            $table->integer('idTuteur');
+            $table->integer('idEnfant');
+            $table->integer('idOffre');
+            $table->integer('idActivite');
+            $table->integer('idH2');
+            $table->integer('idH1');
+            $table->primary(['idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
 
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
@@ -261,10 +264,12 @@ return new class extends Migration
             $table->integer('idActivite');
             $table->primary(['idDemande', 'idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
 
-            $table->foreign('idDemande')->references('idDemande')->on('demande_inscription');
+            $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
         });
+
+        
     }
 
     /**

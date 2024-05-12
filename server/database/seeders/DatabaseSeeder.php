@@ -14,9 +14,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\User::factory(10)->create();
-         $this->call(FactureSeeder::class);
-         $this->call(TypeActiviteSeeder::class);
-         $this->call(ActiviteSeeder::class);
-    }
+      // \App\Models\User::factory(10)->create();
+      // $this->call(TuteurSeeder::class);
+      // $this->call(OffreSeeder::class);
+      // $this->call(OffreActiviteSeeder::class);
+      // $this->call([TuteurSeeder::class,EnfantSeeder::class,]);
+      // $this->call([HoraireSeeder::class]);
+     // $this->call(AnimateurSeeder::class);
+      $this->call(GroupeSeeder::class);
+        $this->call([
+    
+    //  DisponibiliteSeeder::class
+       // AnimateurGroupeSeeder::class
+        EnfantGroupeSeeder::class
+  ]);
+      
+  }
 }
+
