@@ -2,18 +2,18 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-
-class EnfantGroupeSeeder extends Seeder
+use App\Models\Enfant;
+class EnfantSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
-        DB::table('enfant_groupe')->insert([
-            ['idTuteur' => 1, 'idEnfant' => 1, 'idGroupe' => 1],
-            ['idTuteur' => 1, 'idEnfant' => 2, 'idGroupe' => 1],
-            ['idTuteur' => 2, 'idEnfant' => 3, 'idGroupe' => 2],
-            // Ajoutez autant de lignes que nécessaire
-        ]);
+        Enfant::factory()->count(50)->create(); // Ajustez le nombre selon vos besoins
     }
 }
