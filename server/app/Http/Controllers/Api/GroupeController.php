@@ -14,6 +14,7 @@ class GroupeController extends Controller
      */
      
      public function index() {
+       
         $animateurs = Animateur::with(['user', 'groupes.enfants', 'horaires'])->get();
     
         $resultats = $animateurs->map(function ($animateur) {
