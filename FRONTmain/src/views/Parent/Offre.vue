@@ -45,11 +45,14 @@
 </template>
 <script>
 import AjouterOffre from './AjouterOffre.vue';
-
+import { mapGetters } from 'vuex';
 export default {
-    name: 'App',
+    name: 'Offre',
     components: { 
         AjouterOffre
+    },
+    computed: {
+      ...mapGetters(['user'])
     }
   }
 </script>

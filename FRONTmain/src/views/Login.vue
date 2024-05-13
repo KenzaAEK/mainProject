@@ -12,7 +12,7 @@
       <div class="w-full  lg:w-1/2 flex items-center justify-center">
         <div class="max-w-md w-full p-6">
           <h1 class="text-3xl  mb-6 conn text-center">Se Connecter</h1> 
-          <form @submit.prevent="login"  class="space-y-4">
+          <form @submit.prevent="submitlogin"  class="space-y-4">
             <!-- Your form elements go here -->
             <div>
               <input required placeholder="Adresse e-mail" type="email" id="Email" v-model="email" name="Email" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
@@ -46,7 +46,7 @@
     </div> 
   </template>
   <script>
-  import axios from 'axios';
+ import axios from 'axios';
   export default {
     name: 'Login',
     data() {
@@ -62,18 +62,22 @@
       const passwordInput = document.getElementById('password');
       passwordInput.type = this.showPassword1 ? 'text' : 'password';
       },
-        async login()
+      async submitlogin()
         {
-           try {
-            await this.$store.dispatch('auth/login', {
-              email: this.email,
-              password: this.password
-            });
-            this.$router.push('/');
-           } catch (error) {
-            console.error('Login failed:', error);
-           }
-        },
+          const response = await axios.post('/login/', {
+          email: this.email,
+          password: this.password
+        });
+        console.log(response.data.data.user.role)
+        if(response.data.data.user.role==="1"){
+            localStorage.setItem('token', response.data.data.token);
+            this.$store.dispatch('user', response.data.data.user)
+            this.$router.push('/parent');
+        }
+            //localStorage.setItem('token', response.data.data.token);
+            //this.$router.push('/parent');
+            
+        }
     }
   }
   </script>

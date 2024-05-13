@@ -27,7 +27,7 @@
               <input required placeholder="Adresse e-mail" type="email" id="Email" v-model="email" name="Email" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
             </div>
             <div>
-              <input  placeholder="Fonction" type="text" id="Fonction" v-model="fonction" name="Fonction" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+              <input  placeholder="Fonction (Facultatif)" type="text" id="Fonction" v-model="fonction" name="Fonction" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
             </div>
             <div class="relative">
               <input required placeholder="Mot de passe" type="password" id="password" v-model="password" name="password" 
@@ -77,7 +77,6 @@
   </template>
   <script>
   import axios from 'axios';
-  import VueCookies from 'vue-cookies';
   export default {
     name: 'Register',
     data() {
@@ -114,10 +113,7 @@
         });
         console.log(response.data); // Handle successful registration
         // Redirect user to login page or show success message
-        // Extract token from response data
-        const token = response.data.token;
-        VueCookies.set('token', token, { expires: '7d' }); // Token expires in 7 days
-        this.$router.push('/parent');
+        this.$router.push('/login');
       } catch (error) {
         console.error('Registration error:', error.response.data); // Handle registration error
         // Display error message to the user

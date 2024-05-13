@@ -11,6 +11,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 
+
 Route::apiResource('enfants', EnfantController::class);
 Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
 
@@ -20,7 +21,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
-
+    Route::get('/users', [AuthController::class, 'index']);
     // for admins only and authenticated  
     //add middlewear check role 
     

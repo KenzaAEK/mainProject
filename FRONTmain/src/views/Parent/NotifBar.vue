@@ -13,6 +13,15 @@
         </div>
     </div>
 </template>
+<script>
+import { mapGetters } from 'vuex';
+export default {
+    name: 'NotifBar',
+    computed: {
+      ...mapGetters(['user'])
+    }
+}
+</script>
 <style scoped>
 h4{
     color: #FFFFFF;

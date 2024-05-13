@@ -119,5 +119,13 @@ class AuthController extends Controller
             'token' => $token
         ], 'Jeton rafraîchi avec succès. :)');
     }
+    public function index()
+    {
+
+        
+           return auth::user();
+
+        
+    }
 
 }
