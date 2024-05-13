@@ -23,7 +23,7 @@ class Offre extends Model
         'titre'
     ];
 
-
+     
 
      public function administrateurs()
     {

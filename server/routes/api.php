@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('activites', ActiviteController::class);
     Route::post('/offres',[OffreController::class,'store']);
     Route::get('/offres/{offres}',[OffreController::class,'show']);
-    Route::put('/offres/{offres}',[OffreController::class,'update']);
+    Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
     Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
     Route::get('/animateurs', [GroupeController::class, 'index']);
 
