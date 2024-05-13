@@ -13,14 +13,13 @@ class GroupeController extends Controller
      * @return \Illuminate\Http\Response
      */
      
-     public function index() {
-       
-        $animateurs = Animateur::with(['user', 'groupes.enfants', 'horaires'])->get();
+     public function index(Request $request) {
+        // Pagination des animateurs, chaque animateur avec ses détails sera sur une page distincte
+        $perPage = $request->input('per_page', 1); // 1 animateur par page par défaut
+        $animateurs = Animateur::with(['user', 'groupes.enfants', 'horaires'])
+                                ->paginate($perPage);
     
         $resultats = $animateurs->map(function ($animateur) {
-            // Débogage : Vérifier ce qui est dans groupes
-            logger()->info('Groupes:', $animateur->groupes->toArray());
-    
             return [
                 'nom_animateur' => $animateur->user ? $animateur->user->prenom . ' ' . $animateur->user->nom : null,
                 'horaires' => $animateur->horaires->map(function ($horaire) {
@@ -41,7 +40,17 @@ class GroupeController extends Controller
             ];
         });
     
-        return response()->json($resultats);
+        return response()->json([
+            'data' => $resultats,
+            'pagination' => [
+                'total' => $animateurs->total(),
+                'per_page' => $animateurs->perPage(),
+                'current_page' => $animateurs->currentPage(),
+                'last_page' => $animateurs->lastPage(),
+                'from' => $animateurs->firstItem(),
+                'to' => $animateurs->lastItem()
+            ]
+        ]);
     }
     
      
