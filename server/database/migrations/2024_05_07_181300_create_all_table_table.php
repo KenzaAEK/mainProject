@@ -103,7 +103,7 @@ return new class extends Migration
             $table->string('titre', 100);
             $table->text('description');
             $table->text('objectif');
-            $table->string('imagePub', 50)->nullable();
+            $table->string('imagePub')->nullable();
             $table->string('lienYtb');
             $table->longText('programmePdf');
             $table->unsignedBigInteger('idTypeActivite');

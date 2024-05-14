@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\typeActivite;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,13 +20,11 @@ class ActiviteFactory extends Factory
         return [
             'titre' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph,
-            'prix' => $this->faker->randomFloat(2, 10, 100), // random price between 10 and 100
-            'ageMin' => $this->faker->numberBetween(5, 10),
-            'ageMax' => $this->faker->numberBetween(11, 15),
-            'imagePub' => $this->faker->imageUrl(),
-            'lienYtb' => $this->faker->randomNumber(7, true), // generates a "YouTube-like" ID
+            'objectif' => $this->faker->sentence(10), // Limit the sentence length to 10 words
+            'imagePub' => $this->faker->imageUrl(640, 480),
+            'lienYtb' => $this->faker->url,
             'programmePdf' => $this->faker->url,
-            'idTypeActivite' => \App\Models\TypeActivite::factory(), // Ensure you have a TypeActiviteFactory
+            'idTypeActivite' => TypeActivite::factory(),
         ];
     }
 }

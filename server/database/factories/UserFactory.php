@@ -20,12 +20,12 @@ class UserFactory extends Factory
         return [
             'nom' => $this->faker->lastName,
             'prenom' => $this->faker->firstName,
-            'email' => $this->faker->unique()->safeEmail,
+            'email' => $this->faker->unique()->safeEmail, // Generate unique email addresses
             'tel' => $this->faker->phoneNumber,
             'email_verified_at' => now(),
-            'password' => bcrypt('password'), // Vous pouvez utiliser bcrypt pour le mot de passe, ou un autre moyen approprié
-            'role' => 'user', // Vous pouvez définir le rôle par défaut ici
-            'photo' => null, // Par défaut, aucune photo n'est définie
+            'password' => bcrypt('password'),
+            'role' => 'user',
+            'photo' => null,
             'remember_token' => Str::random(10),
         ];
     }

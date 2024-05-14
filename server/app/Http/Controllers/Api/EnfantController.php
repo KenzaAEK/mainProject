@@ -39,6 +39,7 @@ class EnfantController extends Controller
         $user = auth()->user();
         $tuteur = $user->tuteur;
         $enfant = Enfant::create([
+            //'idEnfant' => 1, a resourdre
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'dateNaissance' => $request->dateNaissance,
@@ -46,7 +47,8 @@ class EnfantController extends Controller
             'idTuteur' => $tuteur->idTuteur
         ]);
     
-        return $this->success($enfant, 'Enfant ajouté avec succès', 201);
+        // return $this->success($enfant, 'Enfant ajouté avec succès', 201);
+        return response()->json(['tuteur' => $tuteur->idTuteur, 'messageme' => 'dsdsdasdad'], 201);
 
     }
 

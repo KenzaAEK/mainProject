@@ -20,15 +20,16 @@ class DevisController extends Controller
         $totalHT = $devis->totalHT;  // add calculation
         $totalTTC = $devis->totalTTC;  // add calculation
         
-
+        // create facture 
         // $facture = Facture::create([
         //     'totalHT' => $totalHT,
         //     'totalTTC' => $totalTTC,
         //     'idNotification' => $this->createNotification($devis)  
         // ]);
+        //create notification
 
-    // return response()->json(['message' => 'Devis accepted, facture generated.']);
-    return response()->json(['$this->createNotification($devis)  ' => $this->createNotification($devis)  ]);
+    return response()->json(['message' => 'Devis accepted, facture generated.']);
+    // return response()->json(['$this->createNotification($devis)  ' => $this->createNotification($devis)  ]);
         
     }
 
@@ -65,7 +66,7 @@ class DevisController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**

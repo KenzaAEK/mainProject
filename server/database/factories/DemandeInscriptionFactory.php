@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Pack;
+use App\Models\Tuteur;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,11 @@ class DemandeInscriptionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'optionsPaiement' => $this->faker->randomElement(['mois', 'trimestre', 'semestre', 'annee']),
+            'status' => $this->faker->randomElement(['en attente', 'acceptée', 'refusée']),
+            'dateDemande' => $this->faker->date(),
+            'idPack' => Pack::factory()->create()->idPack,
+            'idTuteur' => Tuteur::factory()->create()->idTuteur,
         ];
     }
 }
