@@ -10,8 +10,6 @@ class Animateur extends Model
     use HasFactory;
     protected $primaryKey = 'idAnimateur';
     protected $table = 'animateurs';
-    protected $table = 'animateurs';
-
     protected $fillable = [
         'idUser',
     ];

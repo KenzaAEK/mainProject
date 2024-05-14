@@ -14,7 +14,7 @@ class TuteurFactory extends Factory
     {
         return [
             'idUser' => User::factory(), // Crée automatiquement un utilisateur et utilise son ID
-            'fonction' => $this->faker->jobTitle
+            'fonction' => $this->faker->sentence(2)
         ];
     }
 }

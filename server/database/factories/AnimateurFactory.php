@@ -24,7 +24,8 @@ class AnimateurFactory extends Factory
     public function definition()
     {
         return [
-            'idUser' => $this->faker->unique()->numberBetween(1, 50)  // Assurez-vous que ces utilisateurs existent ou adaptez selon vos besoins
+            'idUser' => \App\Models\User::factory(),
+            
         ];
     }
 }

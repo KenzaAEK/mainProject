@@ -17,60 +17,60 @@ class DevisController extends Controller
     {
         $devis = Devis::findOrFail($id);
         $devis->update(['status' => 'accepté']);
-        $totalHT = $devis->totalHT;  // add calculation
-        $totalTTC = $devis->totalTTC;  // add calculation
+        $totalHT = $devis->totalHT;  // add calculation (admin)
+        $totalTTC = $devis->totalTTC;  // add calculation (admin)
         
-        // create facture 
+        $notificationId = $this->createNotification($devis);
+
         $facture = Facture::create([
             'totalHT' => $totalHT,
             'totalTTC' => $totalTTC,
-            'idNotification' => $this->createNotification($devis)  
+            'idNotification' => $notificationId
         ]);
-        //create notification
-
-    return response()->json(['message' => 'Devis accepted, facture generated.']);
-    // return response()->json(['$this->createNotification($devis)  ' => $this->createNotification($devis)  ]);
+        // return response()->json(['$tuteur->user'=>         $tuteur = $devis->demandeInscription->tuteur,'$devis->demandeInscription' => $devis->demandeInscription,'$devis->demandeInscription->tuteur' => $devis->demandeInscription->tuteur
+     return response()->json(['message' => 'La demande d\'inscription a été acceptée, et la facture a été générée.','idNotification' => $notificationId  
+    ]);
+    
         
     }
 
     // le parent peut
     public function rejectDevis(Request $request, $id)
     {
-        // $devis = Devis::findOrFail($id);
-        // $reason = $request->input('reason', 'No specific reason provided.');
-        // $devis->update(['status' => 'rejected', 'rejection_reason' => $reason]);
+        $devis = Devis::findOrFail($id);
+        $reason = $request->input('reason',);
+        $devis->update(['status' => 'refusé', 'rejection_reason' => $reason]);
 
-        // Notification::create([
-        //     'idUser' => $devis->demandeInscription->tuteur->user->id,
-        //     'contenu' => 'Votre devis a été refusé. Raison: ' . $reason,
-        // ]);
+        Notification::create([
+            'idUser' => $devis->demandeInscription->tuteur->user->idUser,
+            'contenu' => 'Votre demande d\'inscription a été refusée. Raison: ' . $reason
+        ]);
 
-        // return response()->json(['message' => 'Devis rejected']);
+        return response()->json(['message' => 'La demande d\'inscription a été refusée.']);
     }
-    protected function createNotification($devis)
-{
-    if (!$devis->demandeInscription) {
-        Log::warning('DemandeInscription not found for Devis', ['devis_id' => $devis->id]);
-        return null;
+        protected function createNotification($devis)
+    {
+        if (!$devis->demandeInscription) {
+            throw new \Exception('DemandeInscription not found for Devis ' . $devis->id);
+        }
+
+        if (!$devis->demandeInscription->tuteur) {
+            throw new \Exception('Tuteur not found for DemandeInscription ' . $devis->demandeInscription->id);
+        }
+
+        $tuteur = $devis->demandeInscription->tuteur;
+
+        if (!$tuteur->user) {
+            throw new \Exception('User not found for Tuteur ' . $tuteur->id);
+        }
+
+        $notification = Notification::create([
+            'contenu' => 'Votre devis a été accepté.',
+            'idUser' => $tuteur->user->idUser,
+        ]);
+
+        return $notification->idNotification;
     }
-
-    if (!$devis->demandeInscription->tuteur) {
-        Log::warning('Tuteur not found for DemandeInscription', ['demande_id' => $devis->demandeInscription->id]);
-        return null;
-    }
-
-    if (!$devis->demandeInscription->tuteur->user) {
-        Log::warning('User not found for Tuteur', ['tuteur_id' => $devis->demandeInscription->tuteur->id]);
-        return null;
-    }
-
-    $notification = Notification::create([
-        'contenu' => 'Votre devis a été accepté.',
-        'idUser' => $devis->demandeInscription->tuteur->user->idUser,
-    ]);
-
-    return $notification->idNotification;
-}
 
     /**
      * Display a listing of the resource.

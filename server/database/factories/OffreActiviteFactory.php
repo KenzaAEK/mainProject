@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\typeActivite;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Offre_activite>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Activite>
  */
-class OffreActiviteFactory extends Factory
+class ActiviteFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,15 +18,13 @@ class OffreActiviteFactory extends Factory
     public function definition()
     {
         return [
-            'idOffre' => \App\Models\Offre::factory(),
-            'idActivite' => \App\Models\Activite::factory(),
-            'tarif' => $this->faker->randomFloat(2, 10, 100),
-            'effmax' => $this->faker->numberBetween(5, 20),
-            'effmin' => $this->faker->numberBetween(1, 5),
-            'age_min' => $this->faker->numberBetween(5, 12),
-            'age_max' => $this->faker->numberBetween(13, 18),
-            'nbrSeance' => $this->faker->numberBetween(1, 10),
-            'Duree_en_heure' => $this->faker->numberBetween(1, 3)
+            'titre' => $this->faker->sentence(3),
+            'description' => $this->faker->paragraph,
+            'objectif' => $this->faker->sentence(10), // Limit the sentence length to 10 words
+            'imagePub' => $this->faker->imageUrl(640, 480),
+            'lienYtb' => $this->faker->url,
+            'programmePdf' => $this->faker->url,
+            'idTypeActivite' => TypeActivite::factory(),
         ];
     }
 }
