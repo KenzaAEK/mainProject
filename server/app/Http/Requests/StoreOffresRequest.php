@@ -30,6 +30,14 @@ class StoreOffresRequest extends FormRequest
         'dateDebutOffre' => 'required|date',
         'dateFinOffre' => 'required|date|after_or_equal:dateDebutOffre',
         'description' => 'nullable|string',
+        'activites' => 'required|array|min:1', 
+        'activites.*.tarif' => 'required|numeric',
+        'activites.*.effmax' => 'required|integer',
+        'activites.*.effmin' => 'required|integer',
+        'activites.*.age_min' => 'required|integer',
+        'activites.*.age_max' => 'required|integer',
+        'activites.*.nbrSeance' => 'required|integer',
+        'activites.*.Duree_en_heure' => 'required|numeric',
         ];
     }
     public function messages()
@@ -43,6 +51,8 @@ class StoreOffresRequest extends FormRequest
             'dateDebutOffre.before_or_equal' => 'La date de début de l\'offre doit être antérieure ou égale à la date de fin de l\'offre.',
             'dateFinOffre.after_or_equal' => 'La date de fin de l\'offre doit être postérieure ou égale à la date de début de l\'offre.',
             'description.string' => 'La description doit être une chaîne de caractères.',
+            'activites.*.idActivite.required' => 'L\'identifiant de l\'activité est obligatoire.',
+            'activites.*.idActivite.exists' => 'L\'activité spécifiée n\'existe pas.',
         ];
     }
 }

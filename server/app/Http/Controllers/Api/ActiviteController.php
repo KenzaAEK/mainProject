@@ -18,7 +18,7 @@ class ActiviteController extends Controller
      */
     public function getAtelier() // j'ai utulisé cette methode pour recuperer le nom des ateliers disponible 
     {
-        $activites = Activite::all(['idActivite','titre']);
+        $activites = Activite::all();
         return response()->json($activites);
     }
 

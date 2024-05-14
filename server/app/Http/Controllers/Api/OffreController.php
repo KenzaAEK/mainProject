@@ -61,9 +61,18 @@ class OffreController extends Controller
                     return response()->json(['error' => 'Activité introuvable'], 404);
                 }
     
-                $activiteData['idOffre'] = $offre->idOffre;
-                $activiteData['idActivite'] = $activite->idActivite;
-                OffreActivite::create($activiteData);
+                $activiteDataPrepared = [
+                    'idOffre' => $offre->idOffre,
+                    'idActivite' => $activite->idActivite,
+                    'tarif' => $activiteData['tarif'],
+                    'effmax' => $activiteData['effmax'],
+                    'effmin' => $activiteData['effmin'],
+                    'age_min' => $activiteData['age_min'],
+                    'age_max' => $activiteData['age_max'],
+                    'nbrSeance' => $activiteData['nbrSeance'],
+                    'Duree_en_heure' => $activiteData['Duree_en_heure']
+                ];
+                OffreActivite::create($activiteDataPrepared);
             }
     
             DB::commit();
