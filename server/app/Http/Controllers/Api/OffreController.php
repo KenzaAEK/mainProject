@@ -53,11 +53,6 @@ class OffreController extends Controller
             $offreData['idAdmin'] = $idAdmin;
             
             $offre = Offre::create($offreData);
-            
-
-     
-            
-             // Comment out the activities processing to isolate the issue
              
              foreach ($request->activites as $activiteData) {
                  $activiteValidator = Validator::make($activiteData, (new StoreOffresActiviteRequest)->rules());
@@ -65,12 +60,11 @@ class OffreController extends Controller
                      
                      return response()->json(['errors' => $activiteValidator->errors()], 422);
                  }
-                 $activite = new OffreActivite($activiteValidator->validated());
-                 $activite->idOffre = $offre->idOffre;
-                 $activite->save();
+                 $offreactivite = new OffreActivite($activiteValidator->validated());
+                 $offreactivite->idOffre = $offre->idOffre;
+                 $offreactivite->save();
              }
              
-     
              DB::commit();
              
              return response()->json(['message' => 'Offre créée avec succès', 'id' => $offre->idOffre, 'idAdmin' => $offre->idAdmin]);
