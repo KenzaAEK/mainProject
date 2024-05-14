@@ -21,11 +21,11 @@ class DevisController extends Controller
         $totalTTC = $devis->totalTTC;  // add calculation
         
         // create facture 
-        // $facture = Facture::create([
-        //     'totalHT' => $totalHT,
-        //     'totalTTC' => $totalTTC,
-        //     'idNotification' => $this->createNotification($devis)  
-        // ]);
+        $facture = Facture::create([
+            'totalHT' => $totalHT,
+            'totalTTC' => $totalTTC,
+            'idNotification' => $this->createNotification($devis)  
+        ]);
         //create notification
 
     return response()->json(['message' => 'Devis accepted, facture generated.']);
@@ -48,16 +48,29 @@ class DevisController extends Controller
         // return response()->json(['message' => 'Devis rejected']);
     }
     protected function createNotification($devis)
-    {
-        if (!$devis->demandeInscription) {            return response()->json(['message' => "DemandeInscription  found for Devis."]);}
-        if (!$devis->demandeInscription->tuteur) {            return response()->json(['message' => "Tuteur  found for demandeInscription."]);}
-        if (!$devis->demandeInscription->tuteur->user) {            return response()->json(['message' => "User not found for tuteur."]);}
-
-
-
-            
-        return null;  // Fail gracefully if any link in the chain is missing
+{
+    if (!$devis->demandeInscription) {
+        Log::warning('DemandeInscription not found for Devis', ['devis_id' => $devis->id]);
+        return null;
     }
+
+    if (!$devis->demandeInscription->tuteur) {
+        Log::warning('Tuteur not found for DemandeInscription', ['demande_id' => $devis->demandeInscription->id]);
+        return null;
+    }
+
+    if (!$devis->demandeInscription->tuteur->user) {
+        Log::warning('User not found for Tuteur', ['tuteur_id' => $devis->demandeInscription->tuteur->id]);
+        return null;
+    }
+
+    $notification = Notification::create([
+        'contenu' => 'Votre devis a été accepté.',
+        'idUser' => $devis->demandeInscription->tuteur->user->idUser,
+    ]);
+
+    return $notification->idNotification;
+}
 
     /**
      * Display a listing of the resource.

@@ -92,8 +92,8 @@ class AuthController extends Controller
     {
         auth()->user()->currentAccessToken()->delete();
         return $this->success([
-            'message' => 'Déconnecté avec succès et jeton supprimé. :)'
-        ]);
+            
+        ],'Déconnecté avec succès et jeton supprimé. :)',);
     }
 
     public function refreshToken(Request $request) // tested and working 
