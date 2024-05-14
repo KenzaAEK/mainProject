@@ -54,26 +54,25 @@ class OffreController extends Controller
             
             $offre = Offre::create($offreData);
              
-             foreach ($request->activites as $activiteData) {
-                 $activiteValidator = Validator::make($activiteData, (new StoreOffresActiviteRequest)->rules());
-                 if ($activiteValidator->fails()) {
-                     
-                     return response()->json(['errors' => $activiteValidator->errors()], 422);
-                 }
-                 $offreactivite = new OffreActivite($activiteValidator->validated());
-                 $offreactivite->idOffre = $offre->idOffre;
-                 $offreactivite->save();
-             }
-             
-             DB::commit();
-             
-             return response()->json(['message' => 'Offre créée avec succès', 'id' => $offre->idOffre, 'idAdmin' => $offre->idAdmin]);
-         } catch (\Exception $e) {
-             DB::rollback();
-             return response()->json(['message' => 'Erreur lors de la création de l\'offre', 'error' => $e->getMessage()], 500);
-         }
-     }
-     
+            foreach ($request->activites as $activiteData) {
+                $activite = Activite::where('titre', $activiteData['titre'])->first();
+                if (!$activite) {
+                    DB::rollback();
+                    return response()->json(['error' => 'Activité introuvable'], 404);
+                }
+    
+                $activiteData['idOffre'] = $offre->idOffre;
+                $activiteData['idActivite'] = $activite->idActivite;
+                OffreActivite::create($activiteData);
+            }
+    
+            DB::commit();
+            return response()->json(['message' => 'Offre créée avec succès', 'id' => $offre->idOffre, 'idAdmin' => $offre->idAdmin]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
     
      
     /**

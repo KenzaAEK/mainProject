@@ -29,10 +29,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
+    Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::post('/offres',[OffreController::class,'store']);
     Route::get('/offres/{offres}',[OffreController::class,'show']);
     Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
     Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
+    Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::get('/animateurs', [GroupeController::class, 'index']);
 
 

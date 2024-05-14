@@ -59,7 +59,11 @@ class offreActivite extends Model
         return $this->hasOne(Groupe::class, 'idGroupe');
     }
 
-    
+    public function getAteliers()
+    {
+        $ateliers = Activite::all();
+        return response()->json($ateliers);
+    }
     
 
     
