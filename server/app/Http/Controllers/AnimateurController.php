@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AnimateurController extends Controller
 {
@@ -16,16 +18,23 @@ class AnimateurController extends Controller
         //
     }
     
-    public function AffAnimConnecter()
+    public function AffAnimConnecter(Request $request)
     {
+        $user = $request->user();
 
-       $Animateur = User::where('idUser',Auth::id());
-       if ($animateur) {
-         return response()->json($animateur);
+       $Animateur = User::where('idUser',$user->idUser)->get();
+      
+       if ($Animateur) {
+         return response()->json($Animateur);
         }
       else {
          return response()->json(['error' => 'Animateur non trouvé'], 404);
        }
+    }
+
+    public function AffEtudAnim(Request $request)
+    {
+        
     }
   
 
