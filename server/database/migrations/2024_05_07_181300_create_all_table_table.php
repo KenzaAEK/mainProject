@@ -62,8 +62,6 @@ return new class extends Migration
             $table->id('idTypeActivite');
             $table->string('type', 50)->unique();
             $table->string('domaine', 50);
-        
-   
         });
         Schema::create('competences', function (Blueprint $table) {
             $table->id('idCompetence');

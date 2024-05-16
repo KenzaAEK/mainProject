@@ -29,6 +29,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // for admins only and authenticated  
     //add middlewear check role 
     Route::apiResource('activites', ActiviteController::class);
+    Route::apiResource('type-activites', ActiviteController::class);
 
 
 
