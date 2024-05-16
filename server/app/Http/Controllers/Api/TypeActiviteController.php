@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\typeActivite;
 use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class TypeActiviteController extends Controller
 {
+    use HttpResponses;
+    
     /**
      * Display a listing of the resource.
      *
@@ -27,11 +31,18 @@ class TypeActiviteController extends Controller
      */
     public function store(Request $request)
     {
-        $typeData = $request->all();
-
-        $type = TypeActivite::create($typeData);
-
-        return $this->success($type, 'TypeActivite ajouté avec succès', 201);    }
+        try {
+            $typeData = $request->all();
+            $type = TypeActivite::create($typeData);
+            return $this->success($type, 'TypeActivite ajouté avec succès', 201);
+        } catch (QueryException $e) {
+            if ($e->errorInfo[0] == '23505') { // Unique constraint violation error code
+                return $this->error(null, 'Ce type d\'activité existe déjà', 409); // 409 Conflict
+            } else {
+                return $this->error(null, 'Une erreur s\'est produite lors de la création du type d\'activité', 500); // 500 Internal Server Error
+            }
+        }   
+    }
 
     /**
      * Display the specified resource.
@@ -58,7 +69,7 @@ class TypeActiviteController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $type = TypeActivite::findOrFail($id);
+            $type = typeActivite::findOrFail($id);
             $typeData = $request->all();
             $type->update($typeData);
             return response()->json(['status' => 200, 'message' => 'TypeActivite mis à jour avec succès', 'type' => $type], 200);
