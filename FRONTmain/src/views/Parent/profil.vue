@@ -1,24 +1,24 @@
 <template>
-    <section class="container" id="home">
+    <section class="container" id="home" v-if="user">
         <div class="box-container">
             <div class="box">
                 <div class="image">
                     <img src="@/assets/images/pro2.png" alt="">
                 </div>
-                <h3>Nom Animateur</h3>
+                <h3 > {{ user.nom }} {{ user.prenom }}</h3>
                     <div style="display: flex; align-items: center;">
                         <svg class="h-8 w-8 text-gray-700" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                           <path stroke="none" d="M0 0h24v24H0z"/>
                           <rect x="3" y="5" width="18" height="14" rx="2" />
                           <polyline points="3 7 12 13 21 7" />
                         </svg>
-                        <span style="margin-left: 17px;">example@example.com</span>
+                        <span  style="margin-left: 17px;">{{ user.email }}</span>
                       </div>
                       <div style="display: flex; align-items: center;">
                         <svg class="h-8 w-8 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                         </svg>
-                        <span style="margin-left: 17px;">+212 675092736</span>
+                        <span  style="margin-left: 17px;">{{ user.tel }}</span>
                       </div>
             </div>
         
@@ -165,10 +165,16 @@
 </style>
 <script>
 import AjouterEnfant from './AjouterEnfant.vue'
+import { mapGetters } from 'vuex';
 export default {
-    name: 'App',
+    name: 'profil',
+    
     components: { 
         AjouterEnfant
+    },
+    computed: {
+      ...mapGetters(['user']),
+
     }
   }
 </script>

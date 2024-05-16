@@ -1,8 +1,8 @@
 <template>
-    <footer class="footer" >
+    <footer class="footer" v-if="user">
 
-        <section id="contact">
-            <div class="share"> 
+        <section id="contact" >
+            <div class="share" > 
                 <div class="flex items-center gap-6">
                     <a class="text-gray-700 hover:text-blue-800" aria-label="Visit TrendyMinds LinkedIn" href="" target="_blank"><svg
                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-8">
@@ -84,3 +84,12 @@
     color: #3A5A40 
 }
 </style>
+<script>
+import { mapGetters } from 'vuex';
+export default {
+    name: 'Footer',
+    computed: {
+      ...mapGetters(['user'])
+    }
+  }
+</script>

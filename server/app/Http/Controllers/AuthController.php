@@ -90,9 +90,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->user()->currentAccessToken()->delete();
-        return $this->success([
-            'message' => 'Déconnecté avec succès et jeton supprimé. :)'
-        ]);
+        return $this->success([],'Déconnecté avec succès et jeton supprimé. :)',);
 
     }
 
@@ -118,6 +116,14 @@ class AuthController extends Controller
         return $this->success([
             'token' => $token
         ], 'Jeton rafraîchi avec succès. :)');
+    }
+    public function index()
+    {
+
+        
+           return auth::user();
+
+        
     }
 
 }
