@@ -165,49 +165,49 @@ class OffreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-{
-    $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
-    }
-
-    DB::beginTransaction();
-    try {
-        $offre = Offre::findOrFail($id);
-        $offreData = $validator->validated();
-
-        // Préparation des activités avec l'ID actuel de l'activité pour transmission
-        $activitesArray = $request->input('activites');
-        $activitesPrepared = [];
-        foreach ($activitesArray as $activite) {
-            $currentActivite = Activite::where('titre', $activite['titre'])->first();
-            if (!$currentActivite) {
-                DB::rollback();
-                return response()->json(['error' => 'Activité introuvable'], 404);
-            }
-            $activite['idActivite'] = $currentActivite->idActivite; // Assurez-vous d'obtenir l'ID actuel
-            $activitesPrepared[] = $activite;
+    {
+        $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        // Conversion en JSON pour la fonction PL/pgSQL
-        $activitesJson = json_encode($activitesPrepared);
-
-        // Appel de la fonction PL/pgSQL
-        $result = DB::select("SELECT updateOffreActivites(?, ?, ?, ?, ?) AS result", [
-            $id,
-            $offreData['titre'],
-            $offreData['dateFinOffre'],
-            $offreData['description'],
-            $activitesJson
-        ]);
-
-        DB::commit();
-        return response()->json(['message' => 'Offre mise à jour avec succès', 'result' => $result]);
-    } catch (\Exception $e) {
-        DB::rollback();
-        return response()->json(['error' => $e->getMessage()], 500);
+    
+        DB::beginTransaction();
+        try {
+            $offre = Offre::findOrFail($id);
+            $offreData = $validator->validated();
+    
+            // Préparation des activités avec l'ID actuel de l'activité pour transmission
+            $activitesArray = $request->input('activites');
+            $activitesPrepared = [];
+            foreach ($activitesArray as $activite) {
+                $currentActivite = Activite::where('titre', $activite['titre'])->first();
+                if (!$currentActivite) {
+                    DB::rollback();
+                    return response()->json(['error' => 'Activité introuvable'], 404);
+                }
+                $activite['idActivite'] = $currentActivite->idActivite; // Assurez-vous d'obtenir l'ID actuel
+                $activitesPrepared[] = $activite;
+            }
+    
+            // Conversion en JSON pour la fonction PL/pgSQL
+            $activitesJson = json_encode($activitesPrepared);
+    
+            // Appel de la fonction PL/pgSQL
+            $result = DB::select("SELECT public.updateoffreactivites(?, ?, ?, ?, ?) AS result", [
+                $id,
+                $offreData['titre'],
+                $offreData['dateFinOffre'],
+                $offreData['description'],
+                $activitesJson
+            ]);
+    
+            DB::commit();
+            return response()->json(['message' => 'Offre mise à jour avec succès', 'result' => $result]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-}
 
     
 
