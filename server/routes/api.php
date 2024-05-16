@@ -44,6 +44,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('/offres/{offres}',[OffreController::class,'update']);
     Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
     Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
+   
+   
     Route::get('/animateurs', [GroupeController::class, 'index']);
 
 
