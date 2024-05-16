@@ -12,11 +12,13 @@ class Enfant extends Model
     protected $primaryKey = 'idEnfant';
 
     protected $fillable = [
+    'idEnfant',
     'prenom',
     'nom',
     'dateNaissance',
     'niveauEtude', 
     'idTuteur'];
+    public $incrementing = true;
     public $timestamps = false;
     public function tuteur() {
         return $this->belongsTo(Tuteur::class,'idTuteur'); // cest le parent

@@ -27,4 +27,9 @@ class typeActivite extends Model
     {
         return $this->belongsToMany(competence::class,'competance_activite','id_Activite','id_competence');	
     }
+    public static function getIdByType($type)
+    {
+        $typeActivite = self::where('type', $type)->first();
+        return $typeActivite ? $typeActivite->idTypeActivite : null;
+    }
 }

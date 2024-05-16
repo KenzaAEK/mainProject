@@ -35,12 +35,13 @@ class EnfantController extends Controller
     {
         // use policies and gates ********
         $request->validated(); 
-
+        dd( $request);
         $user = auth()->user();
         //if ($user->tuteur) {
 
         $tuteur = $user->tuteur;
         $enfant = Enfant::create([
+            'idEnfant' =>$request->idEnfant,
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'dateNaissance' => $request->dateNaissance,
@@ -48,7 +49,7 @@ class EnfantController extends Controller
             'idTuteur' => $tuteur->idTuteur
             
         ]);
-        return $this->success($enfant, 'Enfant ajouté avec succès', 201);
+        return $this->success(dd($request), 'Enfant ajouté avec succès', 201);
 
     //} else {
         

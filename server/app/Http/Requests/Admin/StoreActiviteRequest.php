@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
@@ -30,9 +30,9 @@ class StoreActiviteRequest extends FormRequest
             'ageMin' => 'required|integer|between:1,100',
             'ageMax' => 'required|integer|between:1,100|gte:ageMin',
             'imagePub' => 'required|string|max:255',
-            'lienYtb' => 'required|integer',
+            'lienYtb' => 'required|string|max:255',
             'programmePdf' => 'required|string|max:255',
-            'idTypeActivite' => 'required|exists:type_activites,idTypeActivite'
+            'type' => 'required|exists:type_activites,type'
         ];
     }
     public function messages()
@@ -46,8 +46,8 @@ class StoreActiviteRequest extends FormRequest
             'imagePub.required' => 'L\'image publicitaire est obligatoire.',
             'lienYtb.required' => 'Le lien YouTube est obligatoire.',
             'programmePdf.required' => 'Le PDF du programme est obligatoire.',
-            'idTypeActivite.required' => 'Le type d\'activité est obligatoire.',
-            'idTypeActivite.exists' => 'Le type d\'activité spécifié n\'est pas valide.',
+            'type.required' => 'Le type d\'activité est obligatoire.',
+            'type.exists' => 'Le type d\'activité spécifié n\'est pas valide.',
             'ageMax.gte' => 'L\'âge maximum doit être supérieur ou égal à l\'âge minimum.',
         ];
     }
