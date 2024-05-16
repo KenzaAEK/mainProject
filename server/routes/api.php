@@ -32,8 +32,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::post('/offres',[OffreController::class,'store']);
     Route::get('/offres/{offres}',[OffreController::class,'show']);
-    Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
-    Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
+    Route::put('/offres/{offres}',[OffreController::class,'update']);
+    Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);
+    Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);
+
     Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::get('/animateurs', [GroupeController::class, 'index']);
 

@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class offreActivite extends Model
 {
-    use HasFactory;
-    
+    use HasFactory; 
     protected $table = 'offreactivites';
     public $timestamps = false; 
     public $incrementing = false;
@@ -25,6 +24,7 @@ class offreActivite extends Model
         'age_max',
         'age_min'
         ];
+      
     
     
     public function offre()

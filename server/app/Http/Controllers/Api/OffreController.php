@@ -26,7 +26,7 @@ class OffreController extends Controller
      */
     public function index()
     {
-        $activites = Activite::all();
+        $offreactivites = offreActivite::all();
         return response()->json($activites);
     }
 
@@ -121,67 +121,75 @@ class OffreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function customUpdate(Request $request, $id)
-    {
-        // Validation des données (assurez-vous que cette validation est adéquate pour votre cas)
-        $validatedData = $request->validate([
-            // Règles de validation pour l'offre
-            'titre' => 'required|string',
-            'description' => 'required|string',
-            // Assurez-vous que les données des activités sont également validées
-            'activites' => 'required|array',
-            'activites.*.idActivite' => 'required|exists:activites,idActivite',
-            'activites.*.tarif' => 'required|numeric',
-            // Ajoutez d'autres champs nécessaires ici
-        ]);
-    
-        DB::beginTransaction();
-        try {
-            $offre = Offre::findOrFail($id);
-            // Mise à jour de l'offre
-            $offre->update($validatedData);
-    
-            // Gestion des activités
-            foreach ($request->activites as $activiteData) {
-                $activite = OffreActivite::updateOrCreate(
-                    ['idOffre' => $offre->idOffre, 'idActivite' => $activiteData['idActivite']],
-                    $activiteData
-                );
-            }
-    
-            DB::commit();
-            return response()->json(['message' => 'Offre et activités mises à jour avec succès'], 200);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['message' => 'Erreur lors de la mise à jour', 'error' => $e->getMessage()], 500);
-        }
-    }
-    
-    
-
-
-public function destroy($id)
+    public function update(Request $request, $id)
 {
-    $offre = Offre::with('offreActivite')->find($id);  // Assurez-vous d'inclure toutes les relations nécessaires
-    if (!$offre) {
-        return response()->json(['status' => 404, 'message' => "Aucune offre trouvée"], 404);
+    $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
     }
 
     DB::beginTransaction();
     try {
-        // Supprimer les activités liées ou d'autres entités dépendantes
-        foreach ($offre->offreActivite as $activite) {
-            $activite->delete();
+        $offre = Offre::findOrFail($id);
+        $offreData = $validator->validated();
+
+        // Préparation des activités avec l'ID actuel de l'activité pour transmission
+        $activitesArray = $request->input('activites');
+        $activitesPrepared = [];
+        foreach ($activitesArray as $activite) {
+            $currentActivite = Activite::where('titre', $activite['titre'])->first();
+            if (!$currentActivite) {
+                DB::rollback();
+                return response()->json(['error' => 'Activité introuvable'], 404);
+            }
+            $activite['idActivite'] = $currentActivite->idActivite; // Assurez-vous d'obtenir l'ID actuel
+            $activitesPrepared[] = $activite;
         }
 
-        // Suppression de l'offre après la suppression de toutes les dépendances
-        $offre->delete();
+        // Conversion en JSON pour la fonction PL/pgSQL
+        $activitesJson = json_encode($activitesPrepared);
+
+        // Appel de la fonction PL/pgSQL
+        $result = DB::select("SELECT updateOffreActivites(?, ?, ?, ?, ?) AS result", [
+            $id,
+            $offreData['titre'],
+            $offreData['dateFinOffre'],
+            $offreData['description'],
+            $activitesJson
+        ]);
+
         DB::commit();
-        return response()->json(['status' => 200, 'message' => "Offre supprimée avec succès"], 200);
+        return response()->json(['message' => 'Offre mise à jour avec succès', 'result' => $result]);
     } catch (\Exception $e) {
         DB::rollback();
-        return response()->json(['status' => 500, 'message' => "Erreur lors de la suppression de l'offre", 'error' => $e->getMessage()], 500);
+        return response()->json(['error' => $e->getMessage()], 500);
     }
 }
 
+    
+
+
+    public function deleteOffreActiviteById($idOffre, $idActivite)
+    {
+        try {
+            $result = DB::select('SELECT deleteOffreActivitesById(?, ?) as response', [$idOffre, $idActivite]);
+            return response()->json(['status' => 200, 'message' => $result[0]->response]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 500, 'message' => "Erreur lors de la suppression de l'activité", 'error' => $e->getMessage()]);
+        }
+    }
+
+    // Method to delete all offreActivites by idOffre
+    public function deleteOffreActivitesByIdOffre($idOffre)
+    {
+        try {
+            $result = DB::select('SELECT deleteOffreActivitesByIdOffre(?) as response', [$idOffre]);
+            return response()->json(['status' => 200, 'message' => $result[0]->response]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 500, 'message' => "Erreur lors de la suppression des activités", 'error' => $e->getMessage()]);
+        }
+    }
 }
+
+
+
