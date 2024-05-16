@@ -21,19 +21,19 @@ class Notification extends Model
         'read_at' => 'datetime',  
     ];
     // Méthodes pour marquer les notifications comme lues ou non
-    public function markAsRead()
-    {
-        $this->statut = true;
-        $this->read_at = now();
-        $this->save();
-    }
+    // public function markAsRead()
+    // {
+    //     $this->statut = true;
+    //     $this->read_at = now();
+    //     $this->save();
+    // }
 
-    public function markAsUnread()
-    {
-        $this->statut = false;
-        $this->read_at = null;  
-        $this->save();
-    }
+    // public function markAsUnread()
+    // {
+    //     $this->statut = false;
+    //     $this->read_at = null;  
+    //     $this->save();
+    // }
 
     // Relier les notifications aux utilisateurs
     public function user()

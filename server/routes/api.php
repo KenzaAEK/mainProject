@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\api\password\UpdatePasswordController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use Symfony\Component\HttpKernel\Profiler\Profile;
@@ -32,11 +33,23 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']);
 
     Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
-    //Route::post('/password/reset', [ResetController::class, 'ResetPassword']);
+    //Route::post('/password/reset', [ResetController::class, 'ResetPassword']); **************************************************************************
+
+
+    // Manage notifications
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
+    Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
+    Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
+    Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+
+
+
 
     //========================================= ADMIN API =====================================================
-    //add middlewear check role 
-
+    // middlewear check role admin **************************	
 
     Route::apiResource('activites', ActiviteController::class);
     Route::post('/offres',[OffreController::class,'store']);
@@ -53,8 +66,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     //========================================= PARENT API =====================================================
 
-    //add middlewear check role 
-
     //Manage enfant
     Route::apiResource('parent/enfants', EnfantController::class);
     // Manage demande-inscriptions
@@ -62,12 +73,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Accept or reject devis
     Route::post('parent/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
     Route::post('parent/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
-    // Manage notifications
 
-    // Route::get('parent/notifications', [NotificationController::class, 'index']);
-    // Route::get('parent/notifications/{notification}', [NotificationController::class, 'show']);
-    // Route::put('parent/notifications/{notification}/markAsRead', [NotificationController::class, 'markAsRead']);
-
+    
     //OFFRES
     Route::get('parent/offres', [OffreController::class, 'index']);
     Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
