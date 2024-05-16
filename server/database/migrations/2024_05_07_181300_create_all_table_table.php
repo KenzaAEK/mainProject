@@ -93,7 +93,6 @@ return new class extends Migration
             $table->unsignedBigInteger('idTuteur');
             $table->foreign('idPack')->references('idPack')->on('packs');
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
-            
         });
 
         Schema::create('activites', function (Blueprint $table) {
