@@ -30,13 +30,20 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
     Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
+    
+   //********Traitement d'Animateurs*************** 
+   
+   
+   
+   
+    // ********Traitement Administrateurs**********
+    
+    // traitement de l'offres :
     Route::post('/offres',[OffreController::class,'store']);
     Route::get('/offres/{offres}',[OffreController::class,'show']);
     Route::put('/offres/{offres}',[OffreController::class,'update']);
-    Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);
-    Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);
-
-    Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
+    Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
+    Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
     Route::get('/animateurs', [GroupeController::class, 'index']);
 
 
