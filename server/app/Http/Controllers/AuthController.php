@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
 use App\Models\Tuteur;
+use Illuminate\Support\Facades\Mail;
 
 
 class AuthController extends Controller
@@ -78,11 +79,15 @@ class AuthController extends Controller
         // $personalAccessToken->save();
 
 
+                // Mail::to($user->email)->send(new \App\Mail\testMail( $token));
+                        // $user->notify(new \App\Notifications\LoginNotification($user));
+
+
+
 
         //delete the expired tokens when a user logs in or try to login but i have to change the place of this line of code 
         // or simply i can implement a schedule to delete the expired tokens console/kernel.php  $schedule->command('sanctum:prune-expired --hours=24')->daily();
         // PersonalAccessToken::where('expires_at', '<', now())->delete();
-
         return $this->success([
             'user' => $user,
             'token' => $token,

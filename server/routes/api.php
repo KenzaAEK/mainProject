@@ -10,24 +10,34 @@ use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\Api\GroupeController;
+use App\Http\Controllers\api\password\UpdatePasswordController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
-Route::post('/login', [AuthController::class, 'login']);
+
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register']);
-
-
-
-
-
-
+Route::post('/password-reset',[AuthController::class, 'passwordReset']);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
-    
+
+
+    Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
+    Route::post('/profile', [ProfileController::class, 'profile']);
+    Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']);
+
+    Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
+    //Route::post('/password/reset', [ResetController::class, 'ResetPassword']);
+
     //========================================= ADMIN API =====================================================
     //add middlewear check role 
+
+
     Route::apiResource('activites', ActiviteController::class);
     Route::post('/offres',[OffreController::class,'store']);
     Route::get('/offres/{offres}',[OffreController::class,'show']);
@@ -62,9 +72,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('parent/offres', [OffreController::class, 'index']);
     Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
     Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
-
-
-
 
     //========================================= ANIMATEUR API =====================================================
 
