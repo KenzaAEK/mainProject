@@ -12,7 +12,6 @@ class Enfant extends Model
     protected $primaryKey = 'idEnfant';
 
     protected $fillable = [
-    'idEnfant',
     'prenom',
     'nom',
     'dateNaissance',
@@ -20,7 +19,7 @@ class Enfant extends Model
     'idTuteur'];
     public $timestamps = false;
     public function tuteur() {
-        return $this->belongsTo(Tuteur::class); // cest le parent
+        return $this->belongsTo(Tuteur::class,'idTuteur'); // cest le parent
     }
     public function groupes() {
         return $this->belongsToMany(Groupe::class, 'enfant_groupes', 'idEnfant', 'idGroupe');

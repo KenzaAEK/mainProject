@@ -43,7 +43,7 @@ class User extends Authenticatable
     public function tuteur() {
         return $this->hasOne(Tuteur::class, 'idUser');
     }
-    public function notification()
+    public function notifications()
     {
         return $this->hasMany(Notification::class, 'idUser');
     }

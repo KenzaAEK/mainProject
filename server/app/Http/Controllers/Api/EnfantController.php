@@ -37,18 +37,24 @@ class EnfantController extends Controller
         $request->validated(); 
 
         $user = auth()->user();
+        //if ($user->tuteur) {
+
         $tuteur = $user->tuteur;
         $enfant = Enfant::create([
-            //'idEnfant' => 1, a resourdre
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'dateNaissance' => $request->dateNaissance,
             'niveauEtude' => $request->niveauEtude,
             'idTuteur' => $tuteur->idTuteur
+            
         ]);
+        return $this->success($enfant, 'Enfant ajouté avec succès', 201);
+
+    //} else {
+        
+    //}
     
-        // return $this->success($enfant, 'Enfant ajouté avec succès', 201);
-        return response()->json(['tuteur' => $tuteur->idTuteur, 'messageme' => 'dsdsdasdad'], 201);
+      //  return $this->error('', 'User does not have a related Tuteur instance', 400);
 
     }
 
