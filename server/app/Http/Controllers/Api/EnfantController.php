@@ -22,8 +22,15 @@ class EnfantController extends Controller
      */
     public function index()
     {
-        $enfants = Enfant::paginate(10);  
-        return $this->success($enfants, 'Liste des enfants récupérée avec succès', 200);    }
+        $user = auth()->user();
+        $tuteur = $user->tuteur;
+        $enfants = Enfant::where('idTuteur', $tuteur->idTuteur)->paginate(10);
+        return $this->success(
+            EnfantResource::collection($enfants),
+            'Liste des enfants récupérée avec succès',
+            200
+        );
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,28 +42,16 @@ class EnfantController extends Controller
     {
         // use policies and gates ********
         $request->validated(); 
-        dd( $request);
         $user = auth()->user();
-        //if ($user->tuteur) {
-
         $tuteur = $user->tuteur;
         $enfant = Enfant::create([
-            'idEnfant' =>$request->idEnfant,
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'dateNaissance' => $request->dateNaissance,
             'niveauEtude' => $request->niveauEtude,
-            'idTuteur' => $tuteur->idTuteur
-            
+            'idTuteur' => $tuteur->idTuteur    
         ]);
-        return $this->success(dd($request), 'Enfant ajouté avec succès', 201);
-
-    //} else {
-        
-    //}
-    
-      //  return $this->error('', 'User does not have a related Tuteur instance', 400);
-
+        return $this->success($enfant, 'Enfant ajouté avec succès', 201);
     }
 
     /**
@@ -67,11 +62,12 @@ class EnfantController extends Controller
      */
     public function show($id)
     {
-        $enfant = Enfant::find($id);
-        return $enfant
-        ? new EnfantResource($enfant)
-        : response()->json(['status' => 404, 'message' => "Aucun enfant trouvé"], 404);
-
+        $enfant = Enfant::findOrFail($id);
+        return $this->success(
+            new EnfantResource($enfant),
+            'Enfant récupéré avec succès',
+            200
+        );
     }
 
     /**
@@ -83,11 +79,14 @@ class EnfantController extends Controller
      */
     public function update(UpdateEnfantRequest $request, $id)
     {
-        //use policies and gates ********
         try {
             $enfant = Enfant::findOrFail($id);
             $enfant->update($request->validated());
-            return $this->success($enfant, 'Enfant mis à jour avec succès', 200);
+            return $this->success(
+                new EnfantResource($enfant),
+                'Enfant mis à jour avec succès',
+                200
+            );
         } catch (ModelNotFoundException $e) {
             return $this->error(null, 'Enfant non trouvé', 404);
         }

@@ -115,7 +115,6 @@ return new class extends Migration
             $table->string('nom', 100);
             $table->primary(['idTuteur', 'idEnfant']);
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
-          
         });
 
         Schema::create('devis', function (Blueprint $table) {

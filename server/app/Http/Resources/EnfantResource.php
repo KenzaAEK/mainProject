@@ -14,6 +14,13 @@ class EnfantResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->idEnfant,
+            'nom' => $this->nom,
+            'prenom' => $this->prenom,
+            'dateNaissance' => $this->dateNaissance,
+            'niveauEtude' => $this->niveauEtude,
+            'idTuteur' => $this->idTuteur,
+        ];
     }
 }
