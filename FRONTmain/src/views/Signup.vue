@@ -67,6 +67,7 @@
               <button type="submit" class="w-full btt bg-black text-white p-2 rounded-md  focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300">S'inscrire</button>
             </div>
           </form>
+          <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
           <div class="mt-4 text-sm text-gray-600 text-center">
             <p>Vous avez déjà un compte? <router-link to="/login" class="conn hover:underline">Connectez-vous ici</router-link>
             </p>
@@ -87,7 +88,8 @@
       email: '',
       fonction: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      errorMessage:''
     }
   },
     methods: {
@@ -115,8 +117,15 @@
         // Redirect user to login page or show success message
         this.$router.push('/login');
       } catch (error) {
-        console.error('Registration error:', error.response.data); // Handle registration error
-        // Display error message to the user
+          if (error.response && error.response.status === 422) {
+        // Mauvaise requête - par exemple, l'utilisateur existe déjà
+        this.errorMessage = "la confirmation du mot de passe ne correspond pas.";
+        } else {
+        // Autres erreurs
+          this.errorMessage = "Cet e-mail existe déjà. Veuillez choisir un autre e-mail.";
+         }
+      console.error("Erreur d'inscription :", error);
+       
       }
     }
       
@@ -124,6 +133,9 @@
   };
   </script>
   <style scoped>
+  .error-message {
+    color: red;
+  }
   input::placeholder {
     color: rgb(66, 60, 60); /* Change the color to red */
   }

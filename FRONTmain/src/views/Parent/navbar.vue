@@ -1,5 +1,5 @@
-<template>
-        <div class="navbar bg-base-100">
+<template >
+        <div class="navbar bg-base-100" v-if="user">
             <div class="flex-1">
               <a class="btn btn-ghost text-xl"> LOGO</a>
             </div>

@@ -37,6 +37,7 @@
               <button type="submit" class="w-full btt bg-black text-white p-2 rounded-md  focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300">Se Connecter</button>
             </div>
           </form>
+          <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
           <div class="mt-4 text-sm text-gray-600 text-center">
             <p>Vous n'avez pas de compte ? <router-link to="/signup" class="conn hover:underline">S'inscrire maintenant</router-link>
             </p>
@@ -54,6 +55,7 @@
         email: '',
         password: '',
         showPassword1: false,
+        errorMessage: '',
       }
     },
     methods: {
@@ -64,16 +66,25 @@
       },
       async submitlogin()
         {
-          const response = await axios.post('/login/', {
-          email: this.email,
-          password: this.password
-        });
-        console.log(response.data.data.user.role)
-        if(response.data.data.user.role==="1"){
-            localStorage.setItem('token', response.data.data.token);
-            this.$store.dispatch('user', response.data.data.user)
-            this.$router.push('/parent');
-        }
+          try{
+            const response = await axios.post('/login/', {
+                email: this.email,
+                password: this.password
+              });
+            console.log(response.data.data.user.role)
+            if(response.data.data.user.role==="1"){
+                localStorage.setItem('token', response.data.data.token);
+                this.$store.dispatch('user', response.data.data.user)
+                this.$router.push('/parent');
+            }
+          } catch(error){
+            if (error.response && error.response.status === 401) {
+          // Unauthorized - username or password is incorrect
+            this.errorMessage = "Incorrect username or password. Please try again.";
+           }else {
+              this.errorMessage = "An error occurred. Please try again later.";
+            }
+          }
             //localStorage.setItem('token', response.data.data.token);
             //this.$router.push('/parent');
             
@@ -82,6 +93,9 @@
   }
   </script>
   <style scoped>
+  .error-message {
+    color: red;
+  }
   input::placeholder {
     color: rgb(66, 60, 60); /* Change the color to red */
   }
