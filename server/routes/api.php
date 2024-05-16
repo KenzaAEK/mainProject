@@ -15,8 +15,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 
+
+Route::apiResource('enfants', EnfantController::class);
+Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+
 Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
 Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
+
 
 
 
@@ -59,10 +64,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     //add middlewear check role 
     // for parents only and authenticated
-    Route::apiResource('enfants', EnfantController::class);
-    Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
-    Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
-    Route::post('/devis/{id}/reject', [App\Http\Controllers\DevisController::class, 'rejectDevis']);
+  
 
 
 

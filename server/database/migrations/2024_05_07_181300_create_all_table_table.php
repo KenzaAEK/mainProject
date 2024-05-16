@@ -58,12 +58,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-         Schema::create('typeactivites', function (Blueprint $table) {
-             $table->id('idTypeActivite');
-             $table->string('type', 50)->unique();
-             $table->string('domaine', 50);
-         });
-
+        Schema::create('typeactivites', function (Blueprint $table) {
+            $table->id('idTypeActivite');
+            $table->string('type', 50)->unique();
+            $table->string('domaine', 50);
+        
+   
+        });
         Schema::create('competences', function (Blueprint $table) {
             $table->id('idCompetence');
             $table->string('nom_competence', 50);
@@ -118,8 +119,6 @@ return new class extends Migration
             $table->string('nom', 100);
             $table->primary(['idTuteur', 'idEnfant']);
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
-
-
           
         });
 
@@ -169,6 +168,7 @@ return new class extends Migration
             $table->foreign('idActivite')->references('idActivite')->on('activites');
            
         });
+        
 
          Schema::create('groupes', function (Blueprint $table) {
              $table->id('idGroupe');
@@ -204,11 +204,10 @@ return new class extends Migration
              $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
          });
 
-         Schema::create('disponibilite_animateur', function (Blueprint $table) {
-             $table->integer('idAnimateur');
-             $table->integer('idHoraire');
-             $table->primary(['idAnimateur', 'idHoraire']);
-
+        Schema::create('disponibilite_animateur', function (Blueprint $table) {
+            $table->integer('idAnimateur');
+            $table->integer('idHoraire');
+            $table->primary(['idAnimateur', 'idHoraire']);
              $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
              $table->foreign('idHoraire')->references('idHoraire')->on('horaires');
          });
@@ -271,6 +270,9 @@ return new class extends Migration
 
         
     }
+
+        
+    
 
     /**
      * Reverse the migrations.
