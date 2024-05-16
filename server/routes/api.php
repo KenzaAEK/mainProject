@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\Api\GroupeController;
+use App\Http\Controllers\Api\AnimateurController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -38,7 +39,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     
    //********Traitement d'Animateurs*************** 
    
-   
+   Route::get('/Animateurs',[AnimateurController::class,' AffAnimConnecter']);
    
    
     // ********Traitement Administrateurs**********
