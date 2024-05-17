@@ -25,6 +25,6 @@ class Offre extends Model
 
     public function offre_activite()
     {
-        return $this->hasMany(Offre_activite::class, 'idOffre');
+        return $this->hasMany(OffreActivite::class, 'idOffre');
     }
 }
