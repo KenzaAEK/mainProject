@@ -43,7 +43,7 @@ class AnimateurController extends Controller
         {
             return response()->json(['error' => 'il y a eu un probleme lors de la recuperation de ID animateur',400]);
         }
-        $resultats = DB::select("SELECT * FROM getEnfantActivites(?)", [$idAnimateur]); 
+        $resultats = DB::select("SELECT * FROM getEnfantActivitess(?)", [$idAnimateur]); 
         
         return response()->json($resultats);
     }
