@@ -96,11 +96,12 @@ return new class extends Migration
 
         Schema::create('activites', function (Blueprint $table) {
             $table->id('idActivite');
-            $table->string('titre', 100);
+            $table->string('titre', 50);
             $table->text('description');
-            $table->string('imagePub', 255)->nullable();
-            $table->string('lienYtb',255);
-            $table->longText('programmePdf',255);
+            $table->text('objectif');
+            $table->string('imagePub', 50)->nullable();
+            $table->string('lienYtb');
+            $table->longText('programmePdf');
             $table->unsignedBigInteger('idTypeActivite');
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
             $table->timestamps();
