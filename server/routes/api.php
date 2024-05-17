@@ -17,8 +17,7 @@ use App\Http\Controllers\Api\TypeActiviteController;
 ╚==========================================================================╝
 */
 
-Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('/password/reset', [PasswordResetController::class, 'reset']);
+
 
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
@@ -66,7 +65,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
-        Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
+        Route::post('/admin/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
         Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
         // Route::post('/offres',[OffreController::class,'store']);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
