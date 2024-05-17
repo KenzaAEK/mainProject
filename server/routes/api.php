@@ -8,22 +8,32 @@ use App\Http\Controllers\Api\AdministrateurController;
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\EnfantController;
+use App\Http\Controllers\Api\Password\PasswordResetController;
 use App\Http\Controllers\Api\TypeActiviteController;
-
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-
-
-
-
-
-
 
 /*
 ╔==========================================================================╗
 ║                           All Users Routes                                   ║
 ╚==========================================================================╝
 */
+
+Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/password/reset', [PasswordResetController::class, 'reset']);
+
+Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
+Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
+
+
+
+
+
+
+
+
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -96,7 +106,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 ║                           Animateur Routes                              ║
 ╚==========================================================================╝
 */
-    Route::group([ 'prefix' => 'parent'], function () {
+    Route::group([ 'prefix' => 'animateur'], function () {
         
     
     
