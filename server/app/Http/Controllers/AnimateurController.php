@@ -43,10 +43,47 @@ class AnimateurController extends Controller
         {
             return response()->json(['error' => 'il y a eu un probleme lors de la recuperation de ID animateur',400]);
         }
+        $page = $request->input('page',1);
+        $parpage = 5;
         $resultats = DB::select("SELECT * FROM getEnfantActivitess(?)", [$idAnimateur]); 
-        
-        return response()->json($resultats);
+        $collection = collect($resultats);
+        $resultatPaginer = new \Illuminate\Pagination\LengthAwarePaginator(
+             $collection->forPage($page,$parpage),
+             $collection->count(),
+             $parpage,
+             $page,
+             ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return response()->json($resultatPaginer);
     }
+
+    public function searshEtud (Request $request )
+    {
+        $user = $request->user();
+        $idAnimateur = Animateur::where('idUser', $user->idUser)->value('idAnimateur');
+        if (is_null($idAnimateur)) {
+            return response()->json(['error' => 'Problème lors de la récupération de id animateur'], 400);
+        }
+        $prenomSearch = $request->input('prenom_search');
+        $nomSearch = $request->input('nom_search');
+        $resultats = DB :: select ("SELECT * FROM getenfantactivitesnom(?,?,?)",[$idAnimateur,$prenomSearch,$nomSearch]);
+        $eleves = collect($resultats);
+        $page = $request->input('page', 1);
+        $perPage = 5;
+        $paginatedResults = new \Illuminate\Pagination\LengthAwarePaginator(
+            $eleves->forPage($page, $perPage),
+            $eleves->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+    
+        return response()->json($paginatedResults);
+    }
+    
+    
+
   
 
 
