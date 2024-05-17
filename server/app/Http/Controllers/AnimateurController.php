@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Animateur;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class AnimateurController extends Controller
 {
@@ -22,7 +25,7 @@ class AnimateurController extends Controller
     {
         $user = $request->user();
 
-       $Animateur = User::where('idUser',$user->idUser)->get();
+       $Animateur = Animateur::where('idUser',$user->idUser)->get();
       
        if ($Animateur) {
          return response()->json($Animateur);
@@ -34,7 +37,15 @@ class AnimateurController extends Controller
 
     public function AffEtudAnim(Request $request)
     {
+        $user = $request->user();
+        $idAnimateur = Animateur::where('idUser',$user->idUser)->value('idAnimateur');
+        if(is_null($idAnimateur))
+        {
+            return response()->json(['error' => 'il y a eu un probleme lors de la recuperation de ID animateur',400]);
+        }
+        $resultats = DB::select("SELECT * FROM getEnfantActivites(?)", [$idAnimateur]); 
         
+        return response()->json($resultats);
     }
   
 

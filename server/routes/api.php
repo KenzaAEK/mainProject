@@ -40,7 +40,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
    //********Traitement d'Animateurs*************** 
    
    Route::get('/Animateurs',[AnimateurController::class,'AffAnimConnecter']);// Afficher ici les informations de l'Animateur connecter
-   
+   Route::get('/AnimateursEnf',[AnimateurController::class,'AffEtudAnim']);
+
    
     // ********Traitement Administrateurs**********
     
