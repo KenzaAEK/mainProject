@@ -9,13 +9,13 @@ class Animateur extends Model
 {
     use HasFactory;
     protected $primaryKey = 'idAnimateur';
-    protected $table = 'Animateurs';
+    protected $table = 'animateurs';
 
     protected $fillable = [
         'idUser',
     ];
 
-    public function users() {
+    public function user() {
         return $this->belongsTo(User::class);  
     }
     public function Competences()

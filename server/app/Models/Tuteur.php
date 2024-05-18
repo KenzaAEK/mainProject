@@ -16,14 +16,15 @@ class Tuteur extends Model
         'fonction', // Je suppose que c'est le champ 'fonction' que vous avez ajouté
     ];
 
-    public function users() {
-        return $this->belongsTo(User::class);
+    public function user() {
+        return $this->belongsTo(User::class,'idUser');
         
     }
     public function demande_inscription() {
-        return $this->hasMany(Demande_inscription::class, 'idTuteur');
+        return $this->hasMany(DemandeInscription::class, 'idTuteur');
     }
     public function enfants() {
         return $this->hasMany(Enfant::class, 'idTuteur');
     }
+    
 }

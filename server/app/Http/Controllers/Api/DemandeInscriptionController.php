@@ -7,10 +7,14 @@ use App\Http\Requests\Tuteur\StoreDemandeInscriptionRequest;
 use App\Http\Requests\Tuteur\UpdateDemandeInscriptionRequest;
 use Illuminate\Http\Request;
 use App\Models\DemandeInscription;
+use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Resources\DemandeInscriptionResource;
+use App\Models\Pack;
 
 class DemandeInscriptionController extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      *
@@ -30,9 +34,24 @@ class DemandeInscriptionController extends Controller
      */
     public function store(StoreDemandeInscriptionRequest $request)
     {
-        $demande = DemandeInscription::create($request->validated());
-        return response()->json(['status' => 201, 'message' => 'Demande d\'inscription ajoutée avec succès', 'demande' => $demande], 201);
+        try {
+            $user = auth()->user();
+            $tuteurId = $user->tuteur->idTuteur;
+            $pack = Pack::where('type', $request->typePack)->firstOrFail();
     
+            $demande = DemandeInscription::create([
+                'optionsPaiement' => $request->optionsPaiement,
+                'idTuteur' => $tuteurId,
+                'idPack' => $pack->idPack,
+            ]);
+    
+           
+            //event(new NewDemandeInscriptionEvent($demande));***********************
+    
+            return $this->success(['demande' => $demande], 'Demande d\'inscription ajoutée avec succès', 201);
+        } catch (\Exception $e) {
+            return $this->error(null,'Failed to create demande. ' . $e->getMessage(), 422);
+        }
     }
 
     /**
@@ -43,7 +62,10 @@ class DemandeInscriptionController extends Controller
      */
     public function show($id)
     {
-        //
+        $demande = DemandeInscription::find($id);
+        return $demande
+        ? new DemandeInscriptionResource($demande) // Use a resource for consistent formatting
+        : $this->error(null, 'Demande d\'inscription non trouvée', 404);
     }
 
     /**
@@ -58,9 +80,9 @@ class DemandeInscriptionController extends Controller
         try {
             $demande = DemandeInscription::findOrFail($id);
             $demande->update($request->validated());
-            return response()->json(['status' => 200, 'message' => 'Demande d\'inscription mise à jour avec succès', 'demande' => $demande], 200);
+            return $this->success($demande, 'Demande d\'inscription mise à jour avec succès', 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['status' => 404, 'message' => 'Demande d\'inscription non trouvée'], 404);
+            return $this->error(null, 'Demande d\'inscription non trouvée', 404);
         }
     }
 
@@ -74,10 +96,10 @@ class DemandeInscriptionController extends Controller
     {
         $demande = DemandeInscription::find($id);
         if (!$demande) {
-            return response()->json(['status' => 404, 'message' => "Demande d'inscription non trouvée"], 404);
+            return $this->error(null, 'Demande d\'inscription non trouvée', 404);
         }
 
         $demande->delete();
-        return response()->json(['status' => 200, 'message' => "Demande d'inscription supprimée avec succès"], 200);
+        return $this->success(null, 'Demande d\'inscription supprimée avec succès', 200);
     }
 }

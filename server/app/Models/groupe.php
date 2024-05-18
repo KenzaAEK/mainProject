@@ -25,7 +25,7 @@ class Groupe extends Model
    
     public function offre_activite()
     {
-        return $this->belongsTo(Offre_activite::class);
+        return $this->belongsTo(OffreActivite::class);
     }
     public function enfants() {
         return $this->belongsToMany(Enfant::class, 'enfant_groupe', 'id_grp', 'idEnfant','idTuteur');

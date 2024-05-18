@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class typeActivite extends Model
+class TypeActivite extends Model
 {
     use HasFactory;
 
@@ -26,5 +26,10 @@ class typeActivite extends Model
     public function competance()
     {
         return $this->belongsToMany(competence::class,'competance_activite','id_Activite','id_competence');	
+    }
+    public static function getIdByType($type)
+    {
+        $typeActivite = self::where('type', $type)->first();
+        return $typeActivite ? $typeActivite->idTypeActivite : null;
     }
 }

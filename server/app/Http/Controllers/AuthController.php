@@ -11,6 +11,7 @@ use App\Http\Requests\Auth\StoreUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
+use App\Models\Tuteur;
 
 
 class AuthController extends Controller
@@ -23,7 +24,7 @@ class AuthController extends Controller
 
 
         $existingUser = User::where('email', $request->email)->first();
-
+        
         if ($existingUser) {
             // User already exists
             return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
@@ -36,8 +37,9 @@ class AuthController extends Controller
             'email' => $request->email,
             'tel' => $request->tel,
             'password' => Hash::make($request->password),    //or the  bcrypt($request->password)
-            'role' => "1", // 1 = parent , 2 = admin , 3 = animateur
+            'role' => "2", // 1 = parent , 2 = admin , 3 = animateur
         ]);
+        Tuteur::create(['idUser' => $user->idUser]);
         $token = $user->createToken('token-name')->plainTextToken;
 
         //$token = $user->createToken('token-name', [], now()->addMinutes(30))->plainTextToken;  // automated in the config/sanctum.php file

@@ -13,6 +13,6 @@ class Paiement_gateway extends Model
     public $timestamps = false;
     public function offre_activite()
     {
-        return $this->hasMany(Offre_activite::class, 'idPaiment');
+        return $this->hasMany(OffreActivite::class, 'idPaiment');
     }
 }

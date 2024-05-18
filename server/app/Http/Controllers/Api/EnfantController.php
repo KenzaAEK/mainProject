@@ -8,10 +8,13 @@ use App\Http\Requests\Tuteur\UpdateEnfantRequest;
 use Illuminate\Http\Request;
 use App\Models\Enfant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
+use App\Http\Resources\EnfantResource;
+use App\Traits\HttpResponses;
+use Illuminate\Support\Facades\Log;
 
 class EnfantController extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +22,14 @@ class EnfantController extends Controller
      */
     public function index()
     {
-        $enfants = Enfant::paginate(10);  
-        return response()->json($enfants);
+        $user = auth()->user();
+        $tuteur = $user->tuteur;
+        $enfants = Enfant::where('idTuteur', $tuteur->idTuteur)->paginate(10);
+        return $this->success(
+            EnfantResource::collection($enfants),
+            'Liste des enfants récupérée avec succès',
+            200
+        );
     }
 
     /**
@@ -30,20 +39,26 @@ class EnfantController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreEnfantRequest $request)
-    {
-        $user = auth()->user();
+{
+    $request->validated(); 
+    $user = auth()->user();
+    $tuteur = $user->tuteur;
 
-            if (!$user || !$user->tuteur) {  // change to gate *********
-            return response()->json(['status' => 403, 'message' => 'Action non autorisée'], 403);
-        }
-
-        $data = $request->validated();
-        $data['idTuteur'] = $user->tuteur->idTuteur;
-
-        $enfant = Enfant::create($data);
-
-        return response()->json(['status' => 201, 'message' => 'Enfant ajouté avec succès', 'enfant' => $enfant], 201);
+    if (!$tuteur) {
+        return response()->json(['error' => 'No tuteur associated with the user'], 403);
     }
+
+    $enfant = Enfant::create([
+        'nom' => $request->nom,
+        'prenom' => $request->prenom,
+        'dateNaissance' => $request->dateNaissance,
+        'niveauEtude' => $request->niveauEtude,
+        'idTuteur' => $tuteur->idTuteur    
+    ]);
+
+    return $this->success($enfant, 'Enfant ajouté avec succès', 201);
+}
+
 
     /**
      * Display the specified resource.
@@ -53,12 +68,25 @@ class EnfantController extends Controller
      */
     public function show($id)
     {
-        $enfant = Enfant::find($id);
-        return $enfant
-            ? response()->json(['status' => 200, 'enfant' => $enfant], 200)
-            : response()->json(['status' => 404, 'message' => "Aucun enfant trouvé"], 404);
+        $user = auth()->user();
+        $tuteur = $user->tuteur;
     
+        // Check if the tuteur is null
+        if (!$tuteur) {
+            return $this->error(null, 'Aucun tuteur associé à l\'utilisateur', 403);
+        }
+    
+        try {
+            $enfant = Enfant::where('idTuteur', $tuteur->idTuteur)->findOrFail($id);
+            return $this->success(new EnfantResource($enfant), 'Enfant récupéré avec succès', 200);
+        } catch (ModelNotFoundException $e) {
+            return $this->error(null, 'Enfant non trouvé', 404);
+        } catch (\Exception $e) {
+            // Handle other potential errors
+            return $this->error(null, 'Erreur lors de la récupération de l\'enfant', 500);
+        }
     }
+    
 
     /**
      * Update the specified resource in storage.
@@ -67,17 +95,31 @@ class EnfantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateEnfantRequest $request, $id)
-    {
-        //use policies and gates ********
-        try {
-            $enfant = Enfant::findOrFail($id);
-            $enfant->update($request->validated());
-            return response()->json(['status' => 200, 'message' => 'Enfant mis à jour avec succès', 'enfant' => $enfant], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['status' => 404, 'message' => 'Enfant non trouvé'], 404);
-        }
-    }
+
+     
+     public function update(UpdateEnfantRequest $request, $id)
+     {
+         $user = auth()->user();
+         $tuteur = $user->tuteur;
+     
+         // Check if tuteur is null
+         if (!$tuteur) {
+             return $this->error(null, 'Aucun tuteur associé à l\'utilisateur', 403);
+         }
+     
+         try {
+             $enfant = Enfant::where('idTuteur', $tuteur->idTuteur)->findOrFail($id);
+             $enfant->update($request->validated());
+     
+             return $this->success(new EnfantResource($enfant), 'Enfant mis à jour avec succès', 200);
+         } catch (ModelNotFoundException $e) {
+             return $this->error(null, 'Enfant non trouvé', 404);
+         } catch (\Exception $e) {
+             // Handle other potential errors
+             return $this->error(null, 'Erreur lors de la mise à jour de l\'enfant', 500);
+         }
+     }
+     
 
     /**
      * Remove the specified resource from storage.
@@ -87,13 +129,16 @@ class EnfantController extends Controller
      */
     public function destroy($id)
     {
-        $enfant = Enfant::find($id);
-        if (!$enfant) {
-            return response()->json(['status' => 404, 'message' => "Aucun enfant trouvé"], 404);
-        }
+        $user = auth()->user();
+    $tuteur = $user->tuteur;
+    $enfant = Enfant::where('idTuteur', $tuteur->idTuteur)->find($id);
 
-        $enfant->delete();
-        return response()->json(['status' => 200, 'message' => "Enfant supprimé avec succès"], 200);
+    if (!$enfant) {
+        return $this->error(null, 'Aucun enfant trouvé', 404);
+    }
+
+    $enfant->delete();
+    return $this->success(null, 'Enfant supprimé avec succès', 200);
     
     }
 }

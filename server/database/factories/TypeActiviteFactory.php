@@ -17,7 +17,8 @@ class TypeActiviteFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'type' => $this->faker->unique()->word, // Generate a unique word for the 'type' column
+            'domaine' => $this->faker->word,
         ];
     }
 }

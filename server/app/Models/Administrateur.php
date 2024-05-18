@@ -24,7 +24,7 @@ class Administrateur extends Model
       
     }
     public function demande_inscription() {
-        return $this->belongsToMany(Demande_inscription::class, 'admin_traiter', 'idAdmin', 'idDemande');
+        return $this->belongsToMany(DemandeInscription::class, 'admin_traiter', 'idAdmin', 'idDemande');
     }
     
 }

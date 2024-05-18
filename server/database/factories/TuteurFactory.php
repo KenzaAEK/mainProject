@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class TuteurFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'idUser' => User::factory()->create()->idUser,
+            'fonction' => $this->faker->sentence(2),
         ];
     }
 }

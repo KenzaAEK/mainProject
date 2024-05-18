@@ -19,19 +19,22 @@ class Devis extends Model
         'datedevis',
         'idFacture',
         'idDemande',
-        'idNotification'
+        'idNotification',
+        'status',
+        'rejection_reason'
+
     ];
 
 
 
 
-    public function factures() {
+    public function facture() {
         return $this->hasOne(Facture::class, 'idDevis');
     }
     public function demandeInscription() {
-        return $this->belongsTo(Demande_Inscription::class);
+        return $this->belongsTo(DemandeInscription::class,'idDemande');
     }
-    public function notifications() {
+    public function notification() {
         return $this->hasOne(Notification::class, 'idDevis');
     }
 }
