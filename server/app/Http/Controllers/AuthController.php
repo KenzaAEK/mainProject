@@ -37,7 +37,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'tel' => $request->tel,
             'password' => Hash::make($request->password),    //or the  bcrypt($request->password)
-            'role' => "2", // 1 = parent , 2 = admin , 3 = animateur
+            'role' => "2", // 2 = parent , 1 = admin , 3 = animateur
         ]);
         Tuteur::create(['idUser' => $user->idUser]);
         $token = $user->createToken('token-name')->plainTextToken;
