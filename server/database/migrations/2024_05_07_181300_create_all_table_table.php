@@ -257,7 +257,7 @@ return new class extends Migration
             $table->integer('idEnfant');
             $table->integer('idOffre');
             $table->integer('idActivite');
-            $table->decimal('totalavecRemise', 10, 3);
+            $table->decimal('prixtotalRemise', 10, 3);
             $table->primary(['idDemande', 'idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
             $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');

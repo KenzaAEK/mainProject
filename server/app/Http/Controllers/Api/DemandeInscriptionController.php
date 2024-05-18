@@ -10,7 +10,10 @@ use App\Models\DemandeInscription;
 use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\DemandeInscriptionResource;
+use App\Models\Activite;
+use App\Models\offreActivite;
 use App\Models\Pack;
+use Illuminate\Support\Facades\DB;
 
 class DemandeInscriptionController extends Controller
 {
@@ -79,7 +82,8 @@ class DemandeInscriptionController extends Controller
 
                     
                     }
-                    foreach ($prixT as $prixTA){ // PrixTA = prix de l'activite ; prixT = tableau des prix des activites
+                    foreach ($prixT as $prixTA)
+                    { // PrixTA = prix de l'activite ; prixT = tableau des prix des activites
                         $c =0;
                         if($c < $limite)
                         {
@@ -90,13 +94,13 @@ class DemandeInscriptionController extends Controller
                         } 
                         $c++;
 
-                }
-                $dmInscription->enfants()->attach($idEnfant,[
-                    'idTuteur'=>$idTuteur,
-                    'idOffre'=>$offreActivite->idOffre,
-                    'idActivite'=>$offreActivite->idActivite,
-                    'prixtotalRemise' =>$prixTot
-                ]);
+                        }
+                    $dmInscription->enfants()->attach($enfant->idEnfant,[
+                        'idTuteur'=>$idTuteur,
+                        'idOffre'=>$offreActivite->idOffre,
+                        'idActivite'=>$offreActivite->idActivite,
+                        'prixtotalRemise' =>$prixTot
+                    ]);
               
                 
               }
@@ -113,12 +117,12 @@ class DemandeInscriptionController extends Controller
   }   
     
     
-    public function ShowEnfant()
-       {
-        $user = $request->user();
-        $enfants = $user->Tuteur->Enfants;
-        return response()->json([$enfants]); 
-       }
+    // public function ShowEnfant()
+    //    {
+    //     $user = $request->user();
+    //     $enfants = $user->Tuteur->Enfants;
+    //     return response()->json([$enfants]); 
+    //    }
 
     /**
      * Display the specified resource.
