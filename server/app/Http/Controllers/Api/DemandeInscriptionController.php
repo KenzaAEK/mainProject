@@ -35,14 +35,14 @@ class DemandeInscriptionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreDemandeInscriptionRequest $request)
+    public function store(Request $request)
     {
         DB::beginTransaction();
       try{  
         $dmInscription = new DemandeInscription();
-        $dmInscription->save();
+        $dmInscription->optionsPaiement = 'mois';
         $user = $request->user();
-        $idTuteur = $user->Tuteur->idTuteur;
+        $idTuteur = 1;
         $Secenfants = $request->enfants; 
         $nbrEnfants = is_array($Secenfants) ? count($Secenfants) : 0 ;
         $dmInscription->idTuteur = $idTuteur;
@@ -53,7 +53,7 @@ class DemandeInscriptionController extends Controller
         $dmInscription->idPack = $pack->idPack;
 
         //
-        $offreActivite = offreActivite::where('titre',$request->offre)->firstOrFail(); // ? crudEnfant
+        $offreActivite = offreActivite::where('idOffre',$request->idOffre)->firstOrFail(); // ? crudEnfant
 
         $ateliers = $request->Ateliers ; 
         $prixTot = 0 ;
@@ -73,7 +73,7 @@ class DemandeInscriptionController extends Controller
                     {
                         $activite = Activite::where('titre',$AteliersData['titre'])->firstOrFail();
                         if(!$activite){
-                            DB::rollback();
+                            // DB::rollback();
                             return response()->json(['error'=>'Activite introuvable',404]);
                         }
                         $idActivite = $activite->idActivite;
