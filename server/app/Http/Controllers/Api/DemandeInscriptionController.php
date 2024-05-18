@@ -44,6 +44,7 @@ class DemandeInscriptionController extends Controller
         $user = $request->user();
         $idTuteur = $user->Tuteur->idTuteur;
         $Secenfants = $request->enfants; 
+        $nbrEnfants = is_array($Secenfants) ? count($Secenfants) : 0 ;
         $dmInscription->idTuteur = $idTuteur;
         
         //
@@ -56,9 +57,9 @@ class DemandeInscriptionController extends Controller
 
         $ateliers = $request->Ateliers ; 
         $prixTot = 0 ;
-        if ($request->typePack == 'PackEnfant')
+        if ( $nbrEnfants >2 && $request->typePack == 'PackEnfant')
         {
-
+            
         }
         else if  ($request->typePack == 'PackAtelier')
         {
@@ -94,13 +95,13 @@ class DemandeInscriptionController extends Controller
                         } 
                         $c++;
 
-                        }
-                    $dmInscription->enfants()->attach($enfant->idEnfant,[
-                        'idTuteur'=>$idTuteur,
-                        'idOffre'=>$offreActivite->idOffre,
-                        'idActivite'=>$offreActivite->idActivite,
-                        'prixtotalRemise' =>$prixTot
-                    ]);
+                }
+                $dmInscription->enfants()->attach($idEnfant,[
+                    'idTuteur'=>$idTuteur,
+                    'idOffre'=>$offreActivite->idOffre,
+                    'idActivite'=>$offreActivite->idActivite,
+                    'prixtotalRemise' =>$prixTot
+                ]);
               
                 
               }
