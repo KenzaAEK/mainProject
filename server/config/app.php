@@ -191,7 +191,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
+        'Password' => Illuminate\Support\Facades\Password::class,
+
     ])->toArray(),
 
 ];

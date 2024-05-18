@@ -16,7 +16,7 @@ class Tuteur extends Model
         'fonction', // Je suppose que c'est le champ 'fonction' que vous avez ajouté
     ];
 
-    public function users() {
+    public function user() {
         return $this->belongsTo(User::class,'idUser');
         
     }

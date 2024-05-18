@@ -4,6 +4,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Animateur;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,7 +25,7 @@ class AnimateurFactory extends Factory
     public function definition()
     {
         return [
-            'idUser' => $this->faker->unique()->numberBetween(1, 50)  // Assurez-vous que ces utilisateurs existent ou adaptez selon vos besoins
+            'idUser' => User::factory()->create()->idUser,
         ];
     }
 }

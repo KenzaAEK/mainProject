@@ -22,8 +22,11 @@ class Groupe extends Model
     {
         return $this->belongsToMany(Animateur::class, 'animateur_groupes', 'idGroupe', 'idAnimateur');
     }
-    
-
+   
+    public function offre_activite()
+    {
+        return $this->belongsTo(OffreActivite::class);
+    }
     public function enfants() {
         return $this->belongsToMany(Enfant::class, 'enfant_groupe', 'idGroupe', 'idEnfant')
         ->withPivot('idTuteur'); 

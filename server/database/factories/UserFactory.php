@@ -25,7 +25,7 @@ class UserFactory extends Factory
         return [
             'nom' => $this->faker->lastName,
             'prenom' => $this->faker->firstName,
-            'email' => $this->faker->unique()->safeEmail,
+            'email' => $this->faker->unique()->safeEmail, // Generate unique email addresses
             'tel' => $this->faker->phoneNumber,
             'email_verified_at' => now(),
             'password' => bcrypt('password'), // Vous pouvez utiliser la fonction de hachage pour le mot de passe

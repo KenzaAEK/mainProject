@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\DemandeInscription;
-use App\Models\Devis;
-use App\Models\Notification;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 
 class AdministrateurController extends Controller
-{
+{   
+    use HttpResponses; 
+    
     public function approveDemande(Request $request, $idDemande)
     {
         $demande = DemandeInscription::findOrFail($idDemande);
@@ -37,3 +39,4 @@ class AdministrateurController extends Controller
 {
 }
 }
+

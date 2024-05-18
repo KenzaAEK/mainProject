@@ -16,7 +16,7 @@ class Animateur extends Model
     ];
 
     public function user() {
-        return $this->belongsTo(User::class, 'idUser');
+        return $this->belongsTo(User::class);  
     }
     public function Competences()
     {

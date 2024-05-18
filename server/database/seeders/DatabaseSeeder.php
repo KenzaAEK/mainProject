@@ -2,9 +2,18 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Activite;
+use App\Models\Administrateur;
+use App\Models\Animateur;
+use App\Models\DemandeInscription;
+use App\Models\Devis;
+use App\Models\Enfant;
+use App\Models\Facture;
+use App\Models\Notification;
+use App\Models\Pack;
+use App\Models\Tuteur;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-
 class DatabaseSeeder extends Seeder
 {
     /**

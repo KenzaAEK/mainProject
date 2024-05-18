@@ -32,7 +32,7 @@ class Offre extends Model
 
     public function offreActivite()
     {
-        return $this->hasMany(offreActivite::class, 'idOffre');
+        return $this->hasMany(OffreActivite::class, 'idOffre');
     }
    /* public static function createWithNextId($data)
     {

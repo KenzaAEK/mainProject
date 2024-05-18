@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\CanResetPassword;
 
 class User extends Authenticatable
 {
@@ -43,7 +44,7 @@ class User extends Authenticatable
     public function tuteur() {
         return $this->hasOne(Tuteur::class, 'idUser');
     }
-    public function notification()
+    public function notifications()
     {
         return $this->hasMany(Notification::class, 'idUser');
     }
