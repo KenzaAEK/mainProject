@@ -33,10 +33,16 @@ class DemandeInscription extends Model
         return $this->hasOne(Devis::class, 'idDemande');
     }
 
-    public function offre_activite() {
-        return $this->belongsToMany(OffreActivite::class, 'inscriptionEnfant_offre_Activite', 'idDemande', 'idOffre','idActivite');
+    public function offresactivite() :BelongToMany
+    {
+        return $this->belongsToMany(offreActivite::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite');
     }
-
-    public function enfants() {
-        return $this->belongsToMany(Enfant::class, 'inscriptionEnfant_offre_Activite', 'idDemande', 'idEnfant','idTuteur');    }
+    public function enfants() 
+    {
+        {
+            return $this->belongsToMany(Enfants::class,'inscriptionEnfant_offre_Activite')
+                        ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite');
+        }
+    }
 }

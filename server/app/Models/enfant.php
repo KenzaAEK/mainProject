@@ -35,6 +35,19 @@ class Enfant extends Model
     {
         return $this->belongsToMany(offreActivite::class, 'planning_enfant', 'idActivite', 'idEnfant','idTuteur','idOffre');
     }
+
+    // this association inscriptionEnfant_offre_Activite
+    public function offreactivites() :BelongToMany
+    {
+        return $this->belongsToMany(offreActivite::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite');
+    }
+    
+    public function DemandeInscription() :BelongToMany
+    {
+        return $this->belongsToMany(DemandeInscription::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite');
+    }
     
     //for autoincrement of idEnfant
     protected static function boot()

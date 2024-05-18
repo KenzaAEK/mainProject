@@ -34,25 +34,73 @@ class DemandeInscriptionController extends Controller
      */
     public function store(StoreDemandeInscriptionRequest $request)
     {
-        try {
-            $user = auth()->user();
-            $tuteurId = $user->tuteur->idTuteur;
-            $pack = Pack::where('type', $request->typePack)->firstOrFail();
-    
-            $demande = DemandeInscription::create([
-                'optionsPaiement' => $request->optionsPaiement,
-                'idTuteur' => $tuteurId,
-                'idPack' => $pack->idPack,
-            ]);
-    
-           
-            //event(new NewDemandeInscriptionEvent($demande));***********************
-    
-            return $this->success(['demande' => $demande], 'Demande d\'inscription ajoutée avec succès', 201);
-        } catch (\Exception $e) {
-            return $this->error(null,'Failed to create demande. ' . $e->getMessage(), 422);
+        $dmInscription = new DemandeInscription();
+        $user = $request->user();
+        $idTuteur = $user->Tuteur->idTuteur;
+        $Secenfants = $request->enfants; 
+        $SecAteliers = $request->Ateliers;
+        //
+        
+        $pack = Pack :: where('type',$request->type ); 
+
+        //
+        $offreActivite = offreActivite::where('titre',$request->offre); // ? crudEnfant
+
+        $ateliers = $request->Ateliers ; 
+        $prixTot = 0 ;
+        if ($request->typePack == 'PackAtelier')
+        {
+            $i = 0; 
+            $limite = $pack->limite;
+            $remise = $pack->remise;
+            {
+              foreach($request->enfants as $enfant)
+              {  
+                    foreach($request->Ateliers as $AteliersData)
+                    {
+                        $activite = Activite::where('titre',$AteliersData['titre'])->first();
+                        if(!$activite){
+                            DB::rollback();
+                            return response()->json(['error'=>'Activite introuvable',404]);
+                        }
+                        $idActivite = $activite->idActivite;
+                        $prix = $offreActivite->tarif->where('idActivite',$idActivite);
+                        $prixT[$i] = $prix;
+                        $i++;
+                    
+                    }
+                    foreach ($prixT as $prixTA){ // PrixTA = prix de l'activite ; prixT = tableau des prix des activites
+                        $c =0;
+                        if($c < $limite)
+                        {
+                            $prixTot+= $prixTA -($c * $remise * $prixTA);
+                        } 
+                        else{
+                            $prixTot += $prixTA; // prixTot =  prix total final avec remise 
+                        } 
+                        $c++;   
+                }
+              
+                
+              }
+           }
         }
+        else if ($request->typePack == 'PackEnfant')
+           {
+
+           }
+
     }
+      
+    
+    
+    
+    public function ShowEnfant()
+       {
+        $user = $request->user();
+        $enfants = $user->Tuteur->Enfants;
+        return response()->json([$enfants]); 
+       }
 
     /**
      * Display the specified resource.

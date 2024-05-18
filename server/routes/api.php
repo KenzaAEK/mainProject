@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\Api\Password\PasswordResetController;
 use App\Http\Controllers\Api\TypeActiviteController;
+use App\Http\Controllers\Api\GroupeController;
+use App\Http\Controllers\AnimateurController;
 
 /*
 ╔==========================================================================╗
@@ -26,19 +28,10 @@ Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPa
 
 
 
-
-
-
-
-use App\Http\Controllers\DevisController;
-use App\Http\Controllers\Api\GroupeController;
-use App\Http\Controllers\AnimateurController;
-
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 
-<<<<<<<<< Temporary merge branch 1
 Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
 Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 
@@ -46,11 +39,9 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 
 Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
 Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
-=========
 
 Route::apiResource('enfants', EnfantController::class);
 Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
->>>>>>>>> Temporary merge branch 2
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {

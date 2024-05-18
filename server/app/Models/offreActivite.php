@@ -49,11 +49,20 @@ class offreActivite extends Model
     {
         return $this->belongsToMany(Enfant::class, 'planning', 'idOffreActivite', 'idEnfant');
     }
-   
-    public function inscriptionEnfantOffreActivite()
+// this association inscriptionEnfant_offre_Activite
+    public function enfants() :BelongToMany
     {
-        return $this->hasOne(inscriptionEnfantOffreActivite::class, 'idInscriptionEnfantOffreActivite');
+        return $this->belongsToMany(enfant::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite');
     }
+
+   
+    public function DemandeInscription() :BelongToMany
+    {
+        return $this->belongsToMany(DemandeInscription::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite');
+    }
+    
    
     public function groupe(){
         return $this->hasOne(Groupe::class, 'idGroupe');
