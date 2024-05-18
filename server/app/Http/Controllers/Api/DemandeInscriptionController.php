@@ -34,17 +34,22 @@ class DemandeInscriptionController extends Controller
      */
     public function store(StoreDemandeInscriptionRequest $request)
     {
+        DB::beginTransaction();
+      try{  
         $dmInscription = new DemandeInscription();
+        $dmInscription->save();
         $user = $request->user();
         $idTuteur = $user->Tuteur->idTuteur;
         $Secenfants = $request->enfants; 
-        $SecAteliers = $request->Ateliers;
+        $dmInscription->idTuteur = $idTuteur;
+        
         //
         
-        $pack = Pack :: where('type',$request->type ); 
+        $pack =  Pack::where('type', $request->type)->firstOrFail();
+        $dmInscription->idPack = $pack->idPack;
 
         //
-        $offreActivite = offreActivite::where('titre',$request->offre); // ? crudEnfant
+        $offreActivite = offreActivite::where('titre',$request->offre)->firstOrFail(); // ? crudEnfant
 
         $ateliers = $request->Ateliers ; 
         $prixTot = 0 ;
@@ -54,11 +59,11 @@ class DemandeInscriptionController extends Controller
             $limite = $pack->limite;
             $remise = $pack->remise;
             {
-              foreach($request->enfants as $enfant)
+              foreach( $Secenfants as $enfant)
               {  
                     foreach($request->Ateliers as $AteliersData)
                     {
-                        $activite = Activite::where('titre',$AteliersData['titre'])->first();
+                        $activite = Activite::where('titre',$AteliersData['titre'])->firstOrFail();
                         if(!$activite){
                             DB::rollback();
                             return response()->json(['error'=>'Activite introuvable',404]);
@@ -67,6 +72,7 @@ class DemandeInscriptionController extends Controller
                         $prix = $offreActivite->tarif->where('idActivite',$idActivite);
                         $prixT[$i] = $prix;
                         $i++;
+
                     
                     }
                     foreach ($prixT as $prixTA){ // PrixTA = prix de l'activite ; prixT = tableau des prix des activites
@@ -78,8 +84,15 @@ class DemandeInscriptionController extends Controller
                         else{
                             $prixTot += $prixTA; // prixTot =  prix total final avec remise 
                         } 
-                        $c++;   
+                        $c++;
+
                 }
+                $dmInscription->enfants()->attach($idEnfant,[
+                    'idTuteur'=>$idTuteur,
+                    'idOffre'=>$offreActivite->idOffre,
+                    'idActivite'=>$offreActivite->idActivite,
+                    'prixtotalRemise' =>$prixTot
+                ]);
               
                 
               }
@@ -90,9 +103,15 @@ class DemandeInscriptionController extends Controller
 
            }
 
-    }
-      
     
+      DB::commit();
+        return response()->json(['message' => 'Demande d\'inscription créée avec succès'], 201);
+     }catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => 'Échec de la création de la demande. ' . $e->getMessage()], 422);
+        }
+      
+  }   
     
     
     public function ShowEnfant()
