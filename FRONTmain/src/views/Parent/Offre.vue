@@ -1,5 +1,5 @@
 <template>
-    <section class="package" id="offres">
+    <section class="package" id="offres" v-if="user">
         <h1><span>Nos</span> Offres</h1>
         <div class="offre">Offre Inventeurs du Futur <span>     valable jusqu'au le 01/04/2024</span></div>
         <p>Plongez vos enfants dans une aventure technologique complète avec notre atelier "Inventeurs du Futur" ! Nous combinons la programmation, la robotique et les échecs pour développer leurs compétences techniques tout en stimulant leur créativité et leur esprit stratégique.</p>
@@ -45,11 +45,14 @@
 </template>
 <script>
 import AjouterOffre from './AjouterOffre.vue';
-
+import { mapGetters } from 'vuex';
 export default {
-    name: 'App',
+    name: 'Offre',
     components: { 
         AjouterOffre
+    },
+    computed: {
+      ...mapGetters(['user'])
     }
   }
 </script>

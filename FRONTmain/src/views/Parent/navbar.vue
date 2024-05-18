@@ -1,5 +1,5 @@
-<template>
-        <div class="navbar bg-base-100">
+<template >
+        <div class="navbar bg-base-100" v-if="user">
             <div class="flex-1">
               <a class="btn btn-ghost text-xl"> LOGO</a>
             </div>
@@ -25,7 +25,7 @@
               </button>
               <div class="dropdown dropdown-end">
                 <div class="navbar-end">
-                    <a class="btn1 btn">Déconnexion</a>
+                    <a class="btn1 btn" @click.prevent="logout">Déconnexion</a>
                   </div>
                 
               </div>
@@ -38,10 +38,21 @@
 </template>
 <script>
 import NotifBar from './NotifBar.vue'
+import { mapGetters } from 'vuex';
 export default {
     name: 'App',
     components: { 
       NotifBar
+    },
+    methods:{
+      logout(){
+        localStorage.removeItem('token');
+        this.$store.dispatch('user', null);
+        this.$router.push('/');
+      }
+    },
+    computed: {
+      ...mapGetters(['user'])
     }
   }
 </script>

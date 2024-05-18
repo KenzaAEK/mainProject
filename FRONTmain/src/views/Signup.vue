@@ -12,7 +12,7 @@
       <div class="w-full  lg:w-1/2 flex items-center justify-center">
         <div class="max-w-md w-full p-6">
           <h1 class="text-3xl  mb-6 conn text-center">S'inscrire</h1> 
-          <form @submit.prevent="handleSubmit" enctype="multipart/form-data" class="space-y-4">
+          <form @submit.prevent="registerUser" class="space-y-4">
             <!-- Your form elements go here -->
             <div>
               <input required placeholder="Nom" type="text" id="Nom" v-model="nom" name="Nom" class="mt-1 p-2 w-full border-b  focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
@@ -27,7 +27,7 @@
               <input required placeholder="Adresse e-mail" type="email" id="Email" v-model="email" name="Email" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
             </div>
             <div>
-              <input required placeholder="Fonction" type="text" id="Fonction" v-model="fonction" name="Fonction" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+              <input  placeholder="Fonction (Facultatif)" type="text" id="Fonction" v-model="fonction" name="Fonction" class="mt-1 p-2 w-full border-b focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
             </div>
             <div class="relative">
               <input required placeholder="Mot de passe" type="password" id="password" v-model="password" name="password" 
@@ -67,6 +67,7 @@
               <button type="submit" class="w-full btt bg-black text-white p-2 rounded-md  focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300">S'inscrire</button>
             </div>
           </form>
+          <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
           <div class="mt-4 text-sm text-gray-600 text-center">
             <p>Vous avez déjà un compte? <router-link to="/login" class="conn hover:underline">Connectez-vous ici</router-link>
             </p>
@@ -80,19 +81,19 @@
   export default {
     name: 'Register',
     data() {
-      return {
-        nom: '',
-        prenom: '',
-        numero: '',
-        email: '',
-        fonction: '',
-        password: '',
-        confirmPassword: '',
-        photo: null,
-        showPassword1: false,
-        showPassword2: false
-      }
-    },
+    return {
+      nom: '',
+      prenom: '',
+      numero: '',
+      email: '',
+      fonction: '',
+      password: '',
+      confirmPassword: '',
+      showPassword1: false,
+      showPassword2: false,
+      errorMessage:''
+    }
+  },
     methods: {
       togglePasswordVisibility() {
       this.showPassword1 = !this.showPassword1;
@@ -104,33 +105,38 @@
       const passwordInput = document.getElementById('confirmPassword');
       passwordInput.type = this.showPassword2 ? 'text' : 'password';
       },
-      handleFileUpload(event) {
-        this.photo = event.target.files[0];
-      },
-      async handleSubmit() {
-        // Logique pour soumettre le formulaire
-        try{
-          if(this.password !== this.confirmPassword) {
-            throw new Error('Les mots de passe ne correspondent pas');
-          }
-          await this.$store.dispatch('auth/register', {
-            nom: this.nom,
-            prenom: this.prenom,
-            numero: this.numero,
-            email: this.email,
-            fonction: this.fonction,
-            password: this.password,
-            photo: this.photo,
-          });
-          this.$router.push('/login');
-        } catch (error){
-          console.error('Échec de lenregistrement:', error);
+      async registerUser() {
+      try {
+        const response = await axios.post('/register/', {
+          nom: this.nom,
+          prenom: this.prenom,
+          tel: this.numero,
+          email: this.email,
+          password: this.password,
+          password_confirmation: this.confirmPassword
+        });
+        console.log(response.data); // Handle successful registration
+        // Redirect user to login page or show success message
+        this.$router.push('/login');
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          // Extract and display the error message from the API response
+          this.errorMessage = error.response.data.message;
+        } else {
+          this.errorMessage = 'An unexpected error occurred.';
         }
+      
+       
       }
+    }
+      
     }
   };
   </script>
   <style scoped>
+  .error-message {
+    color: red;
+  }
   input::placeholder {
     color: rgb(66, 60, 60); /* Change the color to red */
   }

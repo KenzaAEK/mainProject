@@ -17,6 +17,7 @@
     </div>
 </template>
 <script>
+
 import devis from './Devis.vue'
 export default {
     name: 'App',
@@ -24,6 +25,15 @@ export default {
         devis
     }
   }
+
+import { mapGetters } from 'vuex';
+export default {
+    name: 'NotifBar',
+    computed: {
+      ...mapGetters(['user'])
+    }
+}
+
 </script>
 <style scoped>
 h4{
