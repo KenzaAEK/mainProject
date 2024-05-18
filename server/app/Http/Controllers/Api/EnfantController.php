@@ -62,12 +62,11 @@ class EnfantController extends Controller
      */
     public function show($id)
     {
-        $enfant = Enfant::findOrFail($id);
-        return $this->success(
-            new EnfantResource($enfant),
-            'Enfant récupéré avec succès',
-            200
-        );
+        
+    $user = auth()->user();
+    $tuteur = $user->tuteur;
+    $enfant = Enfant::where('idTuteur', $tuteur->idTuteur)->findOrFail($id);
+    return $this->success(new EnfantResource($enfant), 'Enfant récupéré avec succès', 200);
     }
 
     /**
@@ -79,15 +78,17 @@ class EnfantController extends Controller
      */
     public function update(UpdateEnfantRequest $request, $id)
     {
-        try {
-            $enfant = Enfant::findOrFail($id);
+        $user = auth()->user();
+        $tuteur = $user->tuteur;
+    
+        try
+        {
+            $enfant = Enfant::where('idTuteur', $tuteur->idTuteur)->findOrFail($id);
             $enfant->update($request->validated());
-            return $this->success(
-                new EnfantResource($enfant),
-                'Enfant mis à jour avec succès',
-                200
-            );
-        } catch (ModelNotFoundException $e) {
+    
+            return $this->success(new EnfantResource($enfant), 'Enfant mis à jour avec succès', 200);
+        } catch (ModelNotFoundException $e) 
+        {
             return $this->error(null, 'Enfant non trouvé', 404);
         }
     }
@@ -100,13 +101,16 @@ class EnfantController extends Controller
      */
     public function destroy($id)
     {
-        $enfant = Enfant::find($id);
-        if (!$enfant) {
-            return $this->error(null, 'Aucun enfant trouvé', 404);
-        }
+        $user = auth()->user();
+    $tuteur = $user->tuteur;
+    $enfant = Enfant::where('idTuteur', $tuteur->idTuteur)->find($id);
 
-        $enfant->delete();
-        return $this->success(null, 'Enfant supprimé avec succès', 200);
+    if (!$enfant) {
+        return $this->error(null, 'Aucun enfant trouvé', 404);
+    }
+
+    $enfant->delete();
+    return $this->success(null, 'Enfant supprimé avec succès', 200);
     
     }
 }
