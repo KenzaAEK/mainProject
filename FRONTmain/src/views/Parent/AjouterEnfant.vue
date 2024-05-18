@@ -35,6 +35,48 @@
 </div>
 
 </template>
+<script>
+import axios from "axios";
+import { mapGetters } from 'vuex';
+export default{
+  name: 'AjouterEnfant',
+  data(){
+    return {
+      errorList: [],
+      model: {
+        enfants: {
+          nom:'',
+          prenom:'',
+          niveau:'',
+          naissance:''
+        }
+      }
+    }
+  },
+  computed: {
+      ...mapGetters(['user'])
+  },
+  methods:{
+    saveEnfant(){
+      var mythis = this;
+      axios.post('',this.model.enfants)
+      .then(res=>{
+        console.log(res.data)
+        alert(res.data.message)
+
+        this.model.enfants={
+          nom:'',
+          prenom:'',
+          niveau:'',
+          naissance:''
+        }
+        this.errorList ='';
+        
+      })
+    }
+  }
+}
+</script>
 <style scoped>
 h3{
   color: #A3B18A;
