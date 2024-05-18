@@ -44,6 +44,7 @@ class EnfantController extends Controller
         $request->validated(); 
         $user = auth()->user();
         $tuteur = $user->tuteur;
+        // print_r($tuteur);
         $enfant = Enfant::create([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
