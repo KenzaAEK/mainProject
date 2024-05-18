@@ -24,7 +24,7 @@ class DevisController extends Controller
         // $facture = Facture::create([
         //     'totalHT' => $totalHT,
         //     'totalTTC' => $totalTTC,
-        //     'idNotification' => $this->createNotification($devis)  
+        //     'idNotification' => $this->createNotification($devis)   je trouve que c est improssible il faut commencer par creer l instance notif
         // ]);
 
     // return response()->json(['message' => 'Devis accepted, facture generated.']);

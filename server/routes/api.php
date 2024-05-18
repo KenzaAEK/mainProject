@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     
    //********Traitement d'Animateurs*************** 
-   
+   Route::get('/Animateurs', [GroupeController::class, 'index']);
    Route::get('/Animateurs',[AnimateurController::class,'AffAnimConnecter']);// Afficher ici les informations de l'Animateur connecter
    Route::get('/AnimateursEnf',[AnimateurController::class,'AffEtudAnim']);
    Route::get('/search_students',[AnimateurController::class,'searshEtud']);
@@ -52,7 +52,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('/offres/{offres}',[OffreController::class,'update']);
     Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
     Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
-    Route::get('/animateurs', [GroupeController::class, 'index']);
+   
 
 
     // for admins only and authenticated  
