@@ -96,11 +96,11 @@ class DemandeInscriptionController extends Controller
                         $c++;
 
                 }
-                $dmInscription->enfants()->attach($idEnfant,[
+                $dmInscription->enfants()->attach($enfant->idEnfant,[
                     'idTuteur'=>$idTuteur,
                     'idOffre'=>$offreActivite->idOffre,
                     'idActivite'=>$offreActivite->idActivite,
-                    'prixtotalRemise' =>$prixTot
+                    'PrixtotalRemise' =>$prixTot
                 ]);
               
                 
