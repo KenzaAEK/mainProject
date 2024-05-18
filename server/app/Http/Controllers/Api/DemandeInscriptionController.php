@@ -10,7 +10,10 @@ use App\Models\DemandeInscription;
 use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\DemandeInscriptionResource;
+use App\Models\Activite;
+use App\Models\offreActivite;
 use App\Models\Pack;
+use Illuminate\Support\Facades\DB;
 
 class DemandeInscriptionController extends Controller
 {
@@ -34,72 +37,71 @@ class DemandeInscriptionController extends Controller
      */
     public function store(StoreDemandeInscriptionRequest $request)
     {
-        try {
-            $user = auth()->user();
-            $tuteurId = $user->tuteur->idTuteur;
-            $pack = Pack::where('type', $request->typePack)->firstOrFail();
-    
-            $demande = DemandeInscription::create([
-                'optionsPaiement' => $request->optionsPaiement,
-                'idTuteur' => $tuteurId,
-                'idPack' => $pack->idPack,
-            ]);
-    
+        $dmInscription = new DemandeInscription();
+        $user = $request->user();
+        $idTuteur = $user->Tuteur->idTuteur;
+        $Secenfants = $request->enfants; 
+        $SecAteliers = $request->Ateliers;
+        //
+        
+        $pack = Pack :: where('type',$request->type ); 
+
+        //
+        $offreActivite = offreActivite::where('titre',$request->offre); // ? crudEnfant
+
+
+        $ateliers = $request->Ateliers ; 
+        $prixTot = 0 ;
+        if ($request->typePack == 'PackAtelier')
+        {
+            $i = 0; 
+            $limite = $pack->limite;
+            $remise = $pack->remise;
+            {
+                foreach($request->Ateliers as $AteliersData)
+                {
+                    $activite = Activite::where('titre',$AteliersData['titre'])->first();
+                    if(!$activite){
+                        DB::rollback();
+                        return response()->json(['error'=>'Activite introuvable',404]);
+                    }
+                    $idActivite = $activite->idActivite;
+                    $prix = $offreActivite->tarif->where('idActivite',$idActivite);
+                    $prixT[$i] = $prix;
+                    $i++;
+                }
+                foreach ($prixT as $prixTA){ // PrixTA = prix de l'activite ; prixT = tableau des prix des activites
+                    $c =0;
+                    if($c < $limite)
+                    {
+                        $prixTot+= $prixTA -($c * $remise * $prixTA);
+                    } 
+                    else{
+                        $prixTot += $prixTA; // prixTot =  prix total final avec remise 
+                    } 
+                    $c++;   
+               }
+            }
+        }
+        else if ($request->typePack == 'PackEnfant')
+           {
+
+           }
+
+
+
+
            
-            //event(new NewDemandeInscriptionEvent($demande));***********************
+    }
+      
     
-            return $this->success(['demande' => $demande], 'Demande d\'inscription ajoutée avec succès', 201);
-        } catch (\Exception $e) {
-            return $this->error(null,'Failed to create demande. ' . $e->getMessage(), 422);
-        }
-    }
+    
+    
+    public function ShowEnfant(Request $request)
+       {
+        $user = $request->user();
+        $enfants = $user->Tuteur->Enfants;
+        return response()->json([$enfants]); 
+       }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $demande = DemandeInscription::find($id);
-        return $demande
-        ? new DemandeInscriptionResource($demande) // Use a resource for consistent formatting
-        : $this->error(null, 'Demande d\'inscription non trouvée', 404);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateDemandeInscriptionRequest $request, $id)
-    {
-        try {
-            $demande = DemandeInscription::findOrFail($id);
-            $demande->update($request->validated());
-            return $this->success($demande, 'Demande d\'inscription mise à jour avec succès', 200);
-        } catch (ModelNotFoundException $e) {
-            return $this->error(null, 'Demande d\'inscription non trouvée', 404);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $demande = DemandeInscription::find($id);
-        if (!$demande) {
-            return $this->error(null, 'Demande d\'inscription non trouvée', 404);
-        }
-
-        $demande->delete();
-        return $this->success(null, 'Demande d\'inscription supprimée avec succès', 200);
-    }
 }
