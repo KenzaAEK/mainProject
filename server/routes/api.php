@@ -46,6 +46,10 @@ Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class)
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
+
+
+
+    Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::post('/upload-image', [ProfileController::class, 'uploadImage']);

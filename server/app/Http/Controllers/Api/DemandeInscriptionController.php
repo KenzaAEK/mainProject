@@ -47,40 +47,47 @@ class DemandeInscriptionController extends Controller
         $nbrEnfants = is_array($Secenfants) ? count($Secenfants) : 0 ;
         $dmInscription->idTuteur = $idTuteur;
         
+        
         //
         
         $pack =  Pack::where('type', $request->type)->firstOrFail();
         $dmInscription->idPack = $pack->idPack;
+        
 
         //
         $offreActivite = offreActivite::where('idOffre',$request->idOffre)->firstOrFail(); // ? crudEnfant
 
         $ateliers = $request->Ateliers ; 
         $prixTot = 0 ;
-        if ( $nbrEnfants >2 && $request->typePack == 'PackEnfant')
+
+       
+      
+        if  ($pack->type == 'PackAtelier')
         {
-            
-        }
-        else if  ($request->typePack == 'PackAtelier')
-        {
+           
             $i = 0; 
             $limite = $pack->limite;
             $remise = $pack->remise;
+        
             {
               foreach( $Secenfants as $enfant)
               {  
-                    foreach($request->Ateliers as $AteliersData)
+                    foreach($ateliers as $AteliersData)
                     {
-                        $activite = Activite::where('titre',$AteliersData['titre'])->firstOrFail();
+                        $activite = Activite::where('idActivite',$AteliersData['idActivite'])->firstOrFail();
                         if(!$activite){
                             // DB::rollback();
                             return response()->json(['error'=>'Activite introuvable',404]);
                         }
                         $idActivite = $activite->idActivite;
-                        $prix = $offreActivite->tarif->where('idActivite',$idActivite);
-                        $prixT[$i] = $prix;
-                        $i++;
 
+                        $prix = $offreActivite->where('idActivite',$idActivite)->firstOrFail();
+                        $tarif = $prix->tarif;
+                        
+                        $prixT[] = $tarif; 
+                        $i++;
+                        
+                       
                     
                     }
                     foreach ($prixT as $prixTA)
@@ -88,28 +95,42 @@ class DemandeInscriptionController extends Controller
                         $c =0;
                         if($c < $limite)
                         {
+                            
                             $prixTot+= $prixTA -($c * $remise * $prixTA);
                         } 
                         else{
+                    
                             $prixTot += $prixTA; // prixTot =  prix total final avec remise 
+                            
                         } 
                         $c++;
 
+                       $dmInscription->save();
+
+                        $idoffre = $offreActivite->idOffre;
+                        $idActivite = $offreActivite->idActivite;
+                        $iddemande=$dmInscription->idDemande;
+                      
+                         $dmInscription->enfantss()->attach($enfant['idEnfant'],[
+                            'idDemande' => $iddemande,
+                             'idTuteur'=>$idTuteur,
+                             'idOffre'=>$idoffre,
+                             'idActivite'=>$idActivite,
+                             'PixtotalRemise' =>$prixTot
+                         ]);
+        
                 }
-                $dmInscription->enfants()->attach($enfant->idEnfant,[
-                    'idTuteur'=>$idTuteur,
-                    'idOffre'=>$offreActivite->idOffre,
-                    'idActivite'=>$offreActivite->idActivite,
-                    'PrixtotalRemise' =>$prixTot
-                ]);
-              
-                
+
+             
               }
+            
            }
         }
-        $dmInscription->save();
+
+       
+      
       DB::commit();
-        return response()->json(['message' => 'Demande d\'inscription créée avec succès'], 201);
+        return response()->json(['message' => 'wa tahaaaaaa'], 201);
      }catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error' => 'Échec de la création de la demande. ' . $e->getMessage()], 422);
