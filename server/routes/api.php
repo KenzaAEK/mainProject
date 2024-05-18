@@ -5,14 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 use App\Http\Controllers\Api\AdministrateurController;
+use App\Http\Controllers\Api\OffreController;
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\api\password\UpdatePasswordController;
 use App\Http\Controllers\Api\TypeActiviteController;
-use App\Http\Controllers\password\PasswordResetController ;
-use App\Http\Controllers\User\NotificationController;
-use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Api\GroupeController;
+use App\Http\Controllers\AnimateurController;
 
 /*
 ╔==========================================================================╗
@@ -21,13 +21,9 @@ use App\Http\Controllers\User\ProfileController;
 */
 
 
-Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']); // teste par postman
-Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset'); 
 
-
-
-
-
+Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
+Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
 
 
 
@@ -35,6 +31,17 @@ Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPa
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+
+Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
+Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
+
+
+
+Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
+Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
+
+Route::apiResource('enfants', EnfantController::class);
+Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -66,7 +73,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
-        Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
+        Route::post('/admin/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
         Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
         // Route::post('/offres',[OffreController::class,'store']);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);

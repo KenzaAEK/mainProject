@@ -24,14 +24,29 @@ class Enfant extends Model
         return $this->belongsTo(Tuteur::class,'idTuteur'); // cest le parent
     }
     public function groupes() {
-        return $this->belongsToMany(Groupe::class, 'enfant_groupes', 'idEnfant', 'idGroupe');
-    }
+        return $this->belongsToMany(Groupe::class, 'enfant_groupe', 'idEnfant', 'idGroupe')
+        ->withPivot('idTuteur'); // Si vous avez besoin d'accéder à idTuteur depuis la relation
+     }
+    
     // public function inscriptionEnfant_offre_Activite() {
     //     return $this->hasOne(InscriptionEnfantOffreActivite::class, 'idEnfant');
     // }
     public function offre_activite()
     {
         return $this->belongsToMany(offreActivite::class, 'planning_enfant', 'idActivite', 'idEnfant','idTuteur','idOffre');
+    }
+
+    // this association inscriptionEnfant_offre_Activite
+    public function offreactivites() :BelongToMany
+    {
+        return $this->belongsToMany(offreActivite::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite');
+    }
+    
+    public function DemandeInscription() :BelongToMany
+    {
+        return $this->belongsToMany(DemandeInscription::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite');
     }
     
     //for autoincrement of idEnfant

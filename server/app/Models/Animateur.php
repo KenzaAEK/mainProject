@@ -28,6 +28,6 @@ class Animateur extends Model
     }
     public function groupes()
     {
-        return $this->belongsToMany(Groupe::class,'idAnimateur');
+        return $this->hasMany(Groupe::class, 'idAnimateur');
     }
 }

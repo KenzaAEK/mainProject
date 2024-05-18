@@ -1,0 +1,195 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+use Illuminate\Support\Facades\DB;
+use App\Models\Offre;
+use App\Models\offreActivite;
+use Illuminate\Support\Facades\Log;
+use App\Models\Administrateur;
+use App\Models\horaire;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Activite;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreOffresRequest;
+use App\Http\Requests\StoreOffresActiviteRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+
+class OffreController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $offreactivites = offreActivite::all();
+        return response()->json($activites);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+     
+     public function store(Request $request)
+     {
+         $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
+         if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+         }
+     
+         DB::beginTransaction();
+         try {
+            $offreData = $validator->validated();
+            $idAdmin = Administrateur::where('idUser', Auth::id())->first()->idAdmin;
+
+            $offreData['idAdmin'] = $idAdmin;
+            
+            $offre = Offre::create($offreData);
+             
+            foreach ($request->activites as $activiteData) {
+                $activite = Activite::where('titre', $activiteData['titre'])->first();
+                if (!$activite) {
+                    DB::rollback();
+                    return response()->json(['error' => 'Activité introuvable'], 404);
+                }
+    
+                $activiteDataPrepared = [
+                    'idOffre' => $offre->idOffre,
+                    'idActivite' => $activite->idActivite,
+                    'tarif' => $activiteData['tarif'],
+                    'effmax' => $activiteData['effmax'],
+                    'effmin' => $activiteData['effmin'],
+                    'age_min' => $activiteData['age_min'],
+                    'age_max' => $activiteData['age_max'],
+                    'nbrSeance' => $activiteData['nbrSeance'],
+                    'Duree_en_heure' => $activiteData['Duree_en_heure']
+                ];
+                OffreActivite::create($activiteDataPrepared);
+            }
+    
+            DB::commit();
+            return response()->json(['message' => 'Offre créée avec succès', 'id' => $offre->idOffre, 'idAdmin' => $offre->idAdmin]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
+     
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        try {
+        
+            $offre = Offre::with('offreActivite')->findOrFail($id);
+    
+            return response()->json([
+                'status' => 200,
+                'offre' => $offre,
+                'activites' => $offre->offreActivite  
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Offre non trouvée'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Erreur serveur : ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    DB::beginTransaction();
+    try {
+        $offre = Offre::findOrFail($id);
+        $offreData = $validator->validated();
+
+        
+        $activitesArray = $request->input('activites');
+        $activitesPrepared = [];
+        foreach ($activitesArray as $activite) {
+            $currentActivite = Activite::where('titre', $activite['titre'])->first();
+            if (!$currentActivite) {
+                DB::rollback();
+                return response()->json(['error' => 'Activité introuvable'], 404);
+            }
+            $activite['idActivite'] = $currentActivite->idActivite; // Assurez-vous d'obtenir l'ID actuel
+            $activitesPrepared[] = $activite;
+        }
+
+        // Conversion en JSON pour la fonction PL/pgSQL
+        $activitesJson = json_encode($activitesPrepared);
+
+        // Appel de la fonction PL/pgSQL
+        $result = DB::select("SELECT updateOffreActivites(?, ?, ?, ?, ?) AS result", [
+            $id,
+            $offreData['titre'],
+            $offreData['dateFinOffre'],
+            $offreData['description'],
+            $activitesJson
+        ]);
+
+        DB::commit();
+        return response()->json(['message' => 'Offre mise à jour avec succès', 'result' => $result]);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
+    
+
+
+    public function deleteOffreActiviteById($idOffre, $idActivite)
+    {
+        try {
+            $result = DB::select('SELECT deleteOffreActivitesById(?, ?) as response', [$idOffre, $idActivite]);
+            return response()->json(['status' => 200, 'message' => $result[0]->response]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 500, 'message' => "Erreur lors de la suppression de l'activité", 'error' => $e->getMessage()]);
+        }
+    }
+
+    // Method to delete all offreActivites by idOffre
+    public function deleteOffreActivitesByIdOffre($idOffre)
+    {
+        try {
+            $result = DB::select('SELECT deleteOffreActivitesByIdOffre(?) as response', [$idOffre]);
+            return response()->json(['status' => 200, 'message' => $result[0]->response]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 500, 'message' => "Erreur lors de la suppression des activités", 'error' => $e->getMessage()]);
+        }
+    }
+}
+
+
+
