@@ -53,7 +53,11 @@ class DemandeInscriptionController extends Controller
 
         $ateliers = $request->Ateliers ; 
         $prixTot = 0 ;
-        if ($request->typePack == 'PackAtelier')
+        if ($request->typePack == 'PackEnfant')
+        {
+
+        }
+        else if  ($request->typePack == 'PackAtelier')
         {
             $i = 0; 
             $limite = $pack->limite;
@@ -98,12 +102,7 @@ class DemandeInscriptionController extends Controller
               }
            }
         }
-        else if ($request->typePack == 'PackEnfant')
-           {
-
-           }
-
-    
+        $dmInscription->save();
       DB::commit();
         return response()->json(['message' => 'Demande d\'inscription créée avec succès'], 201);
      }catch (\Exception $e) {
