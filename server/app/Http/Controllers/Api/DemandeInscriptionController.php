@@ -95,7 +95,7 @@ class DemandeInscriptionController extends Controller
                     'idTuteur'=>$idTuteur,
                     'idOffre'=>$offreActivite->idOffre,
                     'idActivite'=>$offreActivite->idActivite,
-                    'prixtotalRemise' =>$prixTot
+                    'PrixtotalRemise' =>$prixTot
                 ]);
               
                 
