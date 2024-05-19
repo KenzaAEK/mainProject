@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Password;
+namespace App\Http\Controllers\Password;
 
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;

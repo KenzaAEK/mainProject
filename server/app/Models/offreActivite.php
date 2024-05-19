@@ -24,6 +24,7 @@ class offreActivite extends Model
         'idActivite',
         'age_max',
         'age_min'
+    
         ];
       
     
@@ -54,14 +55,14 @@ class offreActivite extends Model
     public function enfants() :BelongsToMany
     {
         return $this->belongsToMany(enfant::class,'inscriptionEnfant_offre_Activite')
-                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PrixtotalRemise');
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise');
     }
 
    
     public function DemandeInscription() :BelongsToMany
     {
         return $this->belongsToMany(DemandeInscription::class,'inscriptionEnfant_offre_Activite')
-                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PrixtotalRemise');
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise');
     }
     
    

@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 
 class DemandeInscription extends Model
@@ -12,6 +12,7 @@ class DemandeInscription extends Model
     protected $table = 'demande_inscriptions';
     public $timestamps = false;
     protected $primaryKey = 'idDemande';
+    
     protected $fillable = [
         'optionsPaiement',
         'status',
@@ -36,14 +37,14 @@ class DemandeInscription extends Model
 
     public function offresactivite() :BelongsToMany
     {
-        return $this->belongsToMany(offreActivite::class,'inscriptionEnfant_offre_Activite')
-                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PrixtotalRemise');
+        return $this->belongsToMany(offreActivite::class,'inscriptionEnfant_offre_Activite','idDemande', 'idEnfant')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise');
     }
-    public function enfants() : BelongsToMany
+    public function enfantss() : BelongsToMany
     {
         {
-            return $this->belongsToMany(Enfant::class,'inscriptionEnfant_offre_Activite')
-                        ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PrixtotalRemise');
+            return $this->belongsToMany(Enfant::class,'inscriptionEnfant_offre_Activite','idDemande', 'idEnfant')
+                        ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise');
         }
     }
 }

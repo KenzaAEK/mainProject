@@ -11,12 +11,12 @@ use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\Api\GroupeController;
 
-use App\Http\Controllers\Api\Password\PasswordResetController;
+use App\Http\Controllers\api\password\UpdatePasswordController;
 use App\Http\Controllers\Api\TypeActiviteController;
 
 /*
 ╔==========================================================================╗
-║                           All Users Routes                                   ║
+║                           All Users Routes                               ║
 ╚==========================================================================╝
 */
 
@@ -66,6 +66,10 @@ Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rej
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
+
+
+
+    Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
@@ -115,20 +119,19 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
 });
-    // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
-    // Route::post('/profile', [ProfileController::class, 'profile']);
-    // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); gate for animateur**** email 
-    // Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
-    //Route::post('/password/reset', [ResetController::class, 'ResetPassword']); *********
+    Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
+    Route::post('/profile', [ProfileController::class, 'profile']);
+    Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); //gate for animateur**** email 
+    Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
 
     // Manage notifications
-    // Route::get('/notifications', [NotificationController::class, 'index']);
-    // Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
-    // Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
-    // Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
-    // Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
-    // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
-    // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
+    Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
+    Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
+    Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
 
 
@@ -178,7 +181,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     
 /*
 ╔==========================================================================╗
-║                           Animateur Routes                              ║
+║                           Animateur Routes                               ║
 ╚==========================================================================╝
 */
     Route::group([ 'prefix' => 'animateur'], function () {
