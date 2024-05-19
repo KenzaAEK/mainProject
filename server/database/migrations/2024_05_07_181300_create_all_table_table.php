@@ -24,12 +24,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-         Schema::create('horaires', function (Blueprint $table) {
-             $table->id('idHoraire');
-             $table->string('jour', 50);
-             $table->time('heureDebut');
-             $table->time('heureFin');
-         });
+        Schema::create('horaires', function (Blueprint $table) {
+            $table->id('idHoraire');
+            $table->string('jour', 50);
+            $table->time('heureDebut');
+            $table->time('heureFin');
+        });
 
 
         Schema::create('packs', function (Blueprint $table) {
@@ -97,19 +97,28 @@ return new class extends Migration
 
         Schema::create('activites', function (Blueprint $table) {
             $table->id('idActivite');
-            $table->string('titre', 100);
+            $table->string('titre', 50);
             $table->text('description');
             $table->text('objectif');
-            $table->string('imagePub', 255)->nullable();
-            $table->string('lienYtb',255);
-            $table->longText('programmePdf',255);
-            $table->unsignedBigInteger('idTypeActivite');
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
+            $table->string('imagePub', 50)->nullable();
+            $table->string('lienYtb');
+            $table->longText('programmePdf');
+            $table->unsignedBigInteger('idTypeActivite')->nullable();
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
             $table->timestamps();
-        });
+        }); 
 
         Schema::create('enfants', function (Blueprint $table) {
-            
+            // $table->unsignedBigInteger('idTuteur');
+            // $table->unsignedBigInteger('idEnfant');
+            // $table->string('prenom', 100);
+            // $table->date('dateNaissance');
+            // $table->string('niveauEtude', 50);
+            // $table->string('nom', 100);
+            // $table->primary(['idTuteur', 'idEnfant']);
+            // $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
+
+            $table->id('idEnfant');
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
             $table->string('prenom', 100);
@@ -169,6 +178,7 @@ return new class extends Migration
             $table->foreign('idActivite')->references('idActivite')->on('activites');
            
         });
+        
 
          Schema::create('groupes', function (Blueprint $table) {
              $table->id('idGroupe');
@@ -204,11 +214,10 @@ return new class extends Migration
              $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
          });
 
-         Schema::create('disponibilite_animateur', function (Blueprint $table) {
-             $table->integer('idAnimateur');
-             $table->integer('idHoraire');
-             $table->primary(['idAnimateur', 'idHoraire']);
-
+        Schema::create('disponibilite_animateur', function (Blueprint $table) {
+            $table->integer('idAnimateur');
+            $table->integer('idHoraire');
+            $table->primary(['idAnimateur', 'idHoraire']);
              $table->foreign('idAnimateur')->references('idAnimateur')->on('animateurs');
              $table->foreign('idHoraire')->references('idHoraire')->on('horaires');
          });
@@ -268,9 +277,10 @@ return new class extends Migration
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
         });
+    }
 
         
-    }
+    
 
     /**
      * Reverse the migrations.

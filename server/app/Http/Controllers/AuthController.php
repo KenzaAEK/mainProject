@@ -28,6 +28,7 @@ class AuthController extends Controller
         if ($existingUser) {
             // User already exists
             return $this->error('', 'Un utilisateur avec cet email existe déjà. :(', 409); // 409 Conflict
+
         }
 
         $user = User::create([
@@ -36,7 +37,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'tel' => $request->tel,
             'password' => Hash::make($request->password),    //or the  bcrypt($request->password)
-            'role' => "1", // 1 = parent , 2 = admin , 3 = animateur
+            'role' => "2", // 1 = parent , 2 = admin , 3 = animateur
         ]);
         Tuteur::create(['idUser' => $user->idUser]);
         $token = $user->createToken('token-name')->plainTextToken;
@@ -48,7 +49,6 @@ class AuthController extends Controller
             'user' => $user,
             'token' =>$token,
         ],'Inscription réussie. :)');
-        
     }
     public function login(LoginUserRequest $request) 
     {
@@ -56,6 +56,7 @@ class AuthController extends Controller
         if(!Auth::attempt($request->only(['email','password'])))
         {
             return $this->error('','Les informations d\'identification ne correspondent pas. :(',401);
+
         }
 
         
@@ -91,9 +92,8 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->user()->currentAccessToken()->delete();
-        return $this->success([
-            'message' => 'Déconnecté avec succès et jeton supprimé. :)'
-        ]);
+        return $this->success([],'Déconnecté avec succès et jeton supprimé. :)',);
+
     }
 
     public function refreshToken(Request $request) // tested and working 
@@ -118,6 +118,14 @@ class AuthController extends Controller
         return $this->success([
             'token' => $token
         ], 'Jeton rafraîchi avec succès. :)');
+    }
+    public function index()
+    {
+
+        
+           return auth::user();
+
+        
     }
 
 }
