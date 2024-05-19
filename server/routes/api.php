@@ -40,6 +40,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
+    Route::get('/users', [AuthController::class, 'index']);
     // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
     // Route::post('/profile', [ProfileController::class, 'profile']);
     // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); gate for animateur**** email 
