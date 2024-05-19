@@ -206,6 +206,7 @@ class DemandeInscriptionController extends Controller
     DB::beginTransaction();
     try {
         $dmInscription = new DemandeInscription();
+        $facture = new Facture();
         $dmInscription->optionsPaiement = 'mois';
         $user = $request->user();
         $idTuteur = 1;
@@ -223,6 +224,7 @@ class DemandeInscriptionController extends Controller
 
         if ($pack->type == 'PackAtelier') {
             $this ->handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $ateliers,$idTuteur);
+
         } elseif ($pack->type == 'PackEnfant' && $nbrEnfants > 2) {
             $this ->handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur);
         } else {
@@ -257,6 +259,10 @@ private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secen
             $prixT[] = $tarif;
             $i++;
         }
+        $prixHT = 0;
+        foreach($prixT as $prixSR){
+            $prixHT +=$prixSR;
+        }
 
         foreach ($prixT as $prixTA) {
             $c = 0;
@@ -267,9 +273,8 @@ private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secen
             }
             $c++;
         }
-
+       
         $dmInscription->save();
-
         $idoffre = $offreActivite->idOffre;
         $idActivite = $offreActivite->idActivite;
         $iddemande = $dmInscription->idDemande;
@@ -279,8 +284,11 @@ private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secen
             'idTuteur' => $idTuteur,
             'idOffre' => $idoffre,
             'idActivite' => $idActivite,
-            'PixtotalRemise' => $prixTot
+            'PixtotalRemise' => $prixTot,
+            'PrixtotalBrute'=> $prixHT 
         ]);
+        
+
     }
 }
 
