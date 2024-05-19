@@ -335,6 +335,7 @@ private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenf
         'PixtotalRemise' => 0
     ]);
 }
-    
+
+        
    
 } 
