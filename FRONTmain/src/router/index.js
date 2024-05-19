@@ -101,7 +101,12 @@ const router = createRouter({
               component: () => import('../views/admin/ajouterPacks.vue')
             },
           ]
-        }
+        },
+        {
+          path: '/test',
+          // name: 'inscription',
+          component: () => import('../views/admin/profileAdmin.vue'),
+        },
 
         
       ]
