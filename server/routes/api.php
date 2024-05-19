@@ -17,8 +17,8 @@ use App\Http\Controllers\Api\TypeActiviteController;
 ╚==========================================================================╝
 */
 
-Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('/password/reset', [PasswordResetController::class, 'reset']);
+/* Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/password/reset', [PasswordResetController::class, 'reset']); */
 
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
