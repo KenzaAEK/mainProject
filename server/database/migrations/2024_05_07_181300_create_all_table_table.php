@@ -58,11 +58,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('type_activites', function (Blueprint $table) {
-            $table->id('idTypeActivite');
-            $table->string('type', 50)->unique();
-            $table->string('domaine', 50);
-        });
+         Schema::create('typeactivites', function (Blueprint $table) {
+             $table->id('idTypeActivite');
+             $table->string('type', 50)->unique();
+             $table->string('domaine', 50);
+         });
+
         Schema::create('competences', function (Blueprint $table) {
             $table->id('idCompetence');
             $table->string('nom_competence', 50);
@@ -102,12 +103,14 @@ return new class extends Migration
             $table->string('imagePub', 50)->nullable();
             $table->string('lienYtb');
             $table->longText('programmePdf');
-            $table->unsignedBigInteger('idTypeActivite');
+            $table->unsignedBigInteger('idTypeActivite')->nullable();
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
             $table->timestamps();
         }); 
 
         Schema::create('enfants', function (Blueprint $table) {
+
+            $table->id('idEnfant');
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
             $table->string('prenom', 100);
@@ -247,7 +250,7 @@ return new class extends Migration
              $table->string('Niveau_requis', 50);
              $table->primary(['idTypeActivite', 'idCompetence']);
 
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->foreign('idCompetence')->references('idCompetence')->on('competences');
         });
 
@@ -257,14 +260,17 @@ return new class extends Migration
             $table->integer('idEnfant');
             $table->integer('idOffre');
             $table->integer('idActivite');
-            $table->decimal('PrixtotalRemise', 10, 3);
             $table->primary(['idDemande', 'idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
+            $table->decimal('PrixtotalRemise', 10, 3);
             $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
         });
+<<<<<<<<< Temporary merge branch 1
 
         
+=========
+>>>>>>>>> Temporary merge branch 2
     }
 
         

@@ -38,51 +38,94 @@ class OffreController extends Controller
      */
 
      
-     public function store(Request $request)
+      public function store(Request $request)
      {
          $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
+     
          if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
          }
      
          DB::beginTransaction();
+     
          try {
-            $offreData = $validator->validated();
-            $idAdmin = Administrateur::where('idUser', Auth::id())->first()->idAdmin;
-
-            $offreData['idAdmin'] = $idAdmin;
-            
-            $offre = Offre::create($offreData);
-             
-            foreach ($request->activites as $activiteData) {
-                $activite = Activite::where('titre', $activiteData['titre'])->first();
-                if (!$activite) {
-                    DB::rollback();
-                    return response()->json(['error' => 'Activité introuvable'], 404);
-                }
-    
-                $activiteDataPrepared = [
-                    'idOffre' => $offre->idOffre,
-                    'idActivite' => $activite->idActivite,
-                    'tarif' => $activiteData['tarif'],
-                    'effmax' => $activiteData['effmax'],
-                    'effmin' => $activiteData['effmin'],
-                    'age_min' => $activiteData['age_min'],
-                    'age_max' => $activiteData['age_max'],
-                    'nbrSeance' => $activiteData['nbrSeance'],
-                    'Duree_en_heure' => $activiteData['Duree_en_heure']
-                ];
-                OffreActivite::create($activiteDataPrepared);
-            }
-    
-            DB::commit();
-            return response()->json(['message' => 'Offre créée avec succès', 'id' => $offre->idOffre, 'idAdmin' => $offre->idAdmin]);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-    
+             $offreData = $validator->validated();
+             $idAdmin = Administrateur::where('idUser', Auth::id())->first()->idAdmin;
+             $offreData['idAdmin'] = $idAdmin;
+     
+             // Créer l'offre
+             $offre = Offre::create([
+                 'titre' => $offreData['titre'],
+                 'remise' => $offreData['remise'],
+                 'dateDebutOffre' => $offreData['dateDebutOffre'],
+                 'dateFinOffre' => $offreData['dateFinOffre'],
+                 'description' => $offreData['description'],
+                 'idAdmin' => $offreData['idAdmin'],
+             ]);
+     
+             foreach ($offreData['activites'] as $activiteData) {
+                 if (!isset($activiteData['titre'])) {
+                     DB::rollback();
+                     return response()->json(['error' => 'Le titre de l\'activité est manquant'], 422);
+                 }
+     
+                 $activite = Activite::where('titre', $activiteData['titre'])->first();
+     
+                 if (!$activite) {
+                     DB::rollback();
+                     return response()->json(['error' => 'Activité introuvable'], 404);
+                 }
+     
+                 $totalDuree = 0;
+                 $nbrSeance = 0;
+     
+                 // Calculer la durée totale et le nombre de séances
+                 foreach ($activiteData['jours'] as $jourData) {
+                     $heureDebut = new \DateTime($jourData['heureDebut']);
+                     $heureFin = new \DateTime($jourData['heureFin']);
+                     $interval = $heureDebut->diff($heureFin);
+                     $dureeEnHeures = $interval->h + ($interval->i / 60);
+                     $totalDuree += $dureeEnHeures;
+                     $nbrSeance++;
+                 }
+     
+                 // Créer l'activité pour l'offre
+                 $offreActivite = OffreActivite::create([
+                     'idOffre' => $offre->idOffre,
+                     'idActivite' => $activite->idActivite,
+                     'tarif' => $activiteData['tarif'],
+                     'effmax' => $activiteData['effmax'],
+                     'effmin' => $activiteData['effmin'],
+                     'age_min' => $activiteData['age_min'],
+                     'age_max' => $activiteData['age_max'],
+                     'nbrSeance' => $nbrSeance,
+                     'Duree_en_heure' => $totalDuree,
+                 ]);
+     
+                 // Gérer les jours et les horaires
+                 foreach ($activiteData['jours'] as $jourData) {
+                     $horaire = Horaire::create([
+                         'jour' => $jourData['JourAtelier'],
+                         'heureDebut' => $jourData['heureDebut'],
+                         'heureFin' => $jourData['heureFin'],
+                     ]);
+     
+                     // Associer l'horaire avec l'activité de l'offre
+                     DB::table('disponibilite_offreactivite')->insert([
+                         'idHoraire' => $horaire->idHoraire,
+                         'idOffre' => $offre->idOffre,
+                         'idActivite' => $activite->idActivite,
+                     ]);
+                 }
+             }
+     
+             DB::commit();
+             return response()->json(['message' => 'Offre créée avec succès', 'id' => $offre->idOffre, 'idAdmin' => $offre->idAdmin]);
+         } catch (\Exception $e) {
+             DB::rollback();
+             return response()->json(['error' => $e->getMessage()], 500);
+         }
+     }
      
     /**
      * Display the specified resource.

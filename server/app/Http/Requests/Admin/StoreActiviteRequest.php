@@ -27,8 +27,6 @@ class StoreActiviteRequest extends FormRequest
             'titre' => 'required|string|max:255',
             'description' => 'required|string|max:2048',
             'objectif' => 'required|string|max:1024',
-            'ageMin' => 'required|integer|between:1,100',
-            'ageMax' => 'required|integer|between:1,100|gte:ageMin',
             'imagePub' => 'required|string|max:255',
             'lienYtb' => 'required|string|max:255',
             'programmePdf' => 'required|string|max:255',

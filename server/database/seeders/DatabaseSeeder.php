@@ -23,21 +23,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-      // \App\Models\User::factory(10)->create();
-      // $this->call(TuteurSeeder::class);
-      // $this->call(OffreSeeder::class);
-      // $this->call(OffreActiviteSeeder::class);
-      // $this->call([TuteurSeeder::class,EnfantSeeder::class,]);
-      // $this->call([HoraireSeeder::class]);
-     // $this->call(AnimateurSeeder::class);
-      $this->call(GroupeSeeder::class);
-        $this->call([
-    
-    //  DisponibiliteSeeder::class
-       // AnimateurGroupeSeeder::class
-        EnfantGroupeSeeder::class
-  ]);
-      
-  }
+        // Create users
+        User::factory()->count(10)->create();
+
+        // Create administrateurs
+        Administrateur::factory()->count(2)->create();
+
+        // Create animateurs
+        Animateur::factory()->count(5)->create();
+
+        // Create tuteurs
+        Tuteur::factory()->count(10)->create();
+
+        // Create enfants
+        Enfant::factory()->count(20)->create();
+
+        // Create packs
+        Pack::factory()->count(5)->create();
+
+        // Create demande inscriptions
+        DemandeInscription::factory()->count(15)->create();
+
+        // Create devis
+        Devis::factory()->count(10)->create();
+
+        // Create factures
+        Facture::factory()->count(10)->create();
+
+        // Create notifications
+        Notification::factory()->count(20)->create();
+
+        // Create activites
+        Activite::factory()->count(8)->create();
+    }
 }
 

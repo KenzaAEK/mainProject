@@ -14,14 +14,11 @@ class TypeActiviteFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function run()
-{
-    $types = [ 'Musique', 'Science'];
-    foreach ($types as $type) {
-        TypeActivite::firstOrCreate([
-            'type' => $type,
-            'domaine' => 'Exterieur' // ou une logique pour assigner le domaine
-        ]);
+    public function definition()
+    {
+        return [
+            'type' => $this->faker->unique()->word, // Generate a unique word for the 'type' column
+            'domaine' => $this->faker->word,
+        ];
     }
-}
 }
