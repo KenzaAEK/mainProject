@@ -26,23 +26,23 @@
                 <div class="image">
                     <h2 style="margin-left: -30px;">Mes enfants :</h2>
                 </div>
-                <div class="enfant mx-9"> <!-- Reduced left and right margin from mx-8 to mx-4 -->
-                    <div class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
+                <div class="enfant mx-9" v-if="this.enfants.length > 0"> <!-- Reduced left and right margin from mx-8 to mx-4 -->
+                    <div v-for="enfant in enfants"
+                    :key="enfant.id" class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
                         <div class="h-10 w-10">
                             <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
                         </div>
                         <div>
-                            <div class="text-sm font-medium text-secondary-500">Enfant 1</div>
+                            <div class="text-sm font-medium text-secondary-500">{{ enfant.nom }}</div>
                             <div class="text-xs text-secondary-400">17 ans</div>
                         </div>
                     </div>
-                    <div class="flex flex-wrap items-center justify-start gap-3 mt-4 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
-                        <div class="h-10 w-10">
-                            <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-                        </div>
+                    
+                </div>
+                <div class="enfant mx-9" v-else> <!-- Reduced left and right margin from mx-8 to mx-4 -->
+                    <div class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
                         <div>
-                            <div class="text-sm font-medium text-secondary-500">Enfant 2</div>
-                            <div class="text-xs text-secondary-400">9 Ans</div>
+                            <div class="text-sm font-medium text-secondary-500">tu n'as pas encore d'enfant</div>
                         </div>
                     </div>
                 </div>
@@ -166,15 +166,33 @@
 <script>
 import AjouterEnfant from './AjouterEnfant.vue'
 import { mapGetters } from 'vuex';
+import axios from 'axios';
 export default {
     name: 'profil',
-    
+    data(){
+        return{
+            enfants: []
+        }
+    },
+    mounted(){
+        this.getEnfants();
+    },
     components: { 
         AjouterEnfant
     },
     computed: {
       ...mapGetters(['user']),
 
-    }
+    },
+    methods: {
+        getEnfants(){
+            axios.get('/parent/enfants').then(res=> {
+                this.enfants = res.data.data;
+                console.log(res.data.data[0].nom)
+                console.log(this.enfants[0].nom)
+                console.log(this.enfants[1].nom)
+            });
+        }
+    },
   }
 </script>

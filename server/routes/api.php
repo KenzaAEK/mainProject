@@ -40,6 +40,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
+    Route::get('/users', [AuthController::class, 'index']);
     // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
     // Route::post('/profile', [ProfileController::class, 'profile']);
     // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); gate for animateur**** email 
@@ -68,6 +69,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
         Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
+        
         // Route::post('/offres',[OffreController::class,'store']);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
         // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
