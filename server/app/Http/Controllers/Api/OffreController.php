@@ -38,7 +38,7 @@ class OffreController extends Controller
      */
 
      
-     public function store(Request $request)
+      public function store(Request $request)
      {
          $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
      
