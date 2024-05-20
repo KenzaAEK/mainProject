@@ -3,7 +3,7 @@
         <div class="box-container">
             <div class="box">
                 <div class="image">
-                    <img src="@/assets/images/pro2.png" alt="">
+                    <img src="https://img.freepik.com/premium-photo/happy-fathers-day-father-as-superhero-cartoon-family-with-superhero-dad-elegant-mom_409847-97.jpg" alt="">
                 </div>
                 <h3 > {{ user.nom }} {{ user.prenom }}</h3>
                     <div style="display: flex; align-items: center;">
@@ -26,15 +26,15 @@
                 <div class="image">
                     <h2 style="margin-left: -30px;">Mes enfants :</h2>
                 </div>
-                <div class="enfant mx-9" v-if="this.enfants.length > 0"> <!-- Reduced left and right margin from mx-8 to mx-4 -->
-                    <div v-for="enfant in enfants"
+                <div class="overflow-y-scroll enfant mx-9" v-if="this.enfants.length > 0"> <!-- Reduced left and right margin from mx-8 to mx-4 -->
+                    <div style="margin-bottom: -1.05rem;" v-for="enfant in enfants"
                     :key="enfant.id" class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
-                        <div class="h-10 w-10">
-                            <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                        <div class="h-10 w-10" >
+                            <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="@/assets/images/prfl.png" alt="" />
                         </div>
                         <div>
-                            <div class="text-sm font-medium text-secondary-500">{{ enfant.nom }}</div>
-                            <div class="text-xs text-secondary-400">17 ans</div>
+                            <div class="text-sm font-medium text-secondary-500" >{{ enfant.nom }} {{ enfant.prenom }}</div>
+                            <div class="text-xs text-secondary-400" style="margin-left: -3.2rem;">{{ calculateAge(enfant.dateNaissance) }} ans</div>
                         </div>
                     </div>
                     
@@ -48,7 +48,7 @@
                 </div>
                 <a class="btn1 btn" onclick="my_modal_1.showModal()">Ajouter enfant</a> 
                 <dialog id="my_modal_1" class="modal">
-                    <AjouterEnfant/>
+                    <AjouterEnfant @enfantAdded="getEnfants"/>
                   </dialog>  
             </div>   
         
@@ -56,7 +56,7 @@
                 <div class="image">
                     <h2 style="margin-left: -30px;">Mes offres :</h2>
                 </div>
-                <div class="enfant mx-9"> <!-- Reduced left and right margin from mx-8 to mx-4 -->
+                <div class="overflow-y-scroll enfant mx-9"> <!-- Reduced left and right margin from mx-8 to mx-4 -->
                     <div class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
                         <div class="h-10 w-10">
                             <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="@/assets/images/offre1.png" alt="" />
@@ -85,7 +85,48 @@
     </section>
 </template>
 <style scoped>
+.overflow-y-scroll {
+    height: 10.5rem; /* Set a specific height */
+    overflow-y: scroll; /* Ensure vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrolling if not needed */
+    padding-left: 10px; /* Optional: space inside the div */
+    padding-right: 10px; /* Optional: space inside the div */
+    padding-top: 0px; /* Optional: space inside the div */
+    padding-bottom: 10px; /* Optional: space inside the div */
+    margin: 10px; /* Optional: space outside the div */
+    background-color: #ffffff; /* Optional: background color */
+    border: 1px solid #ffffff; /* Optional: border */
+    border-radius: 5px; /* Optional: rounded corners */
+    font-family: Arial, sans-serif; /* Optional: font family */
+    font-size: 14px; /* Optional: font size */
+    color: #333; /* Optional: text color */
+    line-height: 1.5; /* Optional: line height */
+}
 
+/* Hide scrollbar by default */
+.overflow-y-scroll::-webkit-scrollbar {
+    width: 0;
+}
+
+/* On hover, show the scrollbar */
+.overflow-y-scroll:hover::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+/* Style the scrollbar thumb */
+.overflow-y-scroll::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners for the thumb */
+}
+
+.overflow-y-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: #555; /* Color of the scrollbar thumb when hovered */
+}
+
+/* Style the scrollbar track */
+.overflow-y-scroll::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Color of the scrollbar track */
+}
 .container{
     padding-top: 2rem;
     padding-bottom: 4rem;
@@ -180,19 +221,41 @@ export default {
     components: { 
         AjouterEnfant
     },
+    watch: {
+    user(newUser) {
+      if (newUser) {
+        this.getEnfants();
+      } else {
+        this.enfants = [];
+      }
+    }
+  },
     computed: {
       ...mapGetters(['user']),
 
     },
     methods: {
-        getEnfants(){
-            axios.get('/parent/enfants').then(res=> {
-                this.enfants = res.data.data;
-                console.log(res.data.data[0].nom)
-                console.log(this.enfants[0].nom)
-                console.log(this.enfants[1].nom)
-            });
-        }
+        async getEnfants() {
+      try {
+        const response = await axios.get('/parent/enfants');
+        this.enfants = response.data.data;
+      } catch (error) {
+        console.error('Error fetching children:', error);
+      }
+      
+    },
+    calculateAge(dateNaissance) {
+      const birthDate = new Date(dateNaissance);
+      const ageDifMs = Date.now() - birthDate.getTime();
+      const ageDate = new Date(ageDifMs); // milliseconds from epoch
+      return Math.abs(ageDate.getUTCFullYear() - 1970);
+    },
+    showModal() {
+      const modal = this.$el.querySelector('#my_modal_1');
+      if (modal) {
+        modal.showModal();
+      }
+    }
     },
   }
 </script>

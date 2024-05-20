@@ -2,7 +2,7 @@
   <div class="modal-box flex flex-col gap-3" v-if="user">
     <h3 class="font-bold text-lg">Ajouter Enfant</h3>
     <label class="flex items-center gap-2">
-      Nom : {{ user.nom }}
+      Nom : 
     </label>
     <input type="text" v-model="nom" class="grow input input-bordered flex items-center gap-2" placeholder="Entrez le nom"  required />
     <label class="flex items-center gap-2">
@@ -64,21 +64,18 @@ export default{
     ...mapGetters(['user']),
   },
   methods:{
-    saveEnfant(){
-      
-      const response = axios.post('/parent/enfants', {
-        prenom: this.prenom,
-        nom: this.nom,
-        dateNaissance: this.naissance,
-        niveauEtude: this.niveau,
-        
-      });
-      
-      
-      
-        
-        
-        
+    async saveEnfant() {
+      try {
+        await axios.post('/parent/enfants', {
+          prenom: this.prenom,
+          nom: this.nom,
+          dateNaissance: this.naissance,
+          niveauEtude: this.niveau,
+        });
+        this.$emit('enfantAdded');
+      } catch (error) {
+        console.error('Error adding child:', error);
+      }
     }
   }
 }
