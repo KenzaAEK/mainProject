@@ -206,7 +206,6 @@ class DemandeInscriptionController extends Controller
     DB::beginTransaction();
     try {
         $dmInscription = new DemandeInscription();
-        $facture = new Facture();
         $dmInscription->optionsPaiement = 'mois';
         $user = $request->user();
         $idTuteur = 1;
@@ -245,7 +244,10 @@ private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secen
     $limite = $pack->limite;
     $remise = $pack->remise;
     $prixTot = 0;
+   
     foreach ($Secenfants as $enfant) {
+        $prixT = [];
+        $prixHT = 0;
         foreach ($ateliers as $AteliersData) {
             $activite = Activite::where('idActivite', $AteliersData['idActivite'])->firstOrFail();
             if (!$activite) {
@@ -257,13 +259,9 @@ private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secen
             $tarif = $prix->tarif;
 
             $prixT[] = $tarif;
-            $i++;
+            $prixHT += $tarif;
         }
-        $prixHT = 0;
-        foreach($prixT as $prixSR){
-            $prixHT +=$prixSR;
-        }
-
+        $prixTot = 0;
         foreach ($prixT as $prixTA) {
             $c = 0;
             if ($c < $limite) {
@@ -273,7 +271,6 @@ private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secen
             }
             $c++;
         }
-       
         $dmInscription->save();
         $idoffre = $offreActivite->idOffre;
         $idActivite = $offreActivite->idActivite;
@@ -285,7 +282,7 @@ private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secen
             'idOffre' => $idoffre,
             'idActivite' => $idActivite,
             'PixtotalRemise' => $prixTot,
-            'PrixtotalBrute'=> $prixHT 
+            'Prixbrute'=> $prixHT 
         ]);
         
 
@@ -329,10 +326,11 @@ private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenf
             'idTuteur' => $idTuteur,
             'idOffre' => $idoffre,
             'idActivite' => $idActivite,
-            'PixtotalRemise' => $prixTot
+            'PixtotalRemise' => $prixTot,
+            'Prixbrute' =>0
         ]);
     }
-
+ 
     $childOffre = $childWithMinActivities['idOffre'];
     $childActivite = $offreActivite->where('idOffre', $childOffre)->first()->idActivite;
     $dmInscription->enfantss()->attach($childWithMinActivities['idEnfant'], [
@@ -340,7 +338,8 @@ private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenf
         'idTuteur' => $idTuteur,
         'idOffre' => $childOffre,
         'idActivite' => $childActivite,
-        'PixtotalRemise' => 0
+        'PixtotalRemise' => 0,
+        'Prixbrute' => 0
     ]);
 }
     
