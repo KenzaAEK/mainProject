@@ -39,13 +39,19 @@
                     </div>
                     
                 </div>
-                <div class="enfant mx-9" v-else> <!-- Reduced left and right margin from mx-8 to mx-4 -->
-                    <div class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
+                <div class="overflow-y-scroll enfant mx-9" v-else> <!-- Reduced left and right margin from mx-8 to mx-4 -->
+                    <div style="margin-bottom: -1.05rem;" 
+                    class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
+                        <div class="h-10 w-10" >
+                        </div>
                         <div>
-                            <div class="text-sm font-medium text-secondary-500">tu n'as pas encore d'enfant</div>
+                            <div class="text-sm font-medium text-secondary-500" >tu n'as pas encore d'enfant</div>
+                            <div class="text-xs text-secondary-400" > </div>
                         </div>
                     </div>
+                    
                 </div>
+                
                 <a class="btn1 btn" onclick="my_modal_1.showModal()">Ajouter enfant</a> 
                 <dialog id="my_modal_1" class="modal">
                     <AjouterEnfant @enfantAdded="getEnfants"/>
