@@ -68,6 +68,7 @@ class DevisController extends Controller
             'notification' => $notification,
         ], 200);
     }
+    
 
     protected function sendFactureEmail($facture, $emailDestination)
 {
