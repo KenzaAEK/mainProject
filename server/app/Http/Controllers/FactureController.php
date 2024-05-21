@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Devis;
 use App\Models\Facture;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 
 class FactureController extends Controller
@@ -12,6 +13,7 @@ class FactureController extends Controller
     {
         $facture = Facture::findOrFail($idFacture);
 
+        // Generate the PDF content
         $pdfContent = $this->generatePdfContent($facture);
 
         return response($pdfContent)
@@ -25,9 +27,8 @@ class FactureController extends Controller
             'facture' => $facture,
         ];
 
-        // Uncomment and implement this line to generate PDF content using a view
-        // $pdfContent = PDF::loadView('pdf.facture', $data)->download()->getOriginalContent();
-
-        // return $pdfContent;
+        // Use a PDF generation library like DomPDF to generate the PDF content from a view
+        $pdf = PDF::loadView('pdf.facture', $data);
+        return $pdf->download()->getOriginalContent();
     }
 }

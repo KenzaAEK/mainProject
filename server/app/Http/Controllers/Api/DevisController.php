@@ -7,6 +7,7 @@ use App\Models\Devis;
 use App\Models\Facture;
 use App\Models\Notification;
 use App\Traits\HttpResponses;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -77,7 +78,7 @@ class DevisController extends Controller
     
     $pdfContent = $this->generatePdfContent($facture);
     
-    Mail::send('emails.facture', $factureData, function ($message) use ($emailDestination, $pdfContent, $idFacture) {
+    Mail::send('emails.facture', [], function ($message) use ($emailDestination, $pdfContent, $idFacture) {
         $message->to($emailDestination);
         $message->subject('Votre facture');
         $message->attachData($pdfContent, 'facture_' . $idFacture . '.pdf', [
@@ -87,14 +88,14 @@ class DevisController extends Controller
 }
 
 
-    protected function generatePdfContent($facture)
+protected function generatePdfContent($facture)
     {
         $data = [
             'facture' => $facture,
         ];
 
-        // $pdfContent = PDF::loadView('pdf.facture', $data)->download()->getOriginalContent();
-
-        // return $pdfContent;
+        // Use DomPDF to generate the PDF content from a view
+        $pdf = PDF::loadView('pdf.facture', $data);
+        return $pdf->output();
     }
 }
