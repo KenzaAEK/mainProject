@@ -279,6 +279,7 @@ private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secen
             'idTuteur' => $idTuteur,
             'idOffre' => $idoffre,
             'idActivite' => $idActivite,
+            'Prixbrute'=> 100,
             'PixtotalRemise' => $prixTot
         ]);
     }
@@ -321,6 +322,7 @@ private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenf
             'idTuteur' => $idTuteur,
             'idOffre' => $idoffre,
             'idActivite' => $idActivite,
+            'Prixbrute'=> 100,
             'PixtotalRemise' => $prixTot
         ]);
     }
@@ -332,6 +334,7 @@ private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenf
         'idTuteur' => $idTuteur,
         'idOffre' => $childOffre,
         'idActivite' => $childActivite,
+        'Prixbrute'=> 100,
         'PixtotalRemise' => 0
     ]);
 }

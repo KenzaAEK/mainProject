@@ -38,13 +38,13 @@ class DemandeInscription extends Model
     public function offresactivite() :BelongsToMany
     {
         return $this->belongsToMany(offreActivite::class,'inscriptionEnfant_offre_Activite','idDemande', 'idEnfant')
-                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise');
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise','Prixbrute');
     }
     public function enfantss() : BelongsToMany
     {
         {
             return $this->belongsToMany(Enfant::class,'inscriptionEnfant_offre_Activite','idDemande', 'idEnfant')
-                        ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise');
+                        ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise','Prixbrute');
         }
     }
 }

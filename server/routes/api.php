@@ -13,6 +13,7 @@ use App\Http\Controllers\api\password\UpdatePasswordController;
 use App\Http\Controllers\Api\TypeActiviteController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
+use App\Http\Controllers\FactureController;
 
 /*
 ╔==========================================================================╗
@@ -32,13 +33,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 
-Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
-Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 
 
 
-Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
-Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
 
 Route::apiResource('enfants', EnfantController::class);
 Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
@@ -100,9 +97,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
         Route::apiResource('enfants', EnfantController::class);
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
-        Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
-        Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
-        
+        Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
+        Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
+        Route::get('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
