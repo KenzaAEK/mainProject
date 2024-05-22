@@ -35,6 +35,7 @@
 </div>
 
 </template>
+
 <style scoped>
 h3{
   color: #A3B18A;

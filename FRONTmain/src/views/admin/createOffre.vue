@@ -41,7 +41,7 @@
                   </span>
                 </summary>
                 <div class="flex group-open:animate-fadeIn mt-3 text-neutral-600">
-                  <div class="w-full sm:w-1/2 px-2">
+                  <div class="w-full sm:w-1/3 px-2">
                     <label for="product-name" class="text-sm font-medium text-gray-900 block mb-2">Nom de l'atelier</label>
                     <select v-model="workshop.type" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg f focus:border-black block w-full p-2.5">
                       <option value="None" selected>None</option>
@@ -50,10 +50,16 @@
                       <option value="AI">Atelier AI</option>
                     </select>
                   </div>
-                  <div class="w-full sm:w-1/2 px-2">
+                  <div class="w-full sm:w-1/3 px-2">
                     <label for="category" class="text-sm font-medium text-gray-900 block mb-2">Plage d'âges</label>
                     <div>
                       <input type="text" v-model="workshop.ageRange" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Plage d'âges" required>
+                    </div>
+                  </div>
+                  <div class="w-full sm:w-1/3 px-2">
+                    <label for="category" class="text-sm font-medium text-gray-900 block mb-2">Prix </label>
+                    <div>
+                      <input type="number" v-model="workshop.ageRange" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Prix" required>
                     </div>
                   </div>
                 </div>
@@ -117,6 +123,7 @@
   </template>
   
   <script >
+ 
   export default {
     name: 'createOffre',
     data() {

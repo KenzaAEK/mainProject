@@ -26,44 +26,62 @@
                 <div class="image">
                     <h2 style="margin-left: -30px;">Mes enfants :</h2>
                 </div>
-                <div class="overflow-y-scroll enfant mx-9" v-if="this.enfants.length > 0"> <!-- Reduced left and right margin from mx-8 to mx-4 -->
-                    <div style="margin-bottom: -1.05rem;" v-for="enfant in enfants"
-                    :key="enfant.id" class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
-                        <div class="h-10 w-10" >
-                            <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="@/assets/images/prfl.png" alt="" />
+                <div class="overflow-y-scroll enfant mx-9" v-if="this.enfants.length > 0">
+                    <div style="margin-bottom: -1.05rem;" v-for="enfant in enfants" :key="enfant.id" class="flex items-center justify-between gap-3 mt-8 bg-gray-100 rounded-2xl p-2 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300">
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10">
+                                <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="@/assets/images/prfl.png" alt="" />
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-secondary-500">{{ enfant.nom }} {{ enfant.prenom }}</div>
+                                <div class="text-xs text-secondary-400">{{ calculateAge(enfant.dateNaissance) }} ans</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="text-sm font-medium text-secondary-500" >{{ enfant.nom }} {{ enfant.prenom }}</div>
-                            <div class="text-xs text-secondary-400" style="margin-left: -3.2rem;">{{ calculateAge(enfant.dateNaissance) }} ans</div>
+                        <div class="flex items-center gap-2">
+                            <div  class="flex items-center gap-2">
+                                <svg @click="deleteEnfant(enfant.id)" class="h-6 w-6 text-gray-400 cursor-pointer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z"/>
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                                <svg @click="openUpdateModal(enfant)" class="h-6 w-6 text-gray-400 cursor-pointer" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z"/>
+                                    <path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"/>
+                                    <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"/>
+                                    <line x1="16" y1="5" x2="19" y2="8"/>
+                                </svg>
+                                <dialog id="my_modal_31" class="modal">
+                                    <UpdateEnfant :enfant="selectedEnfant" @enfantUpdated="getEnfants"/>
+                                </dialog>
+                            </div>
                         </div>
+                        
                     </div>
-                    
-                </div>
-                <div class="overflow-y-scroll enfant mx-9" v-else> <!-- Reduced left and right margin from mx-8 to mx-4 -->
-                    <div style="margin-bottom: -1.05rem;" 
-                    class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
-                        <div class="h-10 w-10" >
-                        </div>
-                        <div>
-                            <div class="text-sm font-medium text-secondary-500" >tu n'as pas encore d'enfant</div>
-                            <div class="text-xs text-secondary-400" > </div>
-                        </div>
-                    </div>
-                    
                 </div>
                 
-                <a class="btn1 btn" onclick="my_modal_1.showModal()">Ajouter enfant</a> 
+                <div class="overflow-y-scroll enfant mx-9" v-else>
+                    <div style="margin-bottom: -1.05rem;" 
+                    class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300">
+                        <div class="h-10 w-10"></div>
+                        <div>
+                            <div class="text-sm font-medium text-secondary-500">tu n'as pas encore d'enfant</div>
+                            <div class="text-xs text-secondary-400"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <a class="btn1 btn" @click="showModal()">Ajouter enfant</a> 
                 <dialog id="my_modal_1" class="modal">
                     <AjouterEnfant @enfantAdded="getEnfants"/>
-                  </dialog>  
+                </dialog>  
             </div>   
         
             <div class="box">
                 <div class="image">
                     <h2 style="margin-left: -30px;">Mes offres :</h2>
                 </div>
-                <div class="overflow-y-scroll enfant mx-9"> <!-- Reduced left and right margin from mx-8 to mx-4 -->
-                    <div class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
+                <div class="overflow-y-scroll enfant mx-9">
+                    <div class="flex flex-wrap items-center justify-start gap-3 mt-8 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300">
                         <div class="h-10 w-10">
                             <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="@/assets/images/offre1.png" alt="" />
                         </div>
@@ -72,7 +90,7 @@
                             <div class="text-xs text-secondary-400">horaire</div>
                         </div>
                     </div>
-                    <div class="flex flex-wrap items-center justify-start gap-3 mt-4 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300"> <!-- Changed rounded-lg to rounded-2xl for 2rem border radius -->
+                    <div class="flex flex-wrap items-center justify-start gap-3 mt-4 bg-gray-100 rounded-2xl p-2 pr-1 hover:transform hover:scale-105 hover:shadow-md hover:text-gray-800 transition-all duration-300">
                         <div class="h-10 w-10">
                             <img class="h-full w-full rounded-full object-cover object-center ring ring-white" src="@/assets/images/offre2.png" alt="" />
                         </div>
@@ -82,14 +100,15 @@
                         </div>
                     </div>
                 </div>
-                <a class="btn1 btn"  href="#offres">Ajouter offre</a>
-                <!--<dialog id="my_modal_2" class="modal">
-                    <AjouterOffre/>
-                  </dialog>   -->
+                <a class="btn1 btn" href="#offres">Ajouter offre</a>
             </div>
         </div>
     </section>
 </template>
+
+<style scoped>
+/* Same styles as provided */
+</style>
 <style scoped>
 .overflow-y-scroll {
     height: 10.5rem; /* Set a specific height */
@@ -212,22 +231,26 @@
 </style>
 <script>
 import AjouterEnfant from './AjouterEnfant.vue'
+import UpdateEnfant from './UpdateEnfant.vue';
 import { mapGetters } from 'vuex';
 import axios from 'axios';
+
 export default {
-    name: 'profil',
-    data(){
-        return{
-            enfants: []
-        }
-    },
-    mounted(){
-        this.getEnfants();
-    },
-    components: { 
-        AjouterEnfant
-    },
-    watch: {
+  name: 'profil',
+  data() {
+    return {
+      enfants: [],
+      selectedEnfant: null
+    }
+  },
+  mounted() {
+    this.getEnfants();
+  },
+  components: { 
+    AjouterEnfant,
+    UpdateEnfant
+  },
+  watch: {
     user(newUser) {
       if (newUser) {
         this.getEnfants();
@@ -236,19 +259,25 @@ export default {
       }
     }
   },
-    computed: {
-      ...mapGetters(['user']),
-
-    },
-    methods: {
-        async getEnfants() {
+  computed: {
+    ...mapGetters(['user']),
+  },
+  methods: {
+    async getEnfants() {
       try {
         const response = await axios.get('/parent/enfants');
         this.enfants = response.data.data;
       } catch (error) {
         console.error('Error fetching children:', error);
       }
-      
+    },
+    async deleteEnfant(enfantId) {
+      try {
+        await axios.delete(`/parent/enfants/${enfantId}`);
+        this.enfants = this.enfants.filter(enfant => enfant.id !== enfantId);
+      } catch (error) {
+        console.error('Error deleting child:', error);
+      }
     },
     calculateAge(dateNaissance) {
       const birthDate = new Date(dateNaissance);
@@ -261,7 +290,14 @@ export default {
       if (modal) {
         modal.showModal();
       }
-    }
     },
-  }
+    openUpdateModal(enfant) {
+      this.selectedEnfant = enfant;
+      const modal = this.$el.querySelector('#my_modal_31');
+      if (modal) {
+        modal.showModal();
+      }
+    }
+  },
+}
 </script>

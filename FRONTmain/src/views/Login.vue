@@ -77,12 +77,18 @@
                 this.$store.dispatch('user', response.data.data.user)
                 this.$router.push('/parent');
             }
+            if(response.data.data.user.role==="1"){
+                localStorage.setItem('token', response.data.data.token);
+                this.$store.dispatch('user', response.data.data.user)
+                this.$router.push('/test');
+            }
+            
           } catch(error){
-            if (error.response && error.response.status === 401) {
-          // Unauthorized - username or password is incorrect
-            this.errorMessage = "Incorrect username or password. Please try again.";
-           }else {
-              this.errorMessage = "An error occurred. Please try again later.";
+            if (error.response && error.response.data && error.response.data.message) {
+          // Extract and display the error message from the API response
+          this.errorMessage = error.response.data.message;
+            } else {
+              this.errorMessage = 'An unexpected error occurred.';
             }
           }
             //localStorage.setItem('token', response.data.data.token);
