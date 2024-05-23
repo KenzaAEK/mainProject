@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-box flex flex-col gap-3">
+  <div class="modal-box flex flex-col gap-3" >
     <h3 class="font-bold text-lg">Demande Insciption</h3>
     
     <!-- <label class="flex items-center gap-2 custom">
