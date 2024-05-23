@@ -72,12 +72,12 @@
                 password: this.password
               });
             console.log(response.data.data.user.role)
-            if(response.data.data.user.role==="1"){
+            if(response.data.data.user.role==="2"){
                 localStorage.setItem('token', response.data.data.token);
                 this.$store.dispatch('user', response.data.data.user)
                 this.$router.push('/parent');
             }
-            if(response.data.data.user.role==="2"){
+            if(response.data.data.user.role==="1"){
                 localStorage.setItem('token', response.data.data.token);
                 this.$store.dispatch('user', response.data.data.user)
                 this.$router.push('/test');
