@@ -63,9 +63,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 ║                           Admin Routes                                   ║
 ╚==========================================================================╝
 */
-    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () {
+    Route::group(['middleware' => 'role:1', 'prefix' => 'admin'], function () {
   
         Route::apiResource('activites', ActiviteController::class);
+        //Route::post('activites', ActiviteController::class,'store' );
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
         Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);

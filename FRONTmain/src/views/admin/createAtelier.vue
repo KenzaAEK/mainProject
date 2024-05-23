@@ -80,26 +80,26 @@ export default{
       },
       methods: {
     
-    // async submitForm() {
-    //     //console.log(this.formData.type)
-    //     let result = await axios.post('/activites',{
-    //         titre :  this.formData.titre, 
-    //         objectif : this.formData.objectif,
-    //         description : this.formData.description,
-    //         lienYtb : this.formData.lienYtb,  
-    //         imagePub : this.formData.imagePub,
-    //         effectif : this.formData.effectif
+    async submitForm() {
+        //console.log(this.formData.type)
+        let result = await axios.post('/http://localhost:3000/atelier',{
+            titre :  this.formData.titre, 
+            objectif : this.formData.objectif,
+            description : this.formData.description,
+            lienYtb : this.formData.lienYtb,  
+            imagePub : this.formData.imagePub,
+            effectif : this.formData.effectif
           
-    //     })        
-    //     .then(()=>{
-    //        this.formData.titre = '' 
-    //        this.formData.objectif = ''
-    //        this.description = ''
-    //        this.formData.lienYtb = ''
-    //        this.formData.imagePub = ''
-    //        this.formData.effectif = ''
-    //     })
-    // }
+        })        
+        .then(()=>{
+           this.formData.titre = '' 
+           this.formData.objectif = ''
+           this.description = ''
+           this.formData.lienYtb = ''
+           this.formData.imagePub = ''
+           this.formData.effectif = ''
+        })
+    }
 }};
 
       
