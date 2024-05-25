@@ -89,6 +89,8 @@
       fonction: '',
       password: '',
       confirmPassword: '',
+      showPassword1: false,
+      showPassword2: false,
       errorMessage:''
     }
   },
@@ -117,14 +119,13 @@
         // Redirect user to login page or show success message
         this.$router.push('/login');
       } catch (error) {
-          if (error.response && error.response.status === 422) {
-        // Mauvaise requête - par exemple, l'utilisateur existe déjà
-        this.errorMessage = "la confirmation du mot de passe ne correspond pas.";
+        if (error.response && error.response.data && error.response.data.message) {
+          // Extract and display the error message from the API response
+          this.errorMessage = error.response.data.message;
         } else {
-        // Autres erreurs
-          this.errorMessage = "Cet e-mail existe déjà. Veuillez choisir un autre e-mail.";
-         }
-      console.error("Erreur d'inscription :", error);
+          this.errorMessage = 'An unexpected error occurred.';
+        }
+      
        
       }
     }

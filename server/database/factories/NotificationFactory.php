@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,10 @@ class NotificationFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'contenu' => $this->faker->sentence,
+            'statut' => $this->faker->boolean,
+            'idUser' => User::factory()->create()->idUser,
+            'read_at' => $this->faker->dateTime,
         ];
     }
 }

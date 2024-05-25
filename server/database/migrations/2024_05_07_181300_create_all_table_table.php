@@ -24,12 +24,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-         Schema::create('horaires', function (Blueprint $table) {
-             $table->id('idHoraire');
-             $table->string('jour', 50);
-             $table->time('heureDebut');
-             $table->time('heureFin');
-         });
+        Schema::create('horaires', function (Blueprint $table) {
+            $table->id('idHoraire');
+            $table->string('jour', 50);
+            $table->time('heureDebut');
+            $table->time('heureFin');
+        });
 
 
         Schema::create('packs', function (Blueprint $table) {
@@ -58,13 +58,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('typeactivites', function (Blueprint $table) {
+        Schema::create('type_activites', function (Blueprint $table) {
             $table->id('idTypeActivite');
             $table->string('type', 50)->unique();
             $table->string('domaine', 50);
-        
-   
         });
+
+
         Schema::create('competences', function (Blueprint $table) {
             $table->id('idCompetence');
             $table->string('nom_competence', 50);
@@ -110,7 +110,6 @@ return new class extends Migration
         });
 
         Schema::create('enfants', function (Blueprint $table) {
-            
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
             $table->string('prenom', 100);
@@ -261,14 +260,16 @@ return new class extends Migration
             $table->integer('idEnfant');
             $table->integer('idOffre');
             $table->integer('idActivite');
+            $table->decimal('PixtotalRemise', 10, 3);
+            $table->decimal('Prixbrute', 10, 3);
             $table->primary(['idDemande', 'idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
-
+            
             $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
-        });
 
-        
+
+        });
     }
 
         
