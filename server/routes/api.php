@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\Api\Password\PasswordResetController;
 use App\Http\Controllers\Api\TypeActiviteController;
+use App\Http\Controllers\AnimateurController;
 
 /*
 ╔==========================================================================╗
@@ -123,7 +124,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 ║                           Animateur Routes                              ║
 ╚==========================================================================╝
 */
-    Route::group([ 'prefix' => 'animateur'], function () {
+    Route::group([ 'middleware' => 'role:3', 'prefix' => 'animateur'], function () {
        
         Route::get('/Animateurs',[AnimateurController::class,'AffAnimConnecter']);// Afficher ici les informations de l'Animateur connecter
         Route::get('/AnimateursEnf',[AnimateurController::class,'AffEtudAnim']);

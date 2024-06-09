@@ -31,7 +31,7 @@ class AnimateurController extends Controller
          return response()->json($Animateur);
         }
       else {
-         return response()->json(['error' => 'Animateur non trouvé'], 404);
+         return response()->json(['error' => 'Animateur non trouvé'], 403);
        }
     }
 
@@ -56,7 +56,7 @@ class AnimateurController extends Controller
         );
 
         return response()->json($resultatPaginer);
-    }
+    } 
 
     public function searshEtud (Request $request )
     {
