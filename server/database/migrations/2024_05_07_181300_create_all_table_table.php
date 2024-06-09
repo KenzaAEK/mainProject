@@ -104,21 +104,12 @@ return new class extends Migration
             $table->string('lienYtb');
             $table->longText('programmePdf');
             $table->unsignedBigInteger('idTypeActivite')->nullable();
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
         }); 
 
         Schema::create('enfants', function (Blueprint $table) {
-            // $table->unsignedBigInteger('idTuteur');
-            // $table->unsignedBigInteger('idEnfant');
-            // $table->string('prenom', 100);
-            // $table->date('dateNaissance');
-            // $table->string('niveauEtude', 50);
-            // $table->string('nom', 100);
-            // $table->primary(['idTuteur', 'idEnfant']);
-            // $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
-
-            $table->id('idEnfant');
+            
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
             $table->string('prenom', 100);
