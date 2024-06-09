@@ -118,7 +118,7 @@ return new class extends Migration
             $table->string('nom', 100);
             $table->primary(['idTuteur', 'idEnfant']);
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
-          
+
         });
 
         Schema::create('devis', function (Blueprint $table) {
@@ -307,12 +307,6 @@ return new class extends Migration
         Schema::dropIfExists('horaires');
         Schema::dropIfExists('administrateurs');
         Schema::dropIfExists('activites');
-<<<<<<< HEAD
         Schema::dropIfExists('type_activites');
-=======
-        Schema::dropIfExists('typea_ctivites');
->>>>>>> 426f30cb45ef166857e669b3dda18bf1eadc5606
-
-        
     }
 };
