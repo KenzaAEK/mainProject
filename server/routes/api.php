@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\AdministrateurController;
+use App\Http\Controllers\Api\AdministrateurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 use App\Http\Controllers\Api\OffreController;
-use App\Http\Controllers\Api\DemandeInscriptionController;
+// use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
-use App\Http\Controllers\DevisController;
+use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\GroupeController;
-use App\Http\Controllers\AnimateurController;
+// use App\Http\Controllers\Api\AnimateurController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -18,7 +18,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 
 Route::apiResource('enfants', EnfantController::class);
-Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+// Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
 
 Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
 Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
@@ -39,9 +39,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     
    //********Traitement d'Animateurs*************** 
    
-   Route::get('/Animateurs',[AnimateurController::class,'AffAnimConnecter']);// Afficher ici les informations de l'Animateur connecter
-   Route::get('/AnimateursEnf',[AnimateurController::class,'AffEtudAnim']);
-   Route::get('/search_students',[AnimateurController::class,'searshEtud']);
+//    Route::get('/Animateurs',[AnimateurController::class,'AffAnimConnecter']);// Afficher ici les informations de l'Animateur connecter
+//    Route::get('/AnimateursEnf',[AnimateurController::class,'AffEtudAnim']);
+//    Route::get('/search_students',[AnimateurController::class,'searshEtud']);
 
    
     // ********Traitement Administrateurs**********

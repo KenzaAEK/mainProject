@@ -41,7 +41,7 @@ class OffreController extends Controller
       public function store(Request $request)
      {
          $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
-     
+        
          if ($validator->fails()) {
              return response()->json(['errors' => $validator->errors()], 422);
          }
@@ -49,10 +49,11 @@ class OffreController extends Controller
          DB::beginTransaction();
      
          try {
+            
              $offreData = $validator->validated();
              $idAdmin = Administrateur::where('idUser', Auth::id())->first()->idAdmin;
              $offreData['idAdmin'] = $idAdmin;
-     
+            //  dd($idAdmin);
              // Créer l'offre
              $offre = Offre::create([
                  'titre' => $offreData['titre'],
@@ -78,7 +79,7 @@ class OffreController extends Controller
      
                  $totalDuree = 0;
                  $nbrSeance = 0;
-     
+                //  dd($idAdmin);
                  // Calculer la durée totale et le nombre de séances
                  foreach ($activiteData['jours'] as $jourData) {
                      $heureDebut = new \DateTime($jourData['heureDebut']);
@@ -88,7 +89,7 @@ class OffreController extends Controller
                      $totalDuree += $dureeEnHeures;
                      $nbrSeance++;
                  }
-     
+                //  dd($idAdmin);
                  // Créer l'activité pour l'offre
                  $offreActivite = OffreActivite::create([
                      'idOffre' => $offre->idOffre,
@@ -101,7 +102,7 @@ class OffreController extends Controller
                      'nbrSeance' => $nbrSeance,
                      'Duree_en_heure' => $totalDuree,
                  ]);
-     
+                //  dd($idAdmin);
                  // Gérer les jours et les horaires
                  foreach ($activiteData['jours'] as $jourData) {
                      $horaire = Horaire::create([
@@ -116,6 +117,7 @@ class OffreController extends Controller
                          'idOffre' => $offre->idOffre,
                          'idActivite' => $activite->idActivite,
                      ]);
+                    //  dd($idAdmin);
                  }
              }
      
@@ -138,7 +140,7 @@ class OffreController extends Controller
         try {
             // Charger l'offre avec ses activités associées grâce à la méthode with()
             $offre = Offre::with('offreActivite')->findOrFail($id);
-    
+            // dd($offre);
             return response()->json([
                 'status' => 200,
                 'offre' => $offre,

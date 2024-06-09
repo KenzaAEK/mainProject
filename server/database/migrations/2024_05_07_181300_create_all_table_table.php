@@ -58,7 +58,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-         Schema::create('typeactivites', function (Blueprint $table) {
+         Schema::create('type_activites', function (Blueprint $table) {
              $table->id('idTypeActivite');
              $table->string('type', 50)->unique();
              $table->string('domaine', 50);
@@ -118,7 +118,7 @@ return new class extends Migration
             // $table->primary(['idTuteur', 'idEnfant']);
             // $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
 
-            $table->id('idEnfant');
+            // $table->id('idEnfant');
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
             $table->string('prenom', 100);
