@@ -58,11 +58,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('typeactivites', function (Blueprint $table) {
-            $table->id('idTypeActivite');
-            $table->string('type', 50)->unique();
-            $table->string('domaine', 50);
-        });
+         Schema::create('typeactivites', function (Blueprint $table) {
+             $table->id('idTypeActivite');
+             $table->string('type', 50)->unique();
+             $table->string('domaine', 50);
+         });
 
 
         Schema::create('competences', function (Blueprint $table) {
@@ -107,7 +107,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idTypeActivite');
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
-        });
+        }); 
 
         Schema::create('enfants', function (Blueprint $table) {
             $table->unsignedBigInteger('idTuteur');
@@ -263,7 +263,7 @@ return new class extends Migration
             $table->decimal('PixtotalRemise', 10, 3);
             $table->decimal('Prixbrute', 10, 3);
             $table->primary(['idDemande', 'idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
-            
+
             $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
