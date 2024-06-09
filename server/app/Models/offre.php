@@ -32,7 +32,11 @@ class Offre extends Model
 
     public function offreActivite()
     {
+<<<<<<< HEAD
         return $this->hasMany(OffreActivite::class, 'idOffre');
+=======
+        return $this->hasMany(offreActivite::class, 'idOffre');
+>>>>>>> AnimateurInterface
     }
    /* public static function createWithNextId($data)
     {

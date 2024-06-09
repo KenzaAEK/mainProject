@@ -58,11 +58,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-         Schema::create('type_activites', function (Blueprint $table) {
-             $table->id('idTypeActivite');
-             $table->string('type', 50)->unique();
-             $table->string('domaine', 50);
-         });
+
+        Schema::create('type_activites', function (Blueprint $table) {
+            $table->id('idTypeActivite');
+            $table->string('type', 50)->unique();
+            $table->string('domaine', 50);
+        });
 
         Schema::create('competences', function (Blueprint $table) {
             $table->id('idCompetence');
@@ -97,28 +98,19 @@ return new class extends Migration
 
         Schema::create('activites', function (Blueprint $table) {
             $table->id('idActivite');
-            $table->string('titre', 50);
+
+            $table->string('titre', 100);
             $table->text('description');
             $table->text('objectif');
-            $table->string('imagePub', 50)->nullable();
-            $table->string('lienYtb');
-            $table->longText('programmePdf');
-            $table->unsignedBigInteger('idTypeActivite')->nullable();
+            $table->string('imagePub', 255)->nullable();
+            $table->string('lienYtb',255);
+            $table->longText('programmePdf',255);
+            $table->unsignedBigInteger('idTypeActivite');
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
             $table->timestamps();
-        }); 
+        });
 
         Schema::create('enfants', function (Blueprint $table) {
-            // $table->unsignedBigInteger('idTuteur');
-            // $table->unsignedBigInteger('idEnfant');
-            // $table->string('prenom', 100);
-            // $table->date('dateNaissance');
-            // $table->string('niveauEtude', 50);
-            // $table->string('nom', 100);
-            // $table->primary(['idTuteur', 'idEnfant']);
-            // $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
-
-            // $table->id('idEnfant');
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
             $table->string('prenom', 100);
@@ -127,8 +119,6 @@ return new class extends Migration
             $table->string('nom', 100);
             $table->primary(['idTuteur', 'idEnfant']);
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
-
-
           
         });
 
@@ -260,8 +250,7 @@ return new class extends Migration
              $table->integer('idCompetence');
              $table->string('Niveau_requis', 50);
              $table->primary(['idTypeActivite', 'idCompetence']);
-
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
             $table->foreign('idCompetence')->references('idCompetence')->on('competences');
         });
 
@@ -271,8 +260,10 @@ return new class extends Migration
             $table->integer('idEnfant');
             $table->integer('idOffre');
             $table->integer('idActivite');
+            $table->decimal('PixtotalRemise', 10, 3);
+            $table->decimal('Prixbrute', 10, 3);
             $table->primary(['idDemande', 'idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
-
+            
             $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
@@ -314,7 +305,7 @@ return new class extends Migration
         Schema::dropIfExists('horaires');
         Schema::dropIfExists('administrateurs');
         Schema::dropIfExists('activites');
-        Schema::dropIfExists('typeactivites');
+        Schema::dropIfExists('type_activites');
 
         
     }

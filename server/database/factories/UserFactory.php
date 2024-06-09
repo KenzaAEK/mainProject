@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'tel' => $this->faker->phoneNumber,
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
-            'role' => rand(1,3),
+            'role' => 1,
             'photo' => null,
             'remember_token' => Str::random(10),
         ];

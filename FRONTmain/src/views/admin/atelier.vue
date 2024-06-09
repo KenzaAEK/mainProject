@@ -1,7 +1,7 @@
 <template>
 <div class="flex flex-wrap items-center justify-between ">
             <h2 class="mr-10 text-4xl font-bold leading-none md:text-3xl">
-                Ateliers :
+                Ateliers : 
             </h2>
             <button onclick="openModal('modelConfirm')" href="#" class="block pb-1 mt-2 text-base font-black text-black uppercase border-b border-transparent custom-hover-text " >
                 Ajouter Atelier ->
@@ -121,6 +121,7 @@
     </div>
 </template>
 <script>
+ import { mapGetters } from 'vuex';
 import createAtelier from './createAtelier.vue'
 import supprimerAtelier from './supprimerAtelier.vue'
 export default{
@@ -128,7 +129,11 @@ export default{
     components:{
         createAtelier,
         supprimerAtelier
-    }
+    },
+    computed: {
+      ...mapGetters(['user']),
+
+      }
 }
 window.openModal = function(modalId) {
         document.getElementById(modalId).style.display = 'block'

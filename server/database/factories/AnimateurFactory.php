@@ -1,7 +1,11 @@
 <?php
 
 namespace Database\Factories;
+<<<<<<< HEAD
 
+=======
+use App\Models\Animateur;
+>>>>>>> AnimateurInterface
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +22,11 @@ class AnimateurFactory extends Factory
     public function definition()
     {
         return [
+<<<<<<< HEAD
             'idUser' => User::factory()->create()->idUser,
+=======
+            'idUser' => User::factory()->create(["role"=>3])->idUser,
+>>>>>>> AnimateurInterface
         ];
     }
 }
