@@ -103,7 +103,7 @@ return new class extends Migration
             $table->text('objectif');
             $table->string('imagePub', 255)->nullable();
             $table->string('lienYtb',255);
-            $table->longText('programmePdf',255);
+            $table->longText('programmePdf',255)->nullable();
             $table->unsignedBigInteger('idTypeActivite');
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
