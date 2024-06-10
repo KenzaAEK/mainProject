@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Factories;
-
+use App\Models\Administrateur;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -11,6 +11,12 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class AdministrateurFactory extends Factory
 {
     /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    // protected $model = Administrateur::class;
+    /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
@@ -18,7 +24,7 @@ class AdministrateurFactory extends Factory
     public function definition()
     {
         return [
-            'idUser' => User::factory()->create()->idUser,
+            'idUser' => User::factory()->create(["role"=>2])->idUser,
         ];
     }
 }

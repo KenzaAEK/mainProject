@@ -24,8 +24,10 @@ class Enfant extends Model
         return $this->belongsTo(Tuteur::class,'idTuteur'); // cest le parent
     }
     public function groupes() {
-        return $this->belongsToMany(Groupe::class, 'enfant_groupes', 'idEnfant', 'idGroupe');
-    }
+        return $this->belongsToMany(Groupe::class, 'enfant_groupe', 'idEnfant', 'idGroupe')
+        ->withPivot('idTuteur'); // Si vous avez besoin d'accéder à idTuteur depuis la relation
+     }
+    
     // public function inscriptionEnfant_offre_Activite() {
     //     return $this->hasOne(InscriptionEnfantOffreActivite::class, 'idEnfant');
     // }
