@@ -7,7 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 // use App\Http\Controllers\Api\AdministrateurController;
 use App\Http\Controllers\Api\OffreController;
-use App\Http\Controllers\Api\DemandeInscriptionController;
+// use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\Api\Password\PasswordResetController;
@@ -65,10 +65,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () {
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
-        Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
-        Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
-        Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
-        Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
+        Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
+        Route::post('/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
         // Route::post('/offres',[OffreController::class,'store']);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
         // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
@@ -100,13 +98,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
         Route::apiResource('enfants', EnfantController::class);
-        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
+        // Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
         Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
         Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
         Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::apiResource('enfants', EnfantController::class);
-        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+        // Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);

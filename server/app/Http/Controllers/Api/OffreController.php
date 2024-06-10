@@ -45,7 +45,7 @@ class OffreController extends Controller
          if ($validator->fails()) {
              return response()->json(['errors' => $validator->errors()], 422);
          }
-     
+        //  dd('1');
          DB::beginTransaction();
      
          try {
@@ -172,15 +172,17 @@ class OffreController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
+        // dd($id);
         DB::beginTransaction();
         try {
+            // dd($id);
             $offre = Offre::findOrFail($id);
             $offreData = $validator->validated();
-    
+
             // Préparation des activités avec l'ID actuel de l'activité pour transmission
             $activitesArray = $request->input('activites');
             $activitesPrepared = [];
+            // dd($id);
             foreach ($activitesArray as $activite) {
                 $currentActivite = Activite::where('titre', $activite['titre'])->first();
                 if (!$currentActivite) {
@@ -190,10 +192,10 @@ class OffreController extends Controller
                 $activite['idActivite'] = $currentActivite->idActivite; // Assurez-vous d'obtenir l'ID actuel
                 $activitesPrepared[] = $activite;
             }
-    
+            // dd($id);
             // Conversion en JSON pour la fonction PL/pgSQL
             $activitesJson = json_encode($activitesPrepared);
-    
+            // dd($activitesJson);
             // Appel de la fonction PL/pgSQL
             $result = DB::select("SELECT public.updateoffreactivites(?, ?, ?, ?, ?) AS result", [
                 $id,
@@ -202,7 +204,7 @@ class OffreController extends Controller
                 $offreData['description'],
                 $activitesJson
             ]);
-    
+            dd($id);
             DB::commit();
             return response()->json(['message' => 'Offre mise à jour avec succès', 'result' => $result]);
         } catch (\Exception $e) {

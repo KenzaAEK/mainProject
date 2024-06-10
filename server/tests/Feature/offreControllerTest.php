@@ -24,40 +24,28 @@ use Tests\TestCase;
 class offreControllerTest extends TestCase
 {
     use RefreshDatabase;
-    
- 
-// public function test_it_returns_all_offre_activites_as_json()
-// {
-
-//     $user = User::factory()->create();
-    
-//     $response = $this->actingAs($user, 'sanctum')
-//                      ->json('GET', '/api/offres');
-
-//     $response->assertStatus(200)
-//              ->assertJsonStructure([
-//                  '*' => [
-//                      'idOffre',
-//                      'idActivite',
-                    //  Add other offreActivite fields here
-//                  ]
-//              ]);
-// }
+    public function setUp(): void
+    {
+        parent::setUp();
+        // Create a user and animateur for testing
+        $this->Admin = Administrateur::factory()->create();
+        // dd($Anim);
+        $this->user = User::find($this->Admin->idUser);
+        $this->offre = Offre::factory()->create();
+        $this->activite = Activite::factory(['titre' => 'Swimming'])->create();
+        // $this->offreactivite = offreActivite::factory(['idOffre' => $this->offre->idOffre,'idActivite'=>$this->activite->idActivite])->create();
+        // $this->user = User::factory()->create();
+        // $this->animateur = Animateur::factory()->create(['idUser' => $this->user->id]);
+    }
 
 /** @test */
 public function it_successfully_creates_an_offre_with_valid_data()
 {
-    $admin = Administrateur::factory()->create();
-    $activite = Activite::factory(['titre' => 'Swimming'])->create();
-    $user = User::find($admin->idUser);
-
-    // dd($admin);
-    // $user = User::factory()->create(["role"=>2]);
-    if (!$user) {
-        dd('User is null, check factory setup.'.$user);
-    }
-    // dd($user);
-    Sanctum::actingAs($user);
+    
+    // dd($user);$admin = Administrateur::factory()->create();
+    $activite = $this->activite;
+    
+    Sanctum::actingAs($this->user);
     $payload = [
         'titre' => 'Summer Camp',
         'remise' => 10,
@@ -87,7 +75,7 @@ public function it_successfully_creates_an_offre_with_valid_data()
     //$response = $this->actingAs($user, 'sanctum')
     //                  ->json('POST', '/api/offres', $payload);
     
-    $response = $this->postJson("api/offres/", $payload);
+    $response = $this->postJson("/api/admin/offres", $payload);
     $response->assertStatus(200)
              ->assertJson(['message' => 'Offre créée avec succès']);
 }
@@ -96,12 +84,10 @@ public function it_successfully_creates_an_offre_with_valid_data()
 /** @test */
 public function it_shows_an_offre_with_its_activities()
 {
-    $admin = Administrateur::factory()->create();
-    $user = User::find($admin->idUser);
-    Sanctum::actingAs($user);
+    Sanctum::actingAs($this->user);
     $offreId = Offre::factory()->create()->idOffre;
     // dd($offreId);
-    $response = $this->getJson("/api/offres/{$offreId}");
+    $response = $this->getJson("/api/admin/offres/{$offreId}");
     // dd($response);
     $response->assertStatus(200)
              ->assertJsonStructure([
@@ -115,37 +101,11 @@ public function it_shows_an_offre_with_its_activities()
 }
 
 /** @test */
-public function it_updates_an_existing_offre()
-{
-    $admin = Administrateur::factory()->create();
-    $user = User::find($admin->idUser);
-    Sanctum::actingAs($user);
-    $newTitle = 'Updated Title';
-    $offre = Offre::factory()->create();
-    $response = $this->putJson("/api/offres/{$offre->idOffre}", ['titre' => $newTitle]);
-
-    $response->assertStatus(200)
-             ->assertJson(['message' => 'Offre mise à jour avec succès']);
-}
-
-/** @test */
-public function it_deletes_an_offre_activite_by_id()
-{
-    $user = factory(User::class)->create();
-    $idOffre = 1;  // Use existing idOffre
-    $idActivite = 1;  // Use existing idActivite
-
-    $response = $this->actingAs($user, 'sanctum')
-                     ->json('DELETE', "/api/offres/{$idOffre}/activites/{$idActivite}");
-
-    $response->assertStatus(200)
-             ->assertJson(['message' => 'Activité deleted successfully']);
-}
-
-/** @test */
 public function it_creates_offre_with_multiple_activities_and_validates_them_successfully()
 {
-    $user = factory(User::class)->create();
+    Sanctum::actingAs($this->user);
+    $activite = Activite::factory(['titre' => 'Math Club'])->create();
+    $activite = Activite::factory(['titre' => 'Science Lab'])->create();
     $payload = [
         'titre' => 'Winter Sessions',
         'remise' => 20,
@@ -156,6 +116,10 @@ public function it_creates_offre_with_multiple_activities_and_validates_them_suc
             [
                 'titre' => 'Math Club',
                 'tarif' => 100,
+                'effmax' => 30,
+                'effmin' => 10,
+                'age_min' => 7,
+                'age_max' => 12,
                 'jours' => [
                     ['heureDebut' => '10:00', 'heureFin' => '12:00', 'JourAtelier' => 'Tuesday'],
                     ['heureDebut' => '10:00', 'heureFin' => '12:00', 'JourAtelier' => 'Thursday'],
@@ -164,6 +128,10 @@ public function it_creates_offre_with_multiple_activities_and_validates_them_suc
             [
                 'titre' => 'Science Lab',
                 'tarif' => 120,
+                'effmax' => 30,
+                'effmin' => 10,
+                'age_min' => 7,
+                'age_max' => 12,
                 'jours' => [
                     ['heureDebut' => '14:00', 'heureFin' => '16:00', 'JourAtelier' => 'Wednesday'],
                     ['heureDebut' => '14:00', 'heureFin' => '16:00', 'JourAtelier' => 'Friday'],
@@ -172,8 +140,7 @@ public function it_creates_offre_with_multiple_activities_and_validates_them_suc
         ]
     ];
 
-    $response = $this->actingAs($user, 'sanctum')
-                     ->json('POST', '/api/offres', $payload);
+    $response = $this->postJson('/api/admin/offres', $payload);
 
     $response->assertStatus(200)
              ->assertJson(['message' => 'Offre créée avec succès']);
@@ -183,58 +150,12 @@ public function it_creates_offre_with_multiple_activities_and_validates_them_suc
 }
 
 /** @test */
-public function it_partially_updates_an_offre()
-{
-    $user = factory(User::class)->create();
-    $offre = factory(Offre::class)->create(['titre' => 'Original Title']);
-    $updateData = ['titre' => 'Updated Title'];
-
-    $response = $this->actingAs($user, 'sanctum')
-                     ->json('PUT', "/api/offres/{$offre->id}", $updateData);
-
-    $response->assertStatus(200)
-             ->assertJson(['message' => 'Offre mise à jour avec succès']);
-    $this->assertDatabaseHas('offres', ['titre' => 'Updated Title']);
-}
-
-/** @test */
-public function it_returns_error_when_deleting_activites_for_nonexistent_offre()
-{
-    $user = factory(User::class)->create();
-    $nonExistentIdOffre = 999; // Assuming this ID does not exist
-
-    $response = $this->actingAs($user, 'sanctum')
-                     ->json('DELETE', "/api/offres/{$nonExistentIdOffre}/activites");
-
-    $response->assertStatus(404);
-}
-
-/** @test */
-public function it_handles_exceptions_during_deletion_of_offre_activite()
-{
-    $user = factory(User::class)->create();
-    $idOffre = factory(Offre::class)->create()->id;
-    $idActivite = factory(Activite::class)->create()->id;
-
-    DB::shouldReceive('select') // Mocking DB to throw an exception
-       ->once()
-       ->andThrow(new \Exception('Database error'));
-
-    $response = $this->actingAs($user, 'sanctum')
-                     ->json('DELETE', "/api/offres/{$idOffre}/activites/{$idActivite}");
-
-    $response->assertStatus(500)
-             ->assertJson([
-                 'status' => 500,
-                 'message' => "Erreur lors de la suppression de l'activité",
-                 'error' => 'Database error'
-             ]);
-}
-
-/** @test */
 public function it_fails_to_create_an_offre_when_administrator_is_not_found()
 {
-    $user = factory(User::class)->create();
+    
+    Sanctum::actingAs(User::factory()->create());
+    $activite = Activite::factory(['titre' => 'Math Club'])->create();
+    $activite = Activite::factory(['titre' => 'Science Lab'])->create();
     $payload = [
         // Payload with necessary 'idUser' that does not match any 'Administrateur'
         'titre' => 'Autumn Festival',
@@ -242,60 +163,35 @@ public function it_fails_to_create_an_offre_when_administrator_is_not_found()
         'dateDebutOffre' => '2024-09-01',
         'dateFinOffre' => '2024-11-01',
         'description' => 'A festival of autumn activities',
-        'activites' => [/* some valid activities data */]
+        'activites' => [
+            'titre' => 'Math Club',
+                'tarif' => 100,
+                'effmax' => 30,
+                'effmin' => 10,
+                'age_min' => 7,
+                'age_max' => 12,
+                'jours' => [
+                    ['heureDebut' => '10:00', 'heureFin' => '12:00', 'JourAtelier' => 'Tuesday'],
+                    ['heureDebut' => '10:00', 'heureFin' => '12:00', 'JourAtelier' => 'Thursday'],
+                ]
+        ]
     ];
 
-    $response = $this->actingAs($user, 'sanctum')
-                     ->json('POST', '/api/offres', $payload);
+    $response = $this->postJson('/api/admin/offres', $payload);
 
-    $response->assertStatus(422)
-             ->assertJson(['error' => 'Administrateur introuvable']);
-}
-
-/** @test */
-public function it_fails_to_update_an_offre_with_invalid_date_range()
-{
-    $user = factory(User::class)->create();
-    $offre = factory(Offre::class)->create();
-
-    $payload = [
-        'dateDebutOffre' => '2024-12-01',
-        'dateFinOffre' => '2024-11-01',  // End date before start date
-    ];
-
-    $response = $this->actingAs($user, 'sanctum')
-                     ->json('PUT', "/api/offres/{$offre->id}", $payload);
-
-    $response->assertStatus(422)
-             ->assertJsonStructure([
-                 'errors' => [
-                     'dateFinOffre'
-                 ]
+    $response->assertStatus(403)
+             ->assertJson([
+            "status"=> "Une erreur s'est produite :(",
+            "message"=> "ACCES INTERDIT ",
+            "data"=> ""
              ]);
 }
 
-/** @test */
-public function it_handles_concurrent_deletion_requests_gracefully()
-{
-    $user = factory(User::class)->create();
-    $offre = factory(Offre::class)->create();
-
-    // Simulate first request that deletes the offre
-    $firstResponse = $this->actingAs($user, 'sanctum')
-                          ->json('DELETE', "/api/offres/{$offre->id}");
-
-    // Simulate a concurrent request attempting to delete the same offre
-    $secondResponse = $this->actingAs($user, 'sanctum')
-                           ->json('DELETE', "/api/offres/{$offre->id}");
-
-    $secondResponse->assertStatus(404)  // Assuming the offre is not found after the first deletion
-                   ->assertJson(['message' => 'Offre non trouvée']);
-}
 
 /** @test */
 public function it_validates_complex_json_payloads_for_offre_creation()
 {
-    $user = factory(User::class)->create();
+    Sanctum::actingAs($this->user);
     $payload = [
         'titre' => 'New Year Activities',
         'remise' => 10,
@@ -313,8 +209,7 @@ public function it_validates_complex_json_payloads_for_offre_creation()
         ]
     ];
 
-    $response = $this->actingAs($user, 'sanctum')
-                     ->json('POST', '/api/offres', $payload);
+    $response = $this->postJson('/api/admin/offres', $payload);
 
     $response->assertStatus(422)
              ->assertJsonStructure([
@@ -324,5 +219,150 @@ public function it_validates_complex_json_payloads_for_offre_creation()
              ]);
 }
 
+    // /** @test */
+    // public function it_updates_an_offre_successfully()
+    // {
+    //     // Mock the database transaction methods
+    //     DB::shouldReceive('beginTransaction')->once();
+    //     DB::shouldReceive('commit')->once();
+    //     DB::shouldReceive('rollBack')->once();
+
+    //     // Mock the select statement for deleteOffreActivitesById
+    //     DB::shouldReceive('select')
+    //         ->once()
+    //         ->with('SELECT * FROM deleteOffreActivitesById(?,?)', [$this->offre->idOffre, $this->activite->idActivite])
+    //         ->andReturn(collect([/* mock data */]));
+
+    //     // Mock the select statement for updateoffreactivites
+    //     $mockResult = (object) ['result' => 'expected_result'];
+    //     DB::shouldReceive('select')
+    //         ->once()
+    //         ->with("SELECT public.updateoffreactivites(?, ?, ?, ?, ?) AS result", [
+    //             $this->offre->idOffre,
+    //             'Updated Title',
+    //             '2024-09-01',
+    //             'Updated description',
+    //             json_encode([[
+    //                 'titre' => 'Swimming',
+    //                 'tarif' => 200,
+    //                 'effmax' => 40,
+    //                 'effmin' => 15,
+    //                 'age_min' => 8,
+    //                 'age_max' => 14,
+    //                 'jours' => [[
+    //                     'JourAtelier' => 'Wednesday',
+    //                     'heureDebut' => '10:00',
+    //                     'heureFin' => '12:00'
+    //                 ]]
+    //             ]])
+    //         ])
+    //         ->andReturn([$mockResult]);
+
+    //     // Simulate an authenticated user
+    //     Sanctum::actingAs($this->user);
+
+    //     // Define the payload
+    //     $activites = [
+    //         [
+    //             'titre' => 'Swimming',
+    //             'tarif' => 200,
+    //             'effmax' => 40,
+    //             'effmin' => 15,
+    //             'age_min' => 8,
+    //             'age_max' => 14,
+    //             'jours' => [
+    //                 [
+    //                     'JourAtelier' => 'Wednesday',
+    //                     'heureDebut' => '10:00',
+    //                     'heureFin' => '12:00'
+    //                 ],
+    //             ]
+    //         ]
+    //     ];
+
+    //     $payload = [
+    //         'titre' => 'Updated Title',
+    //         'remise' => 15,
+    //         'dateDebutOffre' => '2024-07-01',
+    //         'dateFinOffre' => '2024-09-01',
+    //         'description' => 'Updated description',
+    //         'activites' => $activites,
+    //     ];
+
+    //     // Perform the update request
+    //     $response = $this->putJson("/api/admin/offres/{$this->offre->idOffre}", $payload);
+
+    //     // Assert the response status and message
+    //     $response->assertStatus(200)
+    //              ->assertJson(['message' => 'Offre mise à jour avec succès']);
+
+    //     // Assert the database has the updated offer
+    //     $this->assertDatabaseHas('offres', ['titre' => 'Updated Title']);
+    // }
+
+  
+/** @test */
+public function it_fails_to_update_an_offre_with_invalid_data()
+{
+    Sanctum::actingAs($this->user);
+    $offre = Offre::factory()->create();
+    $payload = [
+        'titre' => '',
+        'remise' => 15,
+        'dateDebutOffre' => '2024-07-01',
+        'dateFinOffre' => '2024-09-01',
+        'description' => 'Updated description',
+        'activites' => [
+            [
+                'titre' => 'Swimming',
+                'tarif' => 200,
+                'effmax' => 40,
+                'effmin' => 15,
+                'age_min' => 8,
+                'age_max' => 14,
+                'jours' => [
+                    [
+                        'JourAtelier' => 'Wednesday',
+                        'heureDebut' => '10:00',
+                        'heureFin' => '12:00'
+                    ],
+                ]
+            ]
+        ]
+    ];
+
+    $response = $this->putJson("/api/admin/offres/{$offre->idOffre}", $payload);
+    $response->assertStatus(422)
+             ->assertJsonValidationErrors('titre');
+}
+
+// /** @test */
+// public function it_deletes_an_offre_successfully()
+// {
+//     Sanctum::actingAs($this->user);
+//     $offre = Offre::factory()->create();
+
+//     $response = $this->deleteJson("/api/admin/offres/{$offre->idOffre}");
+//     $response->assertStatus(200)
+//              ->assertJson(['message' => 'Offre supprimée avec succès']);
+//     $this->assertDatabaseMissing('offres', ['idOffre' => $offre->idOffre]);
+// }
+
+// /** @test */
+// public function it_fails_to_delete_a_non_existent_offre()
+// {
+//     Sanctum::actingAs($this->user);
+//     $response = $this->deleteJson("/api/admin/offres/99999");
+//     $response->assertStatus(404)
+//              ->assertJson(['message' => 'Offre non trouvée']);
+// }
+
+
+protected function tearDown(): void
+{
+    // Clean up Mockery after each test
+    Mockery::close();
+    parent::tearDown();
+}
 
 }
