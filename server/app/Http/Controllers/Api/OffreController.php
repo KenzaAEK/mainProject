@@ -65,13 +65,14 @@ class OffreController extends Controller
              ]);
      
              foreach ($offreData['activites'] as $activiteData) {
+                
                  if (!isset($activiteData['titre'])) {
                      DB::rollback();
                      return response()->json(['error' => 'Le titre de l\'activité est manquant'], 422);
                  }
      
                  $activite = Activite::where('titre', $activiteData['titre'])->first();
-     
+                //  dd($offreData);
                  if (!$activite) {
                      DB::rollback();
                      return response()->json(['error' => 'Activité introuvable'], 404);
@@ -183,7 +184,9 @@ class OffreController extends Controller
             $activitesArray = $request->input('activites');
             $activitesPrepared = [];
             // dd($id);
+            // dd($activitesArray);
             foreach ($activitesArray as $activite) {
+                
                 $currentActivite = Activite::where('titre', $activite['titre'])->first();
                 if (!$currentActivite) {
                     DB::rollback();

@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(10)->create();
 
         // Create administrateurs
-        Administrateur::factory()->count(2)->create();
+        $this->call([
+            AdminsTableSeeder::class,]);
 
         // Create animateurs
         Animateur::factory()->count(5)->create();
@@ -54,7 +55,9 @@ class DatabaseSeeder extends Seeder
         Notification::factory()->count(20)->create();
 
         // Create activites
-        Activite::factory()->count(8)->create();
+        // Activite::factory()->count(8)->create();
+        $this->call([
+            ActiviteSeeder::class,]);
     }
 }
 

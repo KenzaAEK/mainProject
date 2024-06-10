@@ -99,7 +99,7 @@ return new class extends Migration
         Schema::create('activites', function (Blueprint $table) {
             $table->id('idActivite');
 
-            $table->string('titre', 100);
+            $table->string('titre', 100)->unique();
             $table->text('description');
             $table->text('objectif');
             $table->string('imagePub', 255)->nullable();

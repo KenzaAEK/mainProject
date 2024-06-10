@@ -18,7 +18,7 @@ class TuteurFactory extends Factory
     public function definition()
     {
         return [
-            'idUser' => User::factory()->create()->idUser,
+            'idUser' => User::factory()->create(["role"=>1])->idUser,
             'fonction' => $this->faker->sentence(2),
         ];
     }
