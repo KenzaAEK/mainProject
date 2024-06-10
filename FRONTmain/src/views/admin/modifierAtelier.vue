@@ -4,7 +4,7 @@
 
     <div class="p-6 space-y-6">
         <div >
-            <h1 class="text-center text-4xl font-semibold custom-hover-text">L'ajout d'une atelier</h1>
+            <h1 class="text-center text-4xl font-semibold custom-hover-text">Modifier une atelier</h1>
         </div>
         <form action="#">
             <div class="grid grid-cols-6 gap-6">
@@ -43,7 +43,7 @@
     <div class="flex" style="margin-left: 370px;">
         <div class="p-6 border-t border-gray-200 rounded-b">
             <a href="#"  @click="submitForm" class="text-white bg-gradient-selected font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
-                Ajouter atelier
+                Modifier atelier
             </a>
         </div>  
         <div class="p-6 border-t border-gray-200 rounded-b">
@@ -53,57 +53,11 @@
         </div>  
     </div>
 </div>
-
-
-
 </template>
 <script>
-//import { mapGetters } from 'vuex';
-import axios from 'axios';
 export default{
-    name :'createAtelier',
-    // computed: {
-    //   ...mapGetters(['user']),
-
-    //   },
-      data(){
-        return {
-            formData:{
-                titre:'',
-                objectif:'',
-                description:'',
-                lienYtb:'',
-                imagePub:'',
-                effectif:''
-            }
-        }
-      },
-      methods: {
-    
-    async submitForm() {
-        //console.log(this.formData.type)
-        let result = await axios.post('http://127.0.0.1:8000/api/admin/activites',{
-            titre :  this.formData.titre, 
-            objectif : this.formData.objectif,
-            description : this.formData.description,
-            lienYtb : this.formData.lienYtb,  
-            imagePub : this.formData.imagePub,
-            effectif : this.formData.effectif
-          
-        })        
-        .then(()=>{
-           this.formData.titre = '' 
-           this.formData.objectif = ''
-           this.description = ''
-           this.formData.lienYtb = ''
-          this.formData.imagePub = ''
-           this.formData.effectif = ''
-        })
-    }
-}};
-
-      
-
+    name : 'modifierAtelier',
+}
 window.openModal = function(modalId) {
         document.getElementById(modalId).style.display = 'block'
         document.getElementsByTagName('body')[0].classList.add('overflow-y-hidden')

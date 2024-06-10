@@ -84,6 +84,11 @@ const router = createRouter({
               name: 'supprimerAtelier',
               component: () => import('../views/admin/supprimerAtelier.vue')
             },
+            {
+              path: '/modifierAtelier',
+              name: 'modifierAtelier',
+              component: () => import('../views/admin/modifierAtelier.vue')
+            },
           ]
         },
         {

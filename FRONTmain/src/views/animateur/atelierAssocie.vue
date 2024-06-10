@@ -1,5 +1,5 @@
 <template>
-<div class="flex">
+<div class="flex"  v-if="user">
     <div class="flex-shrink-0" style="width: 300px; height: 300px; ">
         <img src="@/assets/images/offre1.png" alt="" class="w-full h-full object-cover" style="border-radius: 20px;">
     </div>
@@ -31,8 +31,12 @@
 </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 export default {
-    name : 'atelierAssocie'
+    name : 'atelierAssocie',
+    computed: {
+            ...mapGetters(['user']),
+         },
 }
 
 </script>

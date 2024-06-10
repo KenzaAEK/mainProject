@@ -20,6 +20,7 @@
                         </svg>
                         <span  style="margin-left: 17px;">{{ user.tel }}</span>
                       </div>
+                      
             </div>
         
             <div class="box">
