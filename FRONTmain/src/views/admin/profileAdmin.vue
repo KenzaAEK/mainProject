@@ -1,5 +1,5 @@
-<template>
-    <div class="max-w-screen-xl" style="margin-top: 10px;">
+<template >
+    <div v-if="user" class="max-w-screen-xl" style="margin-top: 10px;">
         <div class="bg-white shadow-lg p-6 rounded-lg">                
             
      <div class="flex-col">
@@ -12,7 +12,7 @@
 
             </div>
             <div class="text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl font-serif" style="margin-top: 50px; margin-left: 20px" >
-                Malak El Bakali
+                {{user.nom}} {{user.prenom}}
             </div>
         </div>
         </div>

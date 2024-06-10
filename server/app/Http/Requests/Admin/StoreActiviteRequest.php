@@ -27,9 +27,9 @@ class StoreActiviteRequest extends FormRequest
             'titre' => 'required|string|max:255',
             'description' => 'required|string|max:2048',
             'objectif' => 'required|string|max:1024',
-            'imagePub' => 'required|string|max:255',
+            'imagePub' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'lienYtb' => 'required|string|max:255',
-            'programmePdf' => 'required|string|max:255',
+            'programmePdf' => 'required|file|max:255',
             'type' => 'required|exists:type_activites,type'
         ];
     }
