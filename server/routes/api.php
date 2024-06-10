@@ -63,7 +63,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 ║                           Admin Routes                                   ║
 ╚==========================================================================╝
 */
-    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () {
+    Route::group(['middleware' => 'role:1', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
   
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);

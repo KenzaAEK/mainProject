@@ -10,7 +10,7 @@ class TypeActivite extends Model
     use HasFactory;
 
     protected $primaryKey = 'idTypeActivite';
-    protected $table = 'type_activites';
+    protected $table = 'typeactivites';
     protected $fillable = [
         'type',
         'domaine'

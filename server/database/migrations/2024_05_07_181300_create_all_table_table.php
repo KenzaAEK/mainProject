@@ -58,7 +58,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('type_activites', function (Blueprint $table) {
+        Schema::create('typeactivites', function (Blueprint $table) {
             $table->id('idTypeActivite');
             $table->string('type', 50)->unique();
             $table->string('domaine', 50);
@@ -103,7 +103,7 @@ return new class extends Migration
             $table->text('objectif');
             $table->string('imagePub', 255)->nullable();
             $table->string('lienYtb',255);
-            $table->longText('programmePdf',255);
+            $table->string('programmePdf',255)->nullable();
             $table->unsignedBigInteger('idTypeActivite');
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
