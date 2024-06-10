@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\DemandeInscriptionResource;
 use App\Models\Activite;
 use App\Models\offreActivite;
+use App\Models\Offre;
 use App\Models\Pack;
 use Illuminate\Support\Facades\DB;
 
@@ -208,16 +209,15 @@ class DemandeInscriptionController extends Controller
         $dmInscription = new DemandeInscription();
         $dmInscription->optionsPaiement = 'mois';
         $user = $request->user();
-        $idTuteur = 1;
+        dd($user);
+        $idTuteur = 3;
         $Secenfants = $request->enfants;
         $nbrEnfants = is_array($Secenfants) ? count($Secenfants) : 0;
         $dmInscription->idTuteur = $idTuteur;
 
         $pack = Pack::where('type', $request->type)->firstOrFail();
         $dmInscription->idPack = $pack->idPack;
-
-        $offreActivite = offreActivite::where('idOffre', $request->idOffre)->firstOrFail();
-
+        $offreActivite = offreActivite::where('idOffre', $request->idOffre)->first();
         $ateliers = $request->Ateliers;
         $prixTot = 0;
 
