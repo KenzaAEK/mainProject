@@ -19,7 +19,7 @@ class ActiviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getAtelier() // j'ai utulisé cette methode pour recuperer le nom des ateliers disponible 
     {
         $activites = Activite::all();
         return response()->json($activites);

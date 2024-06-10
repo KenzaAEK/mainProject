@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,7 +20,7 @@ class TypeActivite extends Model
 
     public function activites()
     {
-        return $this->hasMany(Activite::class, 'id_Activite');
+        return $this->hasMany(Activite::class, 'idActivite');
     }
     public function competance()
     {
