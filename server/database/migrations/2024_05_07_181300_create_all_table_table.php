@@ -106,7 +106,7 @@ return new class extends Migration
             $table->string('lienYtb',255);
             $table->longText('programmePdf',255);
             $table->unsignedBigInteger('idTypeActivite');
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
         });
 
@@ -250,7 +250,7 @@ return new class extends Migration
              $table->integer('idCompetence');
              $table->string('Niveau_requis', 50);
              $table->primary(['idTypeActivite', 'idCompetence']);
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->foreign('idCompetence')->references('idCompetence')->on('competences');
         });
 
@@ -305,7 +305,7 @@ return new class extends Migration
         Schema::dropIfExists('horaires');
         Schema::dropIfExists('administrateurs');
         Schema::dropIfExists('activites');
-        Schema::dropIfExists('type_activites');
+        Schema::dropIfExists('typeactivites');
 
         
     }
