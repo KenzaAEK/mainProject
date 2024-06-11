@@ -41,7 +41,7 @@ jobs:
       - name: Run Laravel migrations (using SQLite for testing)
         env:
           DB_CONNECTION: sqlite
-          DB_DATABASE: ${{ github.workspace }}/api/database/database.sqlite
+          DB_DATABASE: ${{ github.workspace }}/server/database/database.sqlite
           APP_ENV: testing # set environment to testing to prevent data loss
         run: |
           touch database/database.sqlite
@@ -83,7 +83,7 @@ jobs:
           context: 
           file: ./Dockerfile
           push: true
-          tags: souhailchaiberras/testpipeline-api:latest
+          tags: souhailchaiberras/mainproject-api:latest
     
       - name: Build and push App Docker image
         uses: docker/build-push-action@v5.3.0
@@ -91,7 +91,7 @@ jobs:
             context: ./server
             file: ./server/Dockerfile
             push: true
-            tags: souhailchaiberras/testpipeline-app:latest
+            tags: souhailchaiberras/mainproject-app:latest
       
 
       
