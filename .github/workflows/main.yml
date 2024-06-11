@@ -29,10 +29,12 @@ jobs:
         run: composer install --prefer-dist --no-progress 
         working-directory: ./server
 
+      - name: List files for debugging
+        run: ls -la ./server
+
       - name: Setup Laravel Environment
         run: |
-          ls -la  # List all files in the directory to check for .env.example
-          cp server/.env.example server/.env
+          cp env.example .env
           php artisan key:generate
         working-directory: ./server # make sure its the right directory 
 
