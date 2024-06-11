@@ -27,7 +27,7 @@ class NotificationController extends Controller
             'statut' => true,
             'read_at' => now(),
         ]);
-        return response()->json(['message' => 'Notification marked as read']);
+        return response()->json(['message' => 'Notification marquée comme lue']);
     }
 
     public function markAsUnread(Notification $notification)
@@ -36,13 +36,13 @@ class NotificationController extends Controller
             'statut' => false,
             'read_at' => null,
         ]);
-        return response()->json(['message' => 'Notification marked as unread']);
+        return response()->json(['message' => 'Notification marquée comme non lue']);
     }
 
     public function destroy(Notification $notification)
     {
         $notification->delete();
-        return response()->json(['message' => 'Notification deleted']);
+        return response()->json(['message' => 'Notification supprimée']);
     }
     public function markAllAsRead()
     {
@@ -50,7 +50,7 @@ class NotificationController extends Controller
         $unreadNotifications = $user->notifications()->where('statut', false)->get();
     
         if ($unreadNotifications->isEmpty()) {
-            return response()->json(['message' => 'No unread notifications found'], 404);
+            return response()->json(['message' => 'Aucune notification non lue trouvée'], 404);
         }
     
         $unreadNotifications->each(function ($notification) {
@@ -60,7 +60,7 @@ class NotificationController extends Controller
             ]);
         });
     
-        return response()->json(['message' => 'All notifications marked as read'], 200);
+        return response()->json(['message' => 'Toutes les notifications marquées comme lues'], 200);
     }
     
     public function markAllAsUnread()
@@ -69,7 +69,7 @@ class NotificationController extends Controller
         $readNotifications = $user->notifications()->where('statut', true)->get();
     
         if ($readNotifications->isEmpty()) {
-            return response()->json(['message' => 'No read notifications found'], 404);
+            return response()->json(['message' => 'Aucune notification lue trouvée'], 404);
         }
     
         $readNotifications->each(function ($notification) {
@@ -79,7 +79,7 @@ class NotificationController extends Controller
             ]);
         });
     
-        return response()->json(['message' => 'All notifications marked as unread'], 200);
+        return response()->json(['message' => 'Toutes les notifications marquées comme non lues'], 200);
     }
 
 }
