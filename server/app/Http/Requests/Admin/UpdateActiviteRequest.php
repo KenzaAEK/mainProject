@@ -24,17 +24,6 @@ class UpdateActiviteRequest extends FormRequest
     public function rules()
     {
         return [
-<<<<<<< HEAD
-            'titre' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string|max:2048',
-            'objectif' => 'sometimes|string|max:1024',
-            'ageMin' => 'sometimes|integer|between:1,100',
-            'ageMax' => 'sometimes|integer|between:1,100|gte:ageMin',
-            'imagePub' => 'sometimes|string|max:255',
-            'lienYtb' => 'sometimes|numeric',
-            'programmePdf' => 'sometimes|string|max:255',
-            'type' => 'sometimes|exists:typeactivites,type'
-=======
             'titre' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string|max:2048',
             'objectif' => 'sometimes|required|string|max:1024',
@@ -42,7 +31,6 @@ class UpdateActiviteRequest extends FormRequest
             'lienYtb' => 'sometimes|required|string|max:255',
             'programmePdf' => 'sometimes|file|mimes:pdf|max:10000',
             'type' => 'sometimes|required|exists:typeactivites,type'
->>>>>>> 1873be89298e6ff805fd205af55d2f40017f4b2f
         ];
     }
     public function messages()
