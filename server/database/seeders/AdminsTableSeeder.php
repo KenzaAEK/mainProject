@@ -19,9 +19,11 @@ class AdminsTableSeeder extends Seeder
         // Récupérer l'ID de l'utilisateur "mouad"
         // $mouadId = User::where('email', 'mouaddahbi3333333333@gmail.com')->value('idUser');
         
-        // Créer un enregistrement dans la table des administrateurs avec l'ID de "mouad"
+        // Administrateur de 
+        // mail : sy@nf
+        // mdp : passadmin
         Administrateur::create([
-            'idUser' => User::factory()->create(["role"=>2,"email"=>"sy@nf","password"=>Hash::make("123456789")])->idUser,
+            'idUser' => User::factory()->create(["role"=>2,"email"=>"sy@nf","password"=>Hash::make("passadmin")])->idUser,
             // Autres colonnes si nécessaire
         ]);
     }
