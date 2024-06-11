@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\api\password;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\UpdatePasswordRequest as AuthUpdatePasswordRequest;
-use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\Auth\UpdatePasswordRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -14,7 +13,7 @@ class UpdatePasswordController extends Controller
 {
     use HttpResponses;
 
-    public function UpdatePassword(AuthUpdatePasswordRequest $request)
+    public function UpdatePassword(UpdatePasswordRequest $request)
     {
         $user = auth()->user();
         if (!Hash::check($request->old_password, $user->password)) {
