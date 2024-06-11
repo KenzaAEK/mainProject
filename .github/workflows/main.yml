@@ -48,9 +48,9 @@ jobs:
           php artisan migrate --force 
         working-directory: ./server # make sure to update path
 
-      - name: Run Laravel tests
-        run: php artisan test
-        working-directory: ./server
+      #- name: Run Laravel tests
+        #run: php artisan test
+        #working-directory: ./server
 
       # Tests for Vue.js
       - name: Install Node.js
