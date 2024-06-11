@@ -17,10 +17,10 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Définir le répertoire de travail
-WORKDIR /var/www/api
+WORKDIR /var/www/server
 
 # Copier le code source de l'API dans le conteneur
-COPY . /var/www/api
+COPY . /var/www/server
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -29,7 +29,7 @@ RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 
 # Modifier les permissions pour permettre à Laravel de gérer les fichiers de cache et de logs
-RUN chown -R www-data:www-data /var/www/api/storage /var/www/api/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/server/storage /var/www/server/bootstrap/cache
 
 # Pour le développement, utiliser le serveur intégré PHP. Pour la production, utiliser un serveur web approprié.
 CMD php -S 0.0.0.0:8000 -t public

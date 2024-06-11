@@ -1,13 +1,13 @@
 version: "3.8"  # Utiliser une version plus récente de Docker Compose pour de meilleures fonctionnalités
 
 services:
-  api:
-    container_name: api
+  server:
+    container_name: server
     build:
-      context: ./api  # Chemin du répertoire contenant le Dockerfile de l'API
+      context: ./server  # Chemin du répertoire contenant le Dockerfile de l'API
       dockerfile: Dockerfile  # Nom du fichier Dockerfile
     env_file:
-      - api/.env # Chemin vers le fichier .env pour l'API
+      - server/.env # Chemin vers le fichier .env pour l'API
     ports:
       - "8000:8000"  # Mapper le port 8000 du conteneur sur le port 8000 de l'hôte
     networks:
@@ -26,7 +26,7 @@ services:
     networks:
       - frontend  # Connecter l'app au réseau frontend
     depends_on:
-      - api  # L'app front-end dépend de l'API
+      - server  # L'app front-end dépend de l'API
 
 
   db:
