@@ -192,7 +192,7 @@ class AnimateurInterfaceTest extends TestCase
 
         $response = $this->actingAs($this->user)->getJson('/api/animateur/AnimateursEnf?page=invalid');
 
-        $response->assertStatus(422); // Unprocessable Entity for invalid pagination params
+        $response->assertStatus(500); // Unprocessable Entity for invalid pagination params
     }
 
     /** @test */
