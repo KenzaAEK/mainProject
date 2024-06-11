@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      #- dev
+      - dev
   pull_request:
     branches:
       - main
@@ -32,7 +32,7 @@ jobs:
       - name: Setup Laravel Environment
         run: |
           ls -la  # List all files in the directory to check for .env.example
-          cp .env.example .env
+          cp server/.env.example server/.env
           php artisan key:generate
         working-directory: ./server # make sure its the right directory 
 
@@ -77,8 +77,8 @@ jobs:
       - name: Build and push API Docker image
         uses: docker/build-push-action@v5.3.0
         with:
-          context: ./FRONTmain
-          file: ./FRONTmain/Dockerfile
+          context: 
+          file: ./Dockerfile
           push: true
           tags: souhailchaiberras/testpipeline-api:latest
     
