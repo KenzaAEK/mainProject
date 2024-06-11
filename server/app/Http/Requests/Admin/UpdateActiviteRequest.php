@@ -32,7 +32,7 @@ class UpdateActiviteRequest extends FormRequest
             'imagePub' => 'sometimes|string|max:255',
             'lienYtb' => 'sometimes|numeric',
             'programmePdf' => 'sometimes|string|max:255',
-            'type' => 'sometimes|exists:type_activites,type'
+            'type' => 'sometimes|exists:typeactivites,type'
         ];
     }
     public function messages()

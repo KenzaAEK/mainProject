@@ -19,8 +19,9 @@ class ActiviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getAtelier() // j'ai utulisé cette methode pour recuperer le nom des ateliers disponible 
+    public function index() // j'ai utulisé cette methode pour recuperer le nom des ateliers disponible 
     {
+        // dd('1');
         $activites = Activite::all();
         return response()->json($activites);
     }
@@ -33,6 +34,7 @@ class ActiviteController extends Controller
      */
     public function store(StoreActiviteRequest $request)
     {
+        // dd('1');
         $typeId = typeActivite::getIdByType($request->validated()['type']);
     
         if (!$typeId) {

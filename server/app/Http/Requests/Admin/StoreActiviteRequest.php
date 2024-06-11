@@ -30,7 +30,7 @@ class StoreActiviteRequest extends FormRequest
             'imagePub' => 'required|string|max:255',
             'lienYtb' => 'required|string|max:255',
             'programmePdf' => 'required|string|max:255',
-            'type' => 'required|exists:type_activites,type'
+            'type' => 'required|exists:typeactivites,type'
         ];
     }
     public function messages()

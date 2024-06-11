@@ -29,10 +29,15 @@ class DatabaseSeeder extends Seeder
         // Create administrateurs
         $this->call([
             AdminsTableSeeder::class,]);
-
         // Create animateurs
-        Animateur::factory()->count(5)->create();
-
+        $this->call([
+            AnimateurSeeder::class,]);
+        // Creation des groupes
+        $this->call([
+            GroupeSeeder::class,]);
+        // Creation des groupes d'animateurs
+        $this->call([
+            AnimateurGroupeSeeder::class,]);
         // Create tuteurs
         Tuteur::factory()->count(10)->create();
 
