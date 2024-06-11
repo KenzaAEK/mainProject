@@ -209,7 +209,8 @@ class DemandeInscriptionController extends Controller
             $dmInscription = new DemandeInscription();
             $dmInscription->optionsPaiement = 'mois';
             $user = $request->user();
-            $idTuteur = 3;
+            $idTuteur = $user->tuteur->idTuteur;
+            dd($idTuteur);
             $Secenfants = $request->enfants;
             $nbrEnfants = is_array($Secenfants) ? count($Secenfants) : 0;
             
