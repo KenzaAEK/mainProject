@@ -83,7 +83,7 @@ jobs:
           context: 
           file: ./Dockerfile
           push: true
-          tags: souhailchaiberras/mainproject-api:latest
+          tags: souhailchaiberras/mainproject1-api:latest
     
       - name: Build and push App Docker image
         uses: docker/build-push-action@v5.3.0
@@ -91,7 +91,7 @@ jobs:
             context: ./server
             file: ./server/Dockerfile
             push: true
-            tags: souhailchaiberras/mainproject-app:latest
+            tags: souhailchaiberras/mainproject1-app:latest
       
       - name: Deploy with Docker Compose
         run: |
