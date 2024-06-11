@@ -35,6 +35,7 @@ Route::post('/register', [AuthController::class, 'register']);
 */
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
+    Route::get('/login', [AuthController::class, 'index']);// pas encore tester pour corriger les porbleme  de production de projet
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
