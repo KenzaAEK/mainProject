@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Password\PasswordResetController;
 use App\Http\Controllers\api\password\UpdatePasswordController;
 use App\Http\Controllers\Api\TypeActiviteController;
 use App\Http\Controllers\AnimateurController;
+use App\Http\Controllers\Api\DemandeInscriptionController;
 
 /*
 ╔==========================================================================╗
@@ -27,15 +28,6 @@ Route::post('/password/reset', [PasswordResetController::class, 'reset']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
 
-
-
-
-
-
-
-
-
-
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -47,66 +39,30 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
 
-
-
-    Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+    Route::apiResource('demande-Inscriptions', DemandeInscriptionController::class);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
-    Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
+    Route::get('/ateliers', [ActiviteController::class, 'getAtelier']); // cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::get('/users', [AuthController::class, 'index']);
-    // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
-    // Route::post('/profile', [ProfileController::class, 'profile']);
-    // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); gate for animateur**** email 
-    // Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
-    //Route::post('/password/reset', [ResetController::class, 'ResetPassword']); *********
 
-    // Manage notifications
-    // Route::get('/notifications', [NotificationController::class, 'index']);
-    // Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
-    // Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
-    // Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
-    // Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
-    // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
-    // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
-
-
-
-/*
-╔==========================================================================╗
-║                           Admin Routes                                   ║
-╚==========================================================================╝
-*/
+    /*
+    ╔==========================================================================╗
+    ║                           Admin Routes                                   ║
+    ╚==========================================================================╝
+    */
     Route::group(['middleware' => 'role:1', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
-  
+
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
         Route::post('/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
-        // Route::post('/offres',[OffreController::class,'store']);
-        // Route::get('/offres/{offres}',[OffreController::class,'show']);
-        // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
-       //  Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
-        // Route::get('/animateurs', [GroupeController::class, 'index']);
+
         // traitement de l'offres :
-        Route::post('/offres',[OffreController::class,'store']);
-        Route::get('/offres/{offres}',[OffreController::class,'show']);
-        Route::put('/offres/{offres}',[OffreController::class,'update']);
-        Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
-        Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
-        // Route::get('/animateurs', [GroupeController::class, 'index']);
-    // for admins only and authenticated  
-    //add middlewear check role 
-        // Route::apiResource('activites', ActiviteController::class);
-    //add middlewear check role 
-    // for parents only and authenticated
-    //add middlewear check role 
-    // for animators only and authenticated 
-    
-    
-
-
-
-
-
+        Route::post('/offres', [OffreController::class, 'store']);
+        Route::get('/offres/{offres}', [OffreController::class, 'show']);
+        Route::put('/offres/{offres}', [OffreController::class, 'update']);
+        Route::delete('/offres/{offres}/{activites}', [OffreController::class, 'deleteOffreActiviteById']); // suppr une activite lier a une offre 
+        Route::delete('/offres/{offres}', [OffreController::class, 'deleteOffreActivitesByIdOffre']); // supprimer l'offre et tous  ces activites 
+    });
 });
