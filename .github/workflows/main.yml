@@ -93,6 +93,7 @@ jobs:
             push: true
             tags: souhailchaiberras/mainproject1-app:latest
       
+      # test deployment 
       - name: Deploy with Docker Compose
         run: |
           docker-compose pull
