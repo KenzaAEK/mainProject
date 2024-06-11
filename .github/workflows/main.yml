@@ -34,7 +34,7 @@ jobs:
 
       - name: Setup Laravel Environment
         run: |
-          cp env.example .env
+          cp .env.example .env
           php artisan key:generate
         working-directory: ./server # make sure its the right directory 
 
