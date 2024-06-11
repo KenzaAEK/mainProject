@@ -11,12 +11,22 @@ class Horaire extends Model
     protected $primaryKey = 'idHoraire';
     protected $table = 'horaires';
     protected $fillable = ['jour', 'heureDebut', 'heureFin'];
+    
+    protected $casts = [
+        'heureDebut' => 'datetime',
+        'heureFin' => 'datetime',
+    ];
     public $timestamps = false;
 
     public function animateurs(){
         return $this->belongsToMany(Animateur::class,'disponibilite_animateur','idHoraire','idAnimateur');
     }
-    public function offre_activite(){
-        return $this->belongsToMany(offreActivite::class,'disponibilite_offreactivite','idHoraire','id_offreActivite');
+    
+    
+    public function offreActivites()
+    {
+        return $this->belongsToMany(OffreActivite::class, 'disponibilite_offreactivite', 'idHoraire', 'idOffreActivite');
+                    
     }
 }
+

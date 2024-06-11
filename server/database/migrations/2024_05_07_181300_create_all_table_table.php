@@ -64,7 +64,6 @@ return new class extends Migration
             $table->string('domaine', 50);
         });
 
-
         Schema::create('competences', function (Blueprint $table) {
             $table->id('idCompetence');
             $table->string('nom_competence', 50);
@@ -98,7 +97,8 @@ return new class extends Migration
 
         Schema::create('activites', function (Blueprint $table) {
             $table->id('idActivite');
-            $table->string('titre', 100);
+
+            $table->string('titre', 100)->unique();
             $table->text('description');
             $table->text('objectif');
             $table->string('imagePub', 255)->nullable();
@@ -249,7 +249,6 @@ return new class extends Migration
              $table->integer('idCompetence');
              $table->string('Niveau_requis', 50);
              $table->primary(['idTypeActivite', 'idCompetence']);
-
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->foreign('idCompetence')->references('idCompetence')->on('competences');
         });
@@ -267,8 +266,6 @@ return new class extends Migration
             $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
-
-
         });
     }
 
