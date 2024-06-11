@@ -37,7 +37,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'tel' => $request->tel,
             'password' => Hash::make($request->password),    //or the  bcrypt($request->password)
-            'role' => "2", // 1 = parent , 2 = admin , 3 = animateur
+            'role' => "1", // 1 = parent , 2 = admin , 3 = animateur
         ]);
         Tuteur::create(['idUser' => $user->idUser]);
         $token = $user->createToken('token-name')->plainTextToken;
@@ -53,14 +53,14 @@ class AuthController extends Controller
     public function login(LoginUserRequest $request) 
     {
         $request->validated($request->all());
-        if(!Auth::attempt($request->only(['email','password'])))
+        $user = User::where('email', $request->email)->first();
+        if(!$user || !Hash::check($request->password, $user->password))
         {
             return $this->error('','Les informations d\'identification ne correspondent pas. :(',401);
 
         }
 
         
-        $user = User::where('email',$request->email)->first();
         //$user = Auth::user();
 
         // if($user){
