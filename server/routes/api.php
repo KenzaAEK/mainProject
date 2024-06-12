@@ -45,8 +45,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 
 
 
-Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
-Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
+
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -72,6 +71,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
 
+    Route::post('/admin/approve-demande', [AdministrateurController::class, 'approveDemande']);
+    Route::get('/admin/approve-demande', [AdministrateurController::class, 'index']);
+    Route::put('/admin/approve-demande', [AdministrateurController::class, 'rejectDemande']);
 
 /*
 ╔==========================================================================╗
@@ -82,7 +84,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
-        Route::post('/admin/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
+      
         Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
         
         // Route::post('/offres',[OffreController::class,'store']);
