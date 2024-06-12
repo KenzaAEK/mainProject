@@ -50,7 +50,7 @@
             <td class="px-6 py-4 whitespace-nowrap">Admin</td>
             <td class="px-6 py-4 whitespace-nowrap">Admin</td>
             <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-custom-color custom-hover-text">En cours</span>
+                <button onclick="openModal('status')" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-custom-color custom-hover-text">En cours</button>
             </td>
         </tr>
     </tbody>
@@ -58,11 +58,27 @@
 
         </div>
     </div>
+    <div id="status" class="fixed hidden z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
+        <status />
+    </div>
 </template>
 <script>
+
+import status from './status.vue'
 export default{
-    name :'inscription'
+    name :'inscription',
+    components:{
+        status,
+    }
 }
+window.openModal = function(modalId) {
+        document.getElementById(modalId).style.display = 'block'
+        document.getElementsByTagName('body')[0].classList.add('overflow-y-hidden')
+    }
+    window.closeModal = function(modalId) {
+            document.getElementById(modalId).style.display = 'none'
+            document.getElementsByTagName('body')[0].classList.remove('overflow-y-hidden')
+        }
 </script>
 <style scoped>
     .custom-hover-bg {

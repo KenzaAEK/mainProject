@@ -7,9 +7,9 @@
                         <div class="text-base text-slate-900 font-semibold dark:text-slate-200">
                             {{ user.nom }} {{ user.prenom }}
                         </div>
-                        <div class="mt-0.5 dark:text-slate-300">
+                        <!-- <div class="mt-0.5 dark:text-slate-300">
                             domaine animateur
-                        </div>
+                        </div> -->
                     </div>
                   </figcaption>
                   <div>

@@ -17,7 +17,7 @@ class CompetenceFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'nom_competence' => $this->faker->word(),
         ];
     }
 }
