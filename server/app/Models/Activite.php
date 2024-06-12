@@ -19,7 +19,7 @@ class Activite extends Model
         'lienYtb',
         'programmePdf',
         'idTypeActivite'
-        
+    
     ];
 
     public function offre_activite()

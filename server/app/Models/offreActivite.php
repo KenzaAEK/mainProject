@@ -4,6 +4,7 @@ namespace App\Models;
 use App\Models\Offre;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class offreActivite extends Model
 {
@@ -23,6 +24,7 @@ class offreActivite extends Model
         'idActivite',
         'age_max',
         'age_min'
+    
         ];
       
     
@@ -49,11 +51,20 @@ class offreActivite extends Model
     {
         return $this->belongsToMany(Enfant::class, 'planning', 'idOffreActivite', 'idEnfant');
     }
-   
-    public function inscriptionEnfantOffreActivite()
+// this association inscriptionEnfant_offre_Activite
+    public function enfants() :BelongsToMany
     {
-        return $this->hasOne(inscriptionEnfantOffreActivite::class, 'idInscriptionEnfantOffreActivite');
+        return $this->belongsToMany(enfant::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise','Prixbrute');
     }
+
+   
+    public function DemandeInscription() :BelongsToMany
+    {
+        return $this->belongsToMany(DemandeInscription::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise','Prixbrute');
+    }
+    
    
     public function groupe(){
         return $this->hasOne(Groupe::class, 'idGroupe');
