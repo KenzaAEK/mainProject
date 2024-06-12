@@ -181,5 +181,33 @@ class AllPivotsSeeder extends Seeder
             }
         }
 
+
+        if($horaires->isEmpty() || $enfants->isEmpty() || $offreactivites->isEmpty())
+        throw new \Exception('offre activite enfant tuteur manquants dans la base de données');
+        foreach ($enfants as $enfant) {
+            $generatedNumbers = [];
+            for ($i=0;$i<2; $i++) {
+                do {
+                    $ofac = offreActivite::inRandomOrder()->first();
+                    $hrr1 = Horaire::inRandomOrder()->first();
+                    $hrr2 = Horaire::inRandomOrder()->first();
+                    $val = [$enfant->idTuteur,$enfant->idEnfant,$ofac->idOffre,$ofac->idActivite];
+                } while (in_array($val, $generatedNumbers));
+                
+                DB::table('planning_enfant')->insert([
+                    'idTuteur' => $enfant->idTuteur,
+                    'idH1' => $hrr1->idHoraire,
+                    'idH2' => $hrr2->idHoraire,
+                    'idEnfant'=>$enfant->idEnfant,
+                    'idOffre'=> $ofac->idOffre,
+                    'idActivite'=>$ofac->idActivite,
+                ]);
+                $generatedNumbers[] = $val;
+            }
+        }
+
+
+
+
     }
 }

@@ -60,7 +60,7 @@ class AnimateurInterfaceTest extends TestCase
         // dd();
         DB::shouldReceive('select')
             ->once()
-            ->with('SELECT * FROM getEnfantActivitess(?)', [$this->Anim->idAnimateur])
+            ->with('SELECT * FROM getEnfantActivitesss(?)', [$this->Anim->idAnimateur])
             ->andReturn(collect([/* mock data */]));
 
         $response = $this->actingAs($this->user)->getJson('api/animateur/AnimateursEnf');
@@ -87,7 +87,7 @@ class AnimateurInterfaceTest extends TestCase
     
             DB::shouldReceive('select')
                 ->twice()
-                ->with('SELECT * FROM getEnfantActivitess(?)', [$this->Anim->idAnimateur])
+                ->with('SELECT * FROM getEnfantActivitesss(?)', [$this->Anim->idAnimateur])
                 ->andReturn($mockData);
             Sanctum::actingAs($this->user);
             $response = $this->getJson('/api/animateur/AnimateursEnf?page=1');
@@ -187,7 +187,7 @@ class AnimateurInterfaceTest extends TestCase
         // Assuming the getEnfantActivitess stored procedure returns some mock data
         DB::shouldReceive('select')
             ->once()
-            ->with('SELECT * FROM getEnfantActivitess(?)', [$this->Anim->idAnimateur])
+            ->with('SELECT * FROM getEnfantActivitesss(?)', [$this->Anim->idAnimateur])
             ->andReturn(collect([/* mock data */]));
 
         $response = $this->actingAs($this->user)->getJson('/api/animateur/AnimateursEnf?page=invalid');
@@ -213,7 +213,7 @@ class AnimateurInterfaceTest extends TestCase
     {
         DB::shouldReceive('select')
             ->once()
-            ->with('SELECT * FROM getEnfantActivitess(?)', [$this->Anim->idAnimateur])
+            ->with('SELECT * FROM getEnfantActivitesss(?)', [$this->Anim->idAnimateur])
             ->andReturn(collect([]));
 
         $response = $this->actingAs($this->user)->getJson('/api/animateur/AnimateursEnf');
@@ -244,7 +244,7 @@ class AnimateurInterfaceTest extends TestCase
 
         DB::shouldReceive('select')
             ->once()
-            ->with('SELECT * FROM getEnfantActivitess(?)', [$this->Anim->idAnimateur])
+            ->with('SELECT * FROM getEnfantActivitesss(?)', [$this->Anim->idAnimateur])
             ->andReturn($mockData);
 
         $response = $this->actingAs($this->user)->getJson('/api/animateur/AnimateursEnf');
@@ -269,7 +269,7 @@ class AnimateurInterfaceTest extends TestCase
 
         DB::shouldReceive('select')
             ->twice()
-            ->with('SELECT * FROM getEnfantActivitess(?)', [$this->Anim->idAnimateur])
+            ->with('SELECT * FROM getEnfantActivitesss(?)', [$this->Anim->idAnimateur])
             ->andReturn($mockData);
 
         $response = $this->actingAs($this->user)->getJson('/api/animateur/AnimateursEnf?page=1&per_page=10');
@@ -330,7 +330,7 @@ class AnimateurInterfaceTest extends TestCase
     {
         DB::shouldReceive('select')
             ->once()
-            ->with('SELECT * FROM getEnfantActivitess(?)', [$this->Anim->idAnimateur])
+            ->with('SELECT * FROM getEnfantActivitesss(?)', [$this->Anim->idAnimateur])
             ->andThrow(new \Exception('Database error'));
 
         $response = $this->actingAs($this->user)->getJson('/api/animateur/AnimateursEnf');
