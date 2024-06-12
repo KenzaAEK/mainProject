@@ -1,5 +1,5 @@
 <template>
-    <div v-if="user" class="relative top-20 mx-auto shadow-xl rounded-md bg-custom-color" style="margin-left: 100px; margin-right:100px; border-radius: 10px;">
+    <div v-if="user" class="relative top-20 mx-auto shadow-xl rounded-md bg-custom-color" style="margin-left: 100px; margin-right:100px; border-radius: 10px;margin-top:-9rem;">
       <div class="p-6 space-y-6">
         <div>
           <h1 class="text-center text-4xl font-semibold custom-hover-text">Edit d'une atelier</h1>
