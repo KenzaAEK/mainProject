@@ -15,8 +15,9 @@ class AdministrateurController extends Controller
 {   
     use HttpResponses; 
     
-    public function approveDemande(Request $request, $idDemande)
+    public function approveDemande(Request $request)
     {
+        $idDemande = $request->idDemande;
         DB::table('demande_inscriptions')
             ->where('idDemande', $idDemande)
             ->update(['status' => 'acceptée']);

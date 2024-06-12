@@ -48,8 +48,6 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 Route::post('/admins/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
 Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
 
-=========
->>>>>>>>> Temporary merge branch 2
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
