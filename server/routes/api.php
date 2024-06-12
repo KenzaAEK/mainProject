@@ -72,8 +72,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
     Route::post('/admin/approve-demande', [AdministrateurController::class, 'approveDemande']);
-    Route::get('/admin/approve-demande', [AdministrateurController::class, 'index']);
-    Route::put('/admin/approve-demande', [AdministrateurController::class, 'rejectDemande']);
+    Route::get('/admin/show-demande', [AdministrateurController::class, 'index']);
+    Route::put('/admin/reject-demande', [AdministrateurController::class, 'rejectDemande']);
 
 /*
 ╔==========================================================================╗
