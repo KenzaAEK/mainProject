@@ -33,6 +33,12 @@
                     <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
+                <svg @click="openUpdateModal(atelier)" class="h-6 w-6 text-gray-900 cursor-pointer" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z"/>
+                  <path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"/>
+                  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"/>
+                  <line x1="16" y1="5" x2="19" y2="8"/>
+              </svg>
               </span>
               <button class="block bg-white rounded-full text-black text-xs font-bold px-3 py-2 leading-none flex items-center">Programme</button>
             </div>
@@ -41,8 +47,13 @@
       </div>
     </div>
   </div>
+  <!-- Open the modal using ID.showModal() method -->
+
+<dialog id="my_modal_1" class="modal">
+  <UpdateAtelier :atelier="selectedAtelier" @atelier-updated="getAteliers"/>
+</dialog>
   <div id="modelConfirm" class="fixed hidden inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
-    <createAtelier @atelier-added="handleAtelierAdded"/>
+    <createAtelier @atelier-added="getAteliers"/>
   </div>
   <div id="sure" class="fixed hidden inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
     <div class="bg-white p-6 rounded-lg max-w-md m-auto mt-20">
@@ -58,6 +69,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import createAtelier from './createAtelier.vue';
+import UpdateAtelier from './UpdateAtelier.vue';
 import axios from 'axios';
 
 export default {
@@ -66,7 +78,8 @@ export default {
     return {
       ateliers: [],
       idToDelete: null,
-      message: '' // New data property for the success message
+      message: '',
+      selectedAtelier: null // New data property for the selected atelier
     };
   },
   mounted() {
@@ -83,8 +96,7 @@ export default {
       }
     },
     handleAtelierAdded(newAtelier) {
-      console.log('New Atelier added:', newAtelier); // Debugging line
-      // Check if newAtelier has the same structure as the items in the ateliers array
+      console.log('New Atelier added:', newAtelier);
       if (newAtelier && newAtelier.titre && newAtelier.description) {
         this.ateliers.push(newAtelier);
       } else {
@@ -94,7 +106,7 @@ export default {
       this.closeModal('modelConfirm');
       setTimeout(() => {
         this.message = '';
-      }, 3000); // Clear the message after 3 seconds
+      }, 3000);
     },
     confirmDelete(id) {
       this.idToDelete = id;
@@ -133,13 +145,37 @@ export default {
     closeModal(modalId) {
       document.getElementById(modalId).style.display = 'none';
       document.getElementsByTagName('body')[0].classList.remove('overflow-y-hidden');
+    },
+    openUpdateModal(atelier) {
+      this.selectedAtelier = atelier;
+      openModal('my_modal_1');
+    },
+    handleAtelierUpdated(updatedAtelier) {
+      const index = this.ateliers.findIndex(a => a.idActivite === updatedAtelier.idActivite);
+      if (index !== -1) {
+        this.ateliers.splice(index, 1, updatedAtelier);
+      }
+      this.message = 'Atelier updated successfully!';
+      setTimeout(() => {
+        this.message = '';
+      }, 3000);
     }
-  },
-  components: {
-    createAtelier
   },
   computed: {
     ...mapGetters(['user']),
+  },
+  watch: {
+    user(newUser) {
+      if (newUser) {
+        this.getAteliers();
+      } else {
+        this.ateliers = [];
+      }
+    }
+  },
+  components: {
+    createAtelier,
+    UpdateAtelier
   }
 };
 </script>
@@ -148,22 +184,11 @@ export default {
 .custom-hover-bg {
   background-color: #fff;
 }
-
 .custom-hover-bg:hover {
   background-image: linear-gradient(to right, #A3B18A, #BECBA5);
   color: #fff;
 }
 .custom-hover-text:hover {
-  color:#A3B18A ;
-}
-.custom-hover-text {
-  color:#A3B18A ;
-}
-.bg-gradient-selected {
-  background-color: #A3B18A;
-}
-
-.bg-custom-color {
-  background-color: #F6F5F4;
+  color: #A3B18A;
 }
 </style>

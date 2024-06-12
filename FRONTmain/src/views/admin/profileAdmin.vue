@@ -7,7 +7,7 @@
         <div class="justify-center items-center flex">
             <div class="flex " style="width: 900px; margin-left: 80px;">
             <div class="" style="width: 150px; height: 150px;">
-                <img src="@/assets/images/malakk.jpg" alt="User Profile"
+                <img src="@/assets/images/prfl3.png" alt="User Profile"
                     class="rounded-md outline outline-2 outline-offset-2 outline-black relative" />
 
             </div>
