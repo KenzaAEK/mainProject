@@ -1,10 +1,11 @@
 <?php
+
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Groupe;
-
-class GroupeSeeder extends Seeder
+use App\Models\Devis;
+class DevisSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +14,6 @@ class GroupeSeeder extends Seeder
      */
     public function run()
     {
-        Groupe::factory()->count(50)->create(); // Crée 10 groupes, ajustez le nombre selon vos besoins
+        Devis::factory()->count(100)->create();
     }
 }
