@@ -14,6 +14,6 @@ class EnfantSeeder extends Seeder
      */
     public function run()
     {
-        Enfant::factory()->count(50)->create(); // Ajustez le nombre selon vos besoins
+        Enfant::factory()->count(100)->create(); // Ajustez le nombre selon vos besoins
     }
 }

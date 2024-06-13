@@ -37,7 +37,7 @@
             border-radius: 5px;
             font-size: 16px;
         }
-        .button:hover {
+        .button:hover { 
             background-color: #0056b3;
         }
     </style>

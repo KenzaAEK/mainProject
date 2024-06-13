@@ -71,9 +71,10 @@ class ActiviteController extends Controller
      */
     public function show($id)
     {
-        
+        // dd('2');
         $activite = Activite::find($id);
-        return $activite
+        // dd($activite);
+        return isset($activite)
             ? response()->json(['status' => 200, 'activite' => $activite], 200)
             : response()->json(['status' => 404, 'message' => "Aucune activité trouvée"], 404);
     

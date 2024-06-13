@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Mockery;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Providers\RouteServiceProvider;
@@ -56,21 +58,24 @@ public function test_store_new_activity_successfully()
     Sanctum::actingAs($this->user);
 
     $typeActivite = TypeActivite::factory()->create(['type' => 'Sport']);
-    // dd($typeActivite);
+
+    // Fake the storage to simulate file uploads
+    Storage::fake('public');
+
     $activityData = [
         'titre' => 'Youth Soccer Training',
         'description' => 'A comprehensive soccer training program for youths.',
         'objectif' => 'Improve soccer skills and teamwork',
         'ageMin' => 10,
         'ageMax' => 15,
-        'imagePub' => 'path/to/image.jpg',   // Ensure this is a valid path in your application tests.
+        'imagePub' => UploadedFile::fake()->image('defile.jpg'),
         'lienYtb' => 'https://youtube.com/example_video',
-        'programmePdf' => 'path/to/program.pdf',  // Ensure this is a valid path in your application tests.
+        'programmePdf' => UploadedFile::fake()->create('bdd.pdf', 1000, 'application/pdf'),
         'type' => 'Sport',
     ];
 
     $response = $this->postJson("api/admin/activites", $activityData);
-    // dd('1');
+
     $response->assertStatus(201);
     $response->assertJsonFragment([
         'titre' => 'Youth Soccer Training',
@@ -131,7 +136,7 @@ public function test_show_non_existing_activity()
     //     "role"=>2
     // ]);
     Sanctum::actingAs($this->user);
-    $response = $this->getJson('api/admin/activites', ['id'=>99999]);
+    $response = $this->getJson('api/admin/activites/9999999');
 
     $response->assertStatus(404);
 }
@@ -275,12 +280,13 @@ public function test_prevent_duplicate_activities()
         'titre' => 'Chess Class',
         'description' => 'Learn chess strategies.',
         'objectif' => 'Strategic thinking',
-        'imagePub' => 'path/to/chess.jpg',
+        'imagePub' => UploadedFile::fake()->image('defile.jpg'),
         'lienYtb' => 'https://youtube.com/chess_intro',
-        'programmePdf' => 'path/to/chess_program.pdf',
+        'programmePdf' => UploadedFile::fake()->create('bdd.pdf', 1000, 'application/pdf'),
         'type' => 'Sport'
     ];
-
+    
+    
     // Create the first instance
     $this->postJson("api/admin/activites", $activityData);
 

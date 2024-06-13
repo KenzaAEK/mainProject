@@ -7,18 +7,21 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 // use App\Http\Controllers\Api\AdministrateurController;
 use App\Http\Controllers\Api\OffreController;
-// use App\Http\Controllers\Api\DemandeInscriptionController;
+use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\EnfantController;
-use App\Http\Controllers\Api\Password\PasswordResetController;
+use App\Http\Controllers\password\PasswordResetController;
 use App\Http\Controllers\Api\TypeActiviteController;
+use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
+use App\Http\Controllers\FactureController;
 
 /*
 ╔==========================================================================╗
 ║                           All Users Routes                               ║
 ╚==========================================================================╝
 */
+
 
 /* Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/password/reset', [PasswordResetController::class, 'reset']); */
@@ -41,13 +44,20 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('activites', ActiviteController::class);
     Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::get('/users', [AuthController::class, 'index']);
+
+Route::apiResource('enfants', EnfantController::class);
+Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+
+Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
+Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
+
+
     // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
     // Route::post('/profile', [ProfileController::class, 'profile']);
-    // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); gate for animateur**** email 
+    // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); //gate for animateur**** email 
     // Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
-    //Route::post('/password/reset', [ResetController::class, 'ResetPassword']); *********
 
-    // Manage notifications
+    // // Manage notifications
     // Route::get('/notifications', [NotificationController::class, 'index']);
     // Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
     // Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
@@ -69,6 +79,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
         Route::post('/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
+        Route::get('/show-demande', [AdministrateurController::class, 'index']);
         // Route::post('/offres',[OffreController::class,'store']);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
         // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
@@ -100,13 +111,17 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
         Route::apiResource('enfants', EnfantController::class);
-        // Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
+        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
         Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
         Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
         Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::apiResource('enfants', EnfantController::class);
         // Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+
+        Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
+        Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
+        Route::get('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);

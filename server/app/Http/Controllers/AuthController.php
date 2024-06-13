@@ -53,6 +53,7 @@ class AuthController extends Controller
     public function login(LoginUserRequest $request) 
     {
         $request->validated($request->all());
+        // dd('1');
         $user = User::where('email', $request->email)->first();
         if(!$user || !Hash::check($request->password, $user->password))
         {
@@ -83,7 +84,7 @@ class AuthController extends Controller
         //delete the expired tokens when a user logs in or try to login but i have to change the place of this line of code 
         // or simply i can implement a schedule to delete the expired tokens console/kernel.php  $schedule->command('sanctum:prune-expired --hours=24')->daily();
         // PersonalAccessToken::where('expires_at', '<', now())->delete();
-
+        // dd('1');
         return $this->success([
             'user' => $user,
             'token' => $token,
