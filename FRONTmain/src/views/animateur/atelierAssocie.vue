@@ -47,7 +47,7 @@
                     <tr v-for="(enfant, i) in groupedActivite.enfants" :key="i" class="bg-white border-b">
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{{ enfant.nom_enfant }}</td>
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{{ enfant.prenom_enfant }}</td>
-                      <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{{ enfant.age }}</td>
+                      <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{{ enfant.age }} ans</td>
                       <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{{ enfant.niveau_etude }}</td>
                     </tr>
                   </tbody>

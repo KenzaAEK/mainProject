@@ -12,8 +12,10 @@
               <li><a href="#contact">Contact Us</a></li>
             </ul>
           </div>
-          <a href="#home" class="btn btn-ghost text-xl">LOGO</a>
-        </div>
+          <div class="image" style="width: 130px; height: 30px;">
+                <img src="@/assets/images/logobg.png" alt="">
+                
+              </div>        </div>
         <div class="navbar-center hidden lg:flex">
           <ul class="menu menu-horizontal px-1">
             <li><a href="#home">Home</a></li>

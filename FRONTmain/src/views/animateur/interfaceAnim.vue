@@ -2,7 +2,7 @@
   <div class="flex" v-if="user">
     <div class="navbar bg-base-100">
       <div class="flex-1">
-        <a class="btn btn-ghost text-xl"> 
+        <a class=""> 
           <div class="image" style="width: 130px; height: 30px;">
                 <img src="@/assets/images/logobg.png" alt="">
                 

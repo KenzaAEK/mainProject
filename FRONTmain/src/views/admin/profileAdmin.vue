@@ -12,7 +12,7 @@
 
             </div>
             <div class="text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl font-serif" style="margin-top: 50px; margin-left: 20px" >
-                Malak El Bakali
+                {{ user.nom }} {{ user.prenom }}
             </div>
         </div>
         </div>
