@@ -27,9 +27,13 @@ class OffreController extends Controller
     public function index()
     {
         $offreactivites = offreActivite::all();
-        return response()->json($activites);
+        $offres = offre::all();
+    
+        return response()->json([
+            'offreactivites' => $offreactivites,
+            'offres' => $offres
+        ], 200);
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -212,6 +216,7 @@ class OffreController extends Controller
     
 
 
+   
     public function deleteOffreActiviteById($idOffre, $idActivite)
     {
         try {
