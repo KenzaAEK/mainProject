@@ -6,11 +6,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Administrateur>
- */
+
 class AdministrateurFactory extends Factory
 {
+    protected $model = Administrateur::class;
     /**
      * The name of the factory's corresponding model.
      *
