@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
 class DevisController extends Controller
@@ -21,7 +22,10 @@ class DevisController extends Controller
     public function acceptDevis(Request $request, $id)
     {
         $devis = Devis::with('demandeInscription.tuteur.user')->findOrFail($id);
-        // $this->authorize('accept', $devis);
+
+        if (Gate::denies('manage-devis', $devis)) {
+            return response()->json(['message' => 'ACCES INTERDIT'], 403);
+        }
         $devis->update(['status' => 'accepté']);  
 
         $notification = Notification::create([
@@ -43,6 +47,14 @@ class DevisController extends Controller
     // Le parent peut refuser son devis
     public function rejectDevis(Request $request, $id)
     {
+        $devis = Devis::with('demandeInscription.tuteur.user', 'facture')->findOrFail($id);
+        
+        if (Gate::denies('manage-devis', $devis)) {
+            return response()->json(['message' => 'ACCES INTERDIT'], 403);
+        }
+
+
+
         $validator = Validator::make($request->all(), [
             'reason' => 'sometimes|string|max:255',
         ]);
