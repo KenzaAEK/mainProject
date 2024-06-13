@@ -74,8 +74,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
-        Route::post('/admin/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
-        Route::post('/admin/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
+        Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
+        Route::post('/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
         // Route::post('/offres',[OffreController::class,'store']);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
         // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);

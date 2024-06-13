@@ -14,7 +14,7 @@ class TypeActiviteFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function run()
+    public function definition()
 {
     $types = [ 'Musique', 'Science'];
     foreach ($types as $type) {
