@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\Administrateur;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Administrateur>
- */
+
 class AdministrateurFactory extends Factory
 {
+    protected $model = Administrateur::class;
     /**
      * Define the model's default state.
      *
@@ -18,7 +18,7 @@ class AdministrateurFactory extends Factory
     public function definition()
     {
         return [
-            'idUser' => User::factory()->create()->idUser,
+            'idUser' => User::factory()->create(["role"=>2])->idUser,
         ];
     }
 }

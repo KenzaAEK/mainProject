@@ -71,7 +71,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
 
-    Route::post('/admin/approve-demande', [AdministrateurController::class, 'approveDemande']);
+    Route::post('/admin/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
     Route::get('/admin/show-demande', [AdministrateurController::class, 'index']);
     Route::put('/admin/reject-demande', [AdministrateurController::class, 'rejectDemande']);
 

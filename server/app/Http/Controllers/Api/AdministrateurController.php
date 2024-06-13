@@ -27,9 +27,11 @@ class AdministrateurController extends Controller
         return response()->json($paginatedItems);
     }
     
-    public function approveDemande(Request $request)
+    public function approveDemande($idDemande)
     {
-        $idDemande = $request->idDemande;
+        // $idDemande = $request->idDemande;
+        // $idDemande = $request->input('idDemande');
+        // dd($idDemande);
         DB::table('demande_inscriptions')
             ->where('idDemande', $idDemande)
             ->update(['status' => 'acceptée']);
@@ -92,10 +94,16 @@ class AdministrateurController extends Controller
         return response()->json(['message' => 'Demande approuvée et devis généré']);
     }
    
-    public function rejectDemande(Request $request)
+    public function rejectDemande($idDemande)
 {
-    $idDemande = $request->idDemande;
-
+    // dd('1 controller');
+    // $idDemande = $request->idDemande;
+    // $idDemande = $request->input('idDemande');
+        // dd($idDemande);
+    // dd($request);
+    // $demande = DemandeInscription::find($idDemande);
+    // dd($demande.'ahhhh');
+    // dd('ahhhh');
      $idTuteur = DB::table('demande_inscriptions')->where('idDemande', $idDemande)->value('idTuteur');
      $idUser = DB::table('tuteurs')->where('idTuteur',$idTuteur)->value('idUser');
    
@@ -109,7 +117,8 @@ class AdministrateurController extends Controller
     
     $demande = DemandeInscription::where('idDemande',$idDemande)->update(['status' => 'refusée']);
     DB::table('inscriptionEnfant_offre_Activite')->where('idDemande', $idDemande)->delete();
-    DemandeInscription::where('idDemande', $idDemande)->delete();
+    // dd('1');
+    // DemandeInscription::where('idDemande', $idDemande)->delete();
     return response()->json(['message' => 'Demande refusée avec succès.']);
 }
 }
