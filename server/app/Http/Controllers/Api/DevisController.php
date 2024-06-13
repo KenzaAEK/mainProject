@@ -78,13 +78,18 @@ class DevisController extends Controller
     
     $pdfContent = $this->generatePdfContent($facture);
     
-    Mail::send('emails.facture', [], function ($message) use ($emailDestination, $pdfContent, $idFacture) {
-        $message->to($emailDestination);
-        $message->subject('Votre facture');
-        $message->attachData($pdfContent, 'facture_' . $idFacture . '.pdf', [
-            'mime' => 'application/pdf',
-        ]);
-    });
+    try {
+        Mail::send('emails.facture', [], function ($message) use ($emailDestination, $pdfContent, $idFacture) {
+            $message->to($emailDestination);
+            $message->subject('Votre facture');
+            $message->attachData($pdfContent, 'facture_' . $idFacture . '.pdf', ['mime' => 'application/pdf']);
+        });
+    } catch (\Exception $e) {
+        Log::error('Error sending email: ' . $e->getMessage());
+        return response()->json(['error' => 'Failed to send email', 'details' => $e->getMessage()], 500);
+    }
+    
+
 }
 
 
@@ -94,8 +99,8 @@ protected function generatePdfContent($facture)
             'facture' => $facture,
         ];
 
-        // Use DomPDF to generate the PDF content from a view
         $pdf = PDF::loadView('pdf.facture', $data);
         return $pdf->output();
+        
     }
 }

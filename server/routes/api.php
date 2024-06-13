@@ -99,7 +99,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
         Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
         Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
-        Route::get('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
+        Route::post('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
