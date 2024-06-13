@@ -3,24 +3,23 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Carbon\Carbon;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Horaire>
+ */
 class HoraireFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function definition()
     {
-        $jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
-        $heureDebut = $this->faker->numberBetween(8, 16); // Heure de début entre 8h et 16h
-
         return [
-            'jour' => $this->faker->randomElement($jours),
-            'heureDebut' => Carbon::createFromTime($heureDebut, 0, 0, 'Europe/Paris'),
-            'heureFin' => Carbon::createFromTime($heureDebut + 1, 0, 0, 'Europe/Paris'), // +1 heure après l'heure de début
+            'jour' => $this->faker->dayOfWeek(),
+            'heureDebut' => $this->faker->time('H:i'),
+            'heureFin' => $this->faker->time('H:i'),
         ];
     }
 }

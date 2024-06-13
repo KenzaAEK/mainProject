@@ -2,26 +2,29 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Offre;
-use App\Models\Activite;
+use App\Models\OffreActivite;
 use App\Models\Animateur;
+// use App\Models\typeActivite;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Groupe>
+ */
 class GroupeFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function definition()
     {
-        $offreactivite = \App\Models\Offreactivite::inRandomOrder()->first();
+        $offreactivite = OffreActivite::factory()->create();
         return [
-            'Nomgrp' => $this->faker->word,
-            'idOffre' => $offreactivite->idOffre,
-            'idActivite' => $offreactivite->idActivite,
-            'idAnimateur' => \App\Models\Animateur::inRandomOrder()->first()->idAnimateur,
+            'Nomgrp' => $this->faker->word(), // Utilisation de Faker pour générer un mot aléatoire
+            'idOffre' =>$offreactivite->idOffre, // Crée une offre activité si elle n'existe pas
+            'idActivite' =>$offreactivite->idActivite, // Crée une activité si elle n'existe pas
+            'idAnimateur' => Animateur::factory()->create()->idAnimateur, 
         ];
     }
 }

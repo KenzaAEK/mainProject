@@ -31,14 +31,17 @@ class StoreOffresRequest extends FormRequest
         'dateFinOffre' => 'required|date|after_or_equal:dateDebutOffre',
         'description' => 'nullable|string',
         'activites' => 'required|array|min:1', 
+        'activites.*.titre' => 'required|string|max:255', 
         'activites.*.tarif' => 'required|numeric',
         'activites.*.effmax' => 'required|integer',
         'activites.*.effmin' => 'required|integer',
         'activites.*.age_min' => 'required|integer',
         'activites.*.age_max' => 'required|integer',
-        'activites.*.nbrSeance' => 'required|integer',
-        'activites.*.Duree_en_heure' => 'required|numeric',
-        ];
+        'activites.*.jours' => 'required|array|min:1', // Nouveau tableau de jours
+        'activites.*.jours.*.JourAtelier' => 'required|string', // Jour de la semaine
+        'activites.*.jours.*.heureDebut' => 'required|date_format:H:i', // Heure de début au format H:i
+        'activites.*.jours.*.heureFin' => 'required|date_format:H:i|after:activites.*.jours.*.heureDebut',
+    ];
     }
     public function messages()
     {

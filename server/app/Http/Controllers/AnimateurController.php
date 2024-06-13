@@ -31,7 +31,7 @@ class AnimateurController extends Controller
          return response()->json($Animateur);
         }
       else {
-         return response()->json(['error' => 'Animateur non trouvé'], 404);
+         return response()->json(['error' => 'Animateur non trouvé'], 403);
        }
     }
 
@@ -45,7 +45,8 @@ class AnimateurController extends Controller
         }
         $page = $request->input('page',1);
         $parpage = 5;
-        $resultats = DB::select("SELECT * FROM getEnfantActivitess(?)", [$idAnimateur]); 
+        // $resultats = DB::select("SELECT * FROM getEnfantActivitess(?)", [$idAnimateur]); 
+        $resultats = DB::select("SELECT * FROM getEnfantActivitesss(?)", [$idAnimateur]);
         $collection = collect($resultats);
         $resultatPaginer = new \Illuminate\Pagination\LengthAwarePaginator(
              $collection->forPage($page,$parpage),
@@ -56,7 +57,7 @@ class AnimateurController extends Controller
         );
 
         return response()->json($resultatPaginer);
-    }
+    } 
 
     public function searshEtud (Request $request )
     {

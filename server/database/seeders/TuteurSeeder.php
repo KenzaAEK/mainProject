@@ -10,6 +10,6 @@ class TuteurSeeder extends Seeder
     public function run()
     {
         
-        Tuteur::factory()->count(10)->create();
+        Tuteur::factory()->count(15)->create();
     }
 }

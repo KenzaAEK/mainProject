@@ -20,9 +20,10 @@ class GroupeController extends Controller
                     return $horaire->jour . ' de ' . $horaire->heureDebut->format('H:i') . ' à ' . $horaire->heureFin->format('H:i');
                 }),
                 'groupes' => $animateur->groupes->map(function ($groupe) {
+                    $enfantsPaginated = $groupe->enfants->paginate(4);
                     return [
                         'activite' => $groupe->activite->titre, // je laisse si on a besoin
-                        'enfants' => $groupe->enfants->map(function ($enfant) {
+                        'enfants' => $enfantsPaginated->items()->map(function ($enfant) { 
                             return [
                                 'nom' => $enfant->nom,
                                 'prenom' => $enfant->prenom,
@@ -30,6 +31,11 @@ class GroupeController extends Controller
                                 'niveau_etude' => $enfant->niveauEtude
                             ];
                         }),
+                        'pagination' => [
+                            'current_page' => $enfantsPaginated->currentPage(),
+                            'last_page' => $enfantsPaginated->lastPage(),
+                            'total' => $enfantsPaginated->total()
+                        ]
                     ];
                 })
             ];
