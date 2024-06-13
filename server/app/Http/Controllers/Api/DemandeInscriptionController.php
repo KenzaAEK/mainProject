@@ -28,8 +28,6 @@ class DemandeInscriptionController extends Controller
     {
         $user = auth()->user();
         $idTuteur = $user->tuteur->idTuteur;
-    
-        // Récupérer les demandes d'inscription du tuteur
         $demandes = DB::table('demande_inscriptions')
                      ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
                      ->join('offreactivites', function($join) {
@@ -368,19 +366,15 @@ class DemandeInscriptionController extends Controller
         switch ($optiondepay) {
             case 'mois':
                 $prixTot = $prixTot;
-                $prixHT=$prixHT;
                 break;
             case 'trimestre':
                 $prixTot= $prixTot* 3;
-                $prixHT= $prixHT* 3;
                 break;
             case 'semestre':
                 $prixTot = $prixTot * 6;
-                $prixHT= $prixHT* 3;
                 break;
             case 'annee':
                 $prixTot = $prixTot * 12;
-                $prixHT= $prixHT* 3;
                 break;
         }
 
@@ -395,7 +389,7 @@ class DemandeInscriptionController extends Controller
                 'idOffre' => $idoffre,
                 'idActivite' => $idActivite,
                 'PixtotalRemise' => $prixTot,
-                'Prixbrute' => 0
+                'Prixbrute' => $prixTot
             ]);
         }
 
@@ -406,8 +400,8 @@ class DemandeInscriptionController extends Controller
             'idTuteur' => $idTuteur,
             'idOffre' => $childOffre,
             'idActivite' => $childActivite,
-            'PixtotalRemise' => 0,
-            'Prixbrute' => 0
+            'PixtotalRemise' => $prixTot*0.4,
+            'Prixbrute' => $prixTot*0.4
         ]);
     }
 }
