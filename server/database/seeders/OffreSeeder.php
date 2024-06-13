@@ -16,6 +16,6 @@ class OffreSeeder extends Seeder
     public function run()
     {
         // Crée 20 offres, ajustez ce nombre selon vos besoins
-        Offre::factory()->count(20)->create();
+        Offre::factory()->count(3)->create();
     }
 }

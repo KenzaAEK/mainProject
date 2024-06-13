@@ -14,13 +14,6 @@ class TypeActiviteSeeder extends Seeder
      */
     public function run()
     {
-        TypeActivite::create([
-            'type' => 'Sport',
-            'domaine' => 'Exterieur',
-        ]);
-        TypeActivite::create([
-            'type' => 'Art',
-            'domaine' => 'Interieur',
-        ]);
+        //
     }
 }
