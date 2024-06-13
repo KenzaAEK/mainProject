@@ -36,6 +36,7 @@ Route::post('/register', [AuthController::class, 'register']);
 ║                           All Users authenticated                        ║
 ╚==========================================================================╝
 */
+Route::apiResource('demande-Inscriptions', DemandeInscriptionController::class);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
 

@@ -26,9 +26,39 @@ class DemandeInscriptionController extends Controller
      */
     public function index()
     {
-        $demandes = DemandeInscription::all();
+        $user = auth()->user();
+        $idTuteur = $user->tuteur->idTuteur;
+    
+        // Récupérer les demandes d'inscription du tuteur
+        $demandes = DB::table('demande_inscriptions')
+                     ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
+                     ->join('offreactivites', function($join) {
+                      $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
+                     ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
+            })
+                    ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
+                    ->join('enfants', function ($join) {
+                     $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
+                    ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
+            })
+                    ->join('disponibilite_offreactivite', function ($join) {
+                     $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
+                     ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
+            })
+            ->join('horaires', 'disponibilite_offreactivite.idHoraire', '=', 'horaires.idHoraire')
+            ->select(
+                'offres.titre as nomOffre',
+                'enfants.prenom as nomEnfant',
+                'horaires.jour',
+                'horaires.heureDebut',
+                'horaires.heureFin'
+            )
+            ->where('demande_inscriptions.idTuteur', $idTuteur)
+            ->get();
+    
         return response()->json($demandes);
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -202,15 +232,14 @@ class DemandeInscriptionController extends Controller
 
 
 
-     public function store(Request $request)
+     public function store(Request $request) // il faut testerrrrrrrrr!!!!!!! les nouvelles fonctionalites option de payement ;(
     {
         DB::beginTransaction();
         try {
             $dmInscription = new DemandeInscription();
-            $dmInscription->optionsPaiement = 'mois';
+            $dmInscription->optionsPaiement = $request->optionsPaiement;
             $user = $request->user();
             $idTuteur = $user->tuteur->idTuteur;
-            dd($idTuteur);
             $Secenfants = $request->enfants;
             $nbrEnfants = is_array($Secenfants) ? count($Secenfants) : 0;
             
@@ -224,10 +253,10 @@ class DemandeInscriptionController extends Controller
             $prixTot = 0;
 
             if ($pack->type == 'PackAtelier') {
-                $this->handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $ateliers, $idTuteur);
+                $this->handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $ateliers, $idTuteur,$dmInscription->optionsPaiement);
 
             } elseif ($pack->type == 'PackEnfant' && $nbrEnfants > 2) {
-                $this->handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur);
+                $this->handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur,$dmInscription->optionsPaiement);
             } else {
                 return response()->json(['error' => 'Le nombre d\'enfants doit être supérieur à 2 pour choisir le PackEnfant.'], 422);
             }
@@ -240,7 +269,7 @@ class DemandeInscriptionController extends Controller
         }
     }
 
-    private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $ateliers, $idTuteur)
+    private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $ateliers, $idTuteur,$optiondepay)
     {
         $i = 0;
         $limite = $pack->limite;
@@ -279,6 +308,25 @@ class DemandeInscriptionController extends Controller
             $idoffre = $offreActivite->idOffre;
             $idActivite = $offreActivite->idActivite;
             $iddemande = $dmInscription->idDemande;
+            switch ($optiondepay) {
+                case 'mois':
+                    $prixTot = $prixTot;
+                    $prixHT=$prixHT;
+                    break;
+                case 'trimestre':
+                    $prixTot= $prixTot* 3;
+                    $prixHT= $prixHT* 3;
+                    break;
+                case 'semestre':
+                    $prixTot = $prixTot * 6;
+                    $prixHT= $prixHT* 3;
+                    break;
+                case 'annee':
+                    $prixTot = $prixTot * 12;
+                    $prixHT= $prixHT* 3;
+                    break;
+            }
+
 
             $dmInscription->enfantss()->attach($enfant['idEnfant'], [
                 'idDemande' => $iddemande,
@@ -291,7 +339,7 @@ class DemandeInscriptionController extends Controller
         }
     }
 
-    private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur)
+    private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur,$optiondepay)
     {
         $remise = $pack->remise;
         $limite = $pack->limite;
@@ -317,6 +365,24 @@ class DemandeInscriptionController extends Controller
         }
 
         $dmInscription->save();
+        switch ($optiondepay) {
+            case 'mois':
+                $prixTot = $prixTot;
+                $prixHT=$prixHT;
+                break;
+            case 'trimestre':
+                $prixTot= $prixTot* 3;
+                $prixHT= $prixHT* 3;
+                break;
+            case 'semestre':
+                $prixTot = $prixTot * 6;
+                $prixHT= $prixHT* 3;
+                break;
+            case 'annee':
+                $prixTot = $prixTot * 12;
+                $prixHT= $prixHT* 3;
+                break;
+        }
 
         foreach ($enfantsSorted as $key => $enfant) {
             $idoffre = $enfant['idOffre'];
