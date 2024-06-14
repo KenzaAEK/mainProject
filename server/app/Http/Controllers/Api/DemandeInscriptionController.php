@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\DemandeInscriptionResource;
 use App\Models\Activite;
 use App\Models\offreActivite;
+use App\Models\Offre;
 use App\Models\Pack;
 use Illuminate\Support\Facades\DB;
 
@@ -25,9 +26,37 @@ class DemandeInscriptionController extends Controller
      */
     public function index()
     {
-        $demandes = DemandeInscription::all();
+        $user = auth()->user();
+        $idTuteur = $user->tuteur->idTuteur;
+        $demandes = DB::table('demande_inscriptions')
+                     ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
+                     ->join('offreactivites', function($join) {
+                      $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
+                     ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
+            })
+                    ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
+                    ->join('enfants', function ($join) {
+                     $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
+                    ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
+            })
+                    ->join('disponibilite_offreactivite', function ($join) {
+                     $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
+                     ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
+            })
+            ->join('horaires', 'disponibilite_offreactivite.idHoraire', '=', 'horaires.idHoraire')
+            ->select(
+                'offres.titre as nomOffre',
+                'enfants.prenom as nomEnfant',
+                'horaires.jour',
+                'horaires.heureDebut',
+                'horaires.heureFin'
+            )
+            ->where('demande_inscriptions.idTuteur', $idTuteur)
+            ->get();
+    
         return response()->json($demandes);
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -58,18 +87,12 @@ class DemandeInscriptionController extends Controller
 
 //         $ateliers = $request->Ateliers ; 
 //         $prixTot = 0 ;
-//         //$countenfant >2;// and type de pack enfant  table offreactive il y a tarif , de latier
-
-
-       
-      
+//         //$countenfant >2;// and type de pack enfant  table offreactive il y a tarif , de latier      
 //         if  ($pack->type == 'PackAtelier')
 //         {
-
 //             $i = 0; 
 //             $limite = $pack->limite;
-//             $remise = $pack->remise;
-        
+//             $remise = $pack->remise;    
 //             {
 //               foreach( $Secenfants as $enfant)
 //               {  
@@ -81,50 +104,35 @@ class DemandeInscriptionController extends Controller
 //                             return response()->json(['error'=>'Activite introuvable',404]);
 //                         }
 //                         $idActivite = $activite->idActivite;
-
 //                         $prix = $offreActivite->where('idActivite',$idActivite)->firstOrFail();
-//                         $tarif = $prix->tarif;
-                        
+//                         $tarif = $prix->tarif;                       
 //                         $prixT[] = $tarif; 
-//                         $i++;
-                        
-                       
-                    
+//                         $i++;                
 //                     }
 //                     foreach ($prixT as $prixTA)
 //                     { // PrixTA = prix de l'activite ; prixT = tableau des prix des activites
 //                         $c =0;
 //                         if($c < $limite)
-//                         {
-                            
+//                         {                           
 //                             $prixTot+= $prixTA -($c * $remise * $prixTA);
 //                         } 
-//                         else{
-                    
-//                             $prixTot += $prixTA; // prixTot =  prix total final avec remise 
-                            
+//                         else{                   
+//                             $prixTot += $prixTA; // prixTot =  prix total final avec remise                            
 //                         } 
 //                         $c++;
-
 //                        $dmInscription->save();
-
 //                         $idoffre = $offreActivite->idOffre;
 //                         $idActivite = $offreActivite->idActivite;
-//                         $iddemande=$dmInscription->idDemande;
-                      
+//                         $iddemande=$dmInscription->idDemande;                     
 //                          $dmInscription->enfantss()->attach($enfant['idEnfant'],[
 //                             'idDemande' => $iddemande,
 //                              'idTuteur'=>$idTuteur,
 //                              'idOffre'=>$idoffre,
 //                              'idActivite'=>$idActivite,
 //                              'PixtotalRemise' =>$prixTot
-//                          ]);
-        
-//                 }
-
-             
-//               }
-            
+//                          ]);       
+//                 }             
+//               }            
 //            }
 //         }
 //         elseif ($pack->type == 'PackEnfant' && $nbrEnfants > 2) {
@@ -132,14 +140,11 @@ class DemandeInscriptionController extends Controller
 //             $limite = $pack->limite;
 //             $enfantsSorted = collect($Secenfants)->sortBy(function ($enfant) use ($offreActivite) {
 //                 return $offreActivite->where('idOffre', $enfant['idOffre'])->count();
-//             });
-        
+//             });       
 //             $childWithMinActivities = $enfantsSorted->first();
-//             $enfantsSorted = $enfantsSorted->slice(1); // Remove the child with minimum activities
-        
+//             $enfantsSorted = $enfantsSorted->slice(1); // Remove the child with minimum activities       
 //             foreach ($enfantsSorted as $key => $enfant) {
-//                 $tarifs = $offreActivite->where('idOffre', $enfant['idOffre'])->pluck('tarif');
-        
+//                 $tarifs = $offreActivite->where('idOffre', $enfant['idOffre'])->pluck('tarif');        
 //                 $i = 0;
 //                 foreach ($tarifs as $tarif) {
 //                     if ($i < $limite) {
@@ -149,8 +154,7 @@ class DemandeInscriptionController extends Controller
 //                     }
 //                     $i++;
 //                 }
-//             }
-        
+//             }        
 //             $dmInscription->save();
 //             	// atachi drari kamlin , sauf l minimum ateliers
 //             foreach ($enfantsSorted as $key => $enfant) {
@@ -165,8 +169,7 @@ class DemandeInscriptionController extends Controller
 //                     'idActivite' => $idActivite,
 //                     'PixtotalRemise' => $prixTot
 //                 ]);
-//             }
-        
+//             }       
 //             // Attachi l wld li b9a bu7do u li3nod min acitivite
 //             $childOffre = $childWithMinActivities['idOffre'];
 //             $childActivite = $offreActivite->where('idOffre', $childOffre)->first()->idActivite;
@@ -180,11 +183,7 @@ class DemandeInscriptionController extends Controller
         
 //         } else {
 //             return response()->json(['error' => 'Le nombre d\'enfants doit être supérieur à 2 pour choisir le PackEnfant.'], 422);
-//         }
-        
-
-       
-      
+//         }     
 //       DB::commit();
 //         return response()->json(['message' => 'wa tahaaaaaa'], 201);
 //      }catch (\Exception $e) {
