@@ -118,7 +118,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::apiResource('enfants', EnfantController::class);
         // Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
-
+        // Route::get('api/parent/facture-download/{id}', [FactureController::class, 'downloadPdf']);
         Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
         Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
         Route::post('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');

@@ -48,7 +48,7 @@ class DevisController extends Controller
     public function rejectDevis(Request $request, $id)
     {
         $devis = Devis::with('demandeInscription.tuteur.user', 'facture')->findOrFail($id);
-        
+        // $dd($devis);
         if (Gate::denies('manage-devis', $devis)) {
             return response()->json(['message' => 'ACCES INTERDIT'], 403);
         }
@@ -64,6 +64,16 @@ class DevisController extends Controller
         }
     
         $devis = Devis::with('demandeInscription.tuteur.user', 'facture')->findOrFail($id);
+        // dd($devis);
+        if ($devis->status=='refusé') {
+            $devis->update([
+                'rejection_reason' => 'Already rejected.',
+            ]);
+            
+            return response()->json([
+                'message' => 'Already rejected.',
+            ], 200);
+        }
         $reason = $request->input('reason', 'Aucune raison spécifiée.');
         $devis->update([
             'status' => 'refusé',

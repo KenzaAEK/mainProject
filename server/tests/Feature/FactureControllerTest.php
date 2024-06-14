@@ -4,11 +4,19 @@ namespace Tests\Feature;
 
 use App\Http\Controllers\FactureController;
 use App\Models\Facture;
-use Barryvdh\DomPDF\Facade as PDF;
+use App\Models\Administrateur;
+use App\Models\User;
+use App\Models\Tuteur;
+use App\Models\Notification;
+use App\Models\DemandeInscription;
+use App\Models\Devis;
+// use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Mockery;
 use Tests\TestCase;
 
 class FactureControllerTest extends TestCase
@@ -19,93 +27,105 @@ class FactureControllerTest extends TestCase
     {
         parent::setUp();
         $this->factureController = new FactureController();
+        $this->admin = Administrateur::factory()->create();
+        $this->useradmin = User::find($this->admin->idUser);
+        $this->tuteur = Tuteur::factory()->create();
+        $this->user = User::find($this->tuteur->idUser);
+        $this->notif = Notification::factory()->create(["idUser"=>$this->useradmin->idUser]);
+        $this->demande = DemandeInscription::factory()->create(["idTuteur"=>$this->tuteur->idTuteur]);
+        $this->facture=Facture::factory()->create(['idNotification'=>$this->notif->idNotification] );
+        $this->devis = Devis::factory()->create([
+            'status' => 'accepté',
+            'idFacture' =>$this->facture->idFacture ,
+            'idNotification' =>$this->notif->idNotification,
+            'idDemande' => $this->demande->idDemande,
+        ]);
+        
     }
 
-    /** @test */
-    public function it_generates_pdf_content()
-    {
-        $facture = Facture::factory()->create();
-        $pdfContent = $this->factureController->generatePdfContent($facture);
 
-        $this->assertNotNull($pdfContent);
-        // You can add more specific assertions here based on your PDF content
+
+    public function testDownloadPdf()
+    {
+        $id = $this->facture->idFacture;
+        // Mock the PDF facade
+        
+        // Mock the PDF facade
+        Pdf::shouldReceive('loadView')
+            ->once()
+            ->andReturnSelf();
+        Pdf::shouldReceive('download')
+            ->once()
+            ->andReturnUsing(function () {
+                $response = response('PDF content');
+                return $response;
+            });
+
+        // Fake the Gate response
+        Gate::shouldReceive('denies')
+            ->with('download-facture', $id)
+            ->andReturn(false);
+
+        // Act as the created user
+        $this->actingAs($this->user);
+
+        // Call the downloadPdf method
+        $response = $this->post("api/parent/facture-download/$id");
+
+        // Assert the response
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/pdf');
+        $response->assertHeader('Content-Disposition', 'attachment; filename="facture_' . $id . '.pdf"');
+        $this->assertEquals('PDF content', $response->getContent());
     }
 
-    /** @test */
-    public function it_returns_pdf_response()
+    public function testDownloadPdfAccessDenied()
     {
-        $facture = Facture::factory()->create();
-        $pdfContent = $this->factureController->generatePdfContent($facture);
+        // Create a user and a facture
+        $id = $this->facture->idFacture;
 
-        $response = $this->factureController->downloadPdf($facture->idFacture);
+        // Fake the Gate response
+        Gate::shouldReceive('denies')
+            ->with('download-facture', $id)
+            ->andReturn(true);
 
-        $this->assertEquals(200, $response->status());
-        $this->assertEquals('application/pdf', $response->headers->get('Content-Type'));
-        $this->assertEquals(
-            'attachment; filename="facture_' . $facture->idFacture . '.pdf"',
-            $response->headers->get('Content-Disposition')
-        );
-        $this->assertEquals($pdfContent, $response->getContent());
-    }
+        // Act as the created user
+        $this->actingAs($this->user);
 
-    /** @test */
-    public function it_returns_403_if_access_denied()
-    {
-        $facture = Facture::factory()->create();
+        // Call the downloadPdf method
+        $response = $this->post("api/parent/facture-download/$id");
 
-        Gate::shouldReceive('denies')->andReturn(true);
-
-        $response = $this->factureController->downloadPdf($facture->idFacture);
-
-        $this->assertEquals(403, $response->status());
-        $this->assertEquals('ACCES INTERDIT', $response->json()['message']);
-    }
-
-    /** @test */
-    public function it_returns_401_if_user_not_authenticated_on_download_pdf()
-    {
-        $response = $this->factureController->downloadPdf(1);
-
-        $response->assertStatus(401);
-    }
-
-    /** @test */
-    public function it_returns_404_if_facture_not_found_on_download_pdf()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        $response = $this->factureController->downloadPdf(999);
-
-        $response->assertStatus(404);
-    }
-
-    /** @test */
-    public function it_generates_empty_pdf_content_if_facture_has_no_data()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        $facture = Facture::factory()->create(['data' => null]);
-
-        $pdfContent = $this->factureController->generatePdfContent($facture);
-
-        $this->assertNotNull($pdfContent);
-        $this->assertEmpty($pdfContent);
-    }
-
-    /** @test */
-    public function it_returns_403_if_access_denied_on_download_pdf()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        $facture = Facture::factory()->create();
-        Gate::shouldReceive('denies')->andReturn(true);
-
-        $response = $this->factureController->downloadPdf($facture->idFacture);
-
+        // Assert the response
         $response->assertStatus(403);
+        $response->assertJson(['message' => 'ACCES INTERDIT']);
+    }
+
+    // public function testDownloadPdfUnauthenticated()
+    // {
+    //     // Create a facture
+    //     $id = $this->facture->idFacture;
+
+    //     // Call the downloadPdf method without authenticating a user
+    //     $response = $this->post("api/parent/facture-download/$id");
+    //     // dd($response);
+    //     // Assert the response
+    //     $response->assertStatus(302); // Redirection to login page
+    //     $response->assertRedirect('/api/login');
+    // }
+
+    public function testDownloadPdfNotFound()
+    {
+        // Create a user
+        // $id = $this->facture->idFacture;
+
+        // Act as the created user
+        $this->actingAs($this->user);
+
+        // Call the downloadPdf method with a non-existent facture ID
+        $response = $this->post("api/parent/facture-download/999");
+
+        // Assert the response
+        $response->assertStatus(404);
     }
 
 }

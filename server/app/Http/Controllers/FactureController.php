@@ -35,3 +35,4 @@ class FactureController extends Controller
         return $pdf->download()->getOriginalContent();
     }
 }
+  
