@@ -3,6 +3,7 @@
 namespace Database\Factories;
 use App\Models\Animateur;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class AnimateurFactory extends Factory
     public function definition()
     {
         return [
-            'idUser' => User::factory()->create(["role"=>3])->idUser,
+            'idUser' => User::factory()->create(["role"=>3,"password"=>Hash::make("passanim")])->idUser,
         ];
     }
 }

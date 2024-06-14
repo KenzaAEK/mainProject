@@ -19,6 +19,20 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class enfantControllerTest extends TestCase
 {
     use RefreshDatabase;
+    protected $parent;
+    protected $enfant;
+    protected $user;
+
+    public function setUp() : void {
+        
+        // $this->parent = Tuteur::factory()->create();
+        // dd($this->user);
+        parent::setUp();
+        
+        $this->parent = Tuteur::factory()->create();
+        $this->enfant = Enfant::factory()->create();
+        $this->user = User::find($this->parent->idUser);
+    }
     // use DatabaseTransactions;
     /**
      * A basic feature test example.
@@ -28,17 +42,18 @@ class enfantControllerTest extends TestCase
 
     public function test_index_returns_paginated_list_of_children()
     {
-        $user = User::factory()->create();
-        $tuteur = Tuteur::factory()->for($user)->create();
-        $children = Enfant::factory()->count(3)->create(['idTuteur' => $tuteur->idTuteur]);
+        
+        // $user = User::factory()->create();
+        // $tuteur = Tuteur::factory()->for($user)->create();
+        $children = Enfant::factory()->count(3)->create(['idTuteur' => $this->parent->idTuteur]);
     
-        Sanctum::actingAs($user);
+        Sanctum::actingAs($this->user);
     
         $response = $this->getJson(route('enfants.index'));
-    
+        // dd();
         $response->assertOk()
                  ->assertJsonStructure(['data' => [['id', 'nom', 'prenom', 'dateNaissance', 'niveauEtude']]])
-                 ->assertJsonCount(3, 'data');
+                 ->assertJsonCount(4, 'data'); // 4 parce qu'il ya un enfant creer lors du setup avec le meme parent
     }
 
     
@@ -65,14 +80,14 @@ class enfantControllerTest extends TestCase
 
 public function test_show_returns_details_of_a_single_child()
 {
-    $enfant = Enfant::factory()->create();
+    // $enfant = Enfant::factory()->create();
+    // dd($enfant);
+    Sanctum::actingAs($this->user);
 
-    Sanctum::actingAs($enfant->tuteur->user);
-
-    $response = $this->get("api/parent/enfants/{$enfant->idEnfant}");
+    $response = $this->get("api/parent/enfants/{$this->enfant->idEnfant}");
     $response->assertOk()
-             ->assertJsonPath('data.id', $enfant->idEnfant)
-             ->assertJsonPath('data.nom', $enfant->nom);
+             ->assertJsonPath('data.id', $this->enfant->idEnfant)
+             ->assertJsonPath('data.nom', $this->enfant->nom);
 }
 
 

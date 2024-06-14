@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Enfant extends Model
 {
@@ -34,6 +35,19 @@ class Enfant extends Model
     public function offre_activite()
     {
         return $this->belongsToMany(offreActivite::class, 'planning_enfant', 'idActivite', 'idEnfant','idTuteur','idOffre');
+    }
+
+    // this association inscriptionEnfant_offre_Activite
+    public function offreactivites() :BelongsToMany
+    {
+        return $this->belongsToMany(offreActivite::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise','Prixbrute');
+    }
+    
+    public function DemandeInscription() :BelongsToMany
+    {
+        return $this->belongsToMany(DemandeInscription::class,'inscriptionEnfant_offre_Activite')
+                    ->withPivot('idDemande','idTuteur','idEnfant','idOffre','idActivite','PixtotalRemise','Prixbrute');
     }
     
     //for autoincrement of idEnfant
