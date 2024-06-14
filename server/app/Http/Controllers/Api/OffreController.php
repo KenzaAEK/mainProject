@@ -58,18 +58,19 @@ class OffreController extends Controller
       public function store(Request $request)
      {
          $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
-     
+        
          if ($validator->fails()) {
-             return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors()], 422);
          }
-     
+        //  dd('1');
          DB::beginTransaction();
      
          try {
+            
              $offreData = $validator->validated();
              $idAdmin = Administrateur::where('idUser', Auth::id())->first()->idAdmin;
              $offreData['idAdmin'] = $idAdmin;
-     
+            //  dd($idAdmin);
              // Créer l'offre
              $offre = Offre::create([
                  'titre' => $offreData['titre'],
@@ -81,13 +82,14 @@ class OffreController extends Controller
              ]);
      
              foreach ($offreData['activites'] as $activiteData) {
+                
                  if (!isset($activiteData['titre'])) {
                      DB::rollback();
                      return response()->json(['error' => 'Le titre de l\'activité est manquant'], 422);
                  }
      
                  $activite = Activite::where('titre', $activiteData['titre'])->first();
-     
+                //  dd($offreData);
                  if (!$activite) {
                      DB::rollback();
                      return response()->json(['error' => 'Activité introuvable'], 404);
@@ -95,7 +97,7 @@ class OffreController extends Controller
      
                  $totalDuree = 0;
                  $nbrSeance = 0;
-     
+                //  dd($idAdmin);
                  // Calculer la durée totale et le nombre de séances
                  foreach ($activiteData['jours'] as $jourData) {
                      $heureDebut = new \DateTime($jourData['heureDebut']);
@@ -105,7 +107,7 @@ class OffreController extends Controller
                      $totalDuree += $dureeEnHeures;
                      $nbrSeance++;
                  }
-     
+                //  dd($idAdmin);
                  // Créer l'activité pour l'offre
                  $offreActivite = OffreActivite::create([
                      'idOffre' => $offre->idOffre,
@@ -118,7 +120,7 @@ class OffreController extends Controller
                      'nbrSeance' => $nbrSeance,
                      'Duree_en_heure' => $totalDuree,
                  ]);
-     
+                //  dd($idAdmin);
                  // Gérer les jours et les horaires
                  foreach ($activiteData['jours'] as $jourData) {
                      $horaire = Horaire::create([
@@ -133,6 +135,7 @@ class OffreController extends Controller
                          'idOffre' => $offre->idOffre,
                          'idActivite' => $activite->idActivite,
                      ]);
+                    //  dd($idAdmin);
                  }
              }
      
@@ -153,13 +156,13 @@ class OffreController extends Controller
     public function show($id)
     {
         try {
-            // Charger l'offre avec ses activités associées grâce à la méthode with()
+        
             $offre = Offre::with('offreActivite')->findOrFail($id);
-    
+            // dd($offre);
             return response()->json([
                 'status' => 200,
                 'offre' => $offre,
-                'activites' => $offre->offreActivite  // Inclure les activités dans la réponse
+                'activites' => $offre->offreActivite  
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
@@ -187,16 +190,20 @@ class OffreController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
+        // dd($id);
         DB::beginTransaction();
         try {
+            // dd($id);
             $offre = Offre::findOrFail($id);
             $offreData = $validator->validated();
-    
+
             // Préparation des activités avec l'ID actuel de l'activité pour transmission
             $activitesArray = $request->input('activites');
             $activitesPrepared = [];
+            // dd($id);
+            // dd($activitesArray);
             foreach ($activitesArray as $activite) {
+                
                 $currentActivite = Activite::where('titre', $activite['titre'])->first();
                 if (!$currentActivite) {
                     DB::rollback();
@@ -205,10 +212,10 @@ class OffreController extends Controller
                 $activite['idActivite'] = $currentActivite->idActivite; // Assurez-vous d'obtenir l'ID actuel
                 $activitesPrepared[] = $activite;
             }
-    
+            // dd($id);
             // Conversion en JSON pour la fonction PL/pgSQL
             $activitesJson = json_encode($activitesPrepared);
-    
+            // dd($activitesJson);
             // Appel de la fonction PL/pgSQL
             $result = DB::select("SELECT public.updateoffreactivites(?, ?, ?, ?, ?) AS result", [
                 $id,
@@ -217,7 +224,7 @@ class OffreController extends Controller
                 $offreData['description'],
                 $activitesJson
             ]);
-    
+            dd($id);
             DB::commit();
             return response()->json(['message' => 'Offre mise à jour avec succès', 'result' => $result]);
         } catch (\Exception $e) {

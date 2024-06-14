@@ -19,16 +19,13 @@
 <script>
 
 import devis from './Devis.vue'
-export default {
-    name: 'App',
-    components: { 
-        devis
-    }
-  }
-
 import { mapGetters } from 'vuex';
+
 export default {
     name: 'NotifBar',
+    components: { 
+        devis
+    },
     computed: {
       ...mapGetters(['user'])
     }
