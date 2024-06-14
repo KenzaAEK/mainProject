@@ -30,10 +30,22 @@ class OffreController extends Controller
            
             $offres = Offre::all();
         foreach($offres as $offre)
+        $idOffre= $offre->idOffre;
+        $activite = DB::table('activites')
+        ->whereIn('idActivite',function($query) use ($offre){
+            $query->select('idActivite')
+            ->from('offreactivites')
+            ->where('idOffre',$offre->idOffre);
+        })
+        ->get();
+        $result[] = [
+            'offre' => $offre,
+            'activites' => $activite,
+            'offreactivites' => $offre->offreActivite  
+        ];
             return response()->json([
                 'status' => 200,
-                'offre' => $offre,
-                'activites' => $offre->offreActivite  
+                'data' =>$result   
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
