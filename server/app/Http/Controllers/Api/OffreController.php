@@ -25,10 +25,51 @@ class OffreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $offreactivites = offreActivite::all();
-        return response()->json($activites);
+{
+    try {
+        // Fetch all offers
+        $offres = Offre::all();
+        $result = [];
+
+        // Iterate through each offer to collect related data
+        foreach ($offres as $offre) {
+            // Fetch related activities using Eloquent relationships (assuming they exist)
+            $activities = DB::table('activites')
+                ->whereIn('idActivite', function($query) use ($offre) {
+                    $query->select('idActivite')
+                        ->from('offreactivites')
+                        ->where('idOffre', $offre->idOffre);
+                })
+                ->get();
+
+            // Append to result array
+            $result[] = [
+                'offre' => $offre,
+                'activities' => $activities,
+                'offreactivites' => $offre->offreActivite // Assuming this is a relationship or property
+            ];
+        }
+
+        return response()->json([
+            'status' => 200,
+            'data' => $result
+        ], 200);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return response()->json([
+            'status' => 404,
+            'message' => 'Offre non trouvée'
+        ], 404);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Erreur serveur : ' . $e->getMessage()
+        ], 500);
     }
+}
+
+
+
+    
 
     /**
      * Store a newly created resource in storage.
@@ -207,7 +248,7 @@ class OffreController extends Controller
                 $offreData['description'],
                 $activitesJson
             ]);
-            dd($id);
+            //dd($id);
             DB::commit();
             return response()->json(['message' => 'Offre mise à jour avec succès', 'result' => $result]);
         } catch (\Exception $e) {

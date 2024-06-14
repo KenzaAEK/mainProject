@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
         Route::post('/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
+        
         // Route::post('/offres',[OffreController::class,'store']);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
         // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
@@ -75,6 +76,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         // Route::get('/animateurs', [GroupeController::class, 'index']);
         // traitement de l'offres :
         Route::post('/offres',[OffreController::class,'store']);
+        Route::get('/offres',[OffreController::class,'index']);
         Route::get('/offres/{offres}',[OffreController::class,'show']);
         Route::put('/offres/{offres}',[OffreController::class,'update']);
         Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
