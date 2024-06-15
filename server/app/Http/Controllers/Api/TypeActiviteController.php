@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\typeActivite;
+use App\Models\TypeActivite;
 use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
@@ -20,7 +20,7 @@ class TypeActiviteController extends Controller
      */
     public function index()
     {
-        return typeActivite::all();
+        return TypeActivite::all();
     }
 
     /**

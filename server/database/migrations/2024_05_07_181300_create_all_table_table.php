@@ -304,7 +304,7 @@ return new class extends Migration
         Schema::dropIfExists('horaires');
         Schema::dropIfExists('administrateurs');
         Schema::dropIfExists('activites');
-        Schema::dropIfExists('type_activites');
+        Schema::dropIfExists('typeactivites');
 
         
     }
