@@ -108,7 +108,6 @@ return new class extends Migration
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
         }); 
-
         Schema::create('enfants', function (Blueprint $table) {
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
