@@ -69,7 +69,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
     // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
-
+    Route::get('/offres',[OffreController::class,'index']);
 
 /*
 ╔==========================================================================╗
@@ -89,11 +89,21 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
        //  Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
         // Route::get('/animateurs', [GroupeController::class, 'index']);
         // traitement de l'offres :
-        Route::post('/offres', [OffreController::class, 'store']);
-        Route::get('/offres/{offres}', [OffreController::class, 'show']);
-        Route::put('/offres/{offres}', [OffreController::class, 'update']);
-        Route::delete('/offres/{offres}/{activites}', [OffreController::class, 'deleteOffreActiviteById']); // suppr une activite lier a une offre 
-        Route::delete('/offres/{offres}', [OffreController::class, 'deleteOffreActivitesByIdOffre']); // supprimer l'offre et tous  ces activites 
+        Route::post('/offres',[OffreController::class,'store']);
+        Route::get('/offres/{offres}',[OffreController::class,'show']);
+        Route::put('/offres/{offres}',[OffreController::class,'update']);
+        Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
+        Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
+        Route::get('/offres',[OffreController::class,'index']);
+        // Route::get('/animateurs', [GroupeController::class, 'index']);
+    // for admins only and authenticated  
+    //add middlewear check role 
+        // Route::apiResource('activites', ActiviteController::class);
+    //add middlewear check role 
+    // for parents only and authenticated
+    //add middlewear check role 
+    // for animators only and authenticated 
+ 
     });
 /*
 ╔==========================================================================╗

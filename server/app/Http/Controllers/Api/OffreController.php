@@ -26,10 +26,39 @@ class OffreController extends Controller
      */
     public function index()
     {
-        $offreactivites = offreActivite::all();
-        return response()->json($activites);
+        try {
+           
+            $offres = Offre::all();
+        foreach($offres as $offre)
+        $idOffre= $offre->idOffre;
+        $activite = DB::table('activites')
+        ->whereIn('idActivite',function($query) use ($offre){
+            $query->select('idActivite')
+            ->from('offreactivites')
+            ->where('idOffre',$offre->idOffre);
+        })
+        ->get();
+        $result[] = [
+            'offre' => $offre,
+            'activites' => $activite,
+            'offreactivites' => $offre->offreActivite  
+        ];
+            return response()->json([
+                'status' => 200,
+                'data' =>$result   
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Offre non trouvée'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Erreur serveur : ' . $e->getMessage()
+            ], 500);
+        }
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -219,6 +248,7 @@ class OffreController extends Controller
     
 
 
+   
     public function deleteOffreActiviteById($idOffre, $idActivite)
     {
         try {
