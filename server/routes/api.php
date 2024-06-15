@@ -30,7 +30,7 @@ Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-
+Route::get('/users', [AuthController::class, 'index']);
 /*
 ╔==========================================================================╗
 ║                           All Users authenticated                        ║
@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
     Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
-    Route::get('/users', [AuthController::class, 'index']);
+    
 
 Route::apiResource('enfants', EnfantController::class);
 Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
