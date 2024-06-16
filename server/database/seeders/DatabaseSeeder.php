@@ -24,40 +24,58 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // Create users
-        User::factory()->count(10)->create();
+        // User::factory()->count(10)->create();
+
+        // // Create administrateurs
+        // $this->call([
+        //     AdminsTableSeeder::class,]);
+        // // Create animateurs
+        // $this->call([
+        //     AnimateurSeeder::class,]);
+        // Creation des groupes
+        $this->call([
+            GroupeSeeder::class,]);
+
+        $this->call([
+            DevisSeeder::class,]);
+        // Create animateurs
+        $this->call([
+            HoraireSeeder::class,]);
+        // Creation des groupes d'animateurs
+        $this->call([
+           CompetenceSeeder::class,]);
 
         // Create administrateurs
         $this->call([
-            AdminsTableSeeder::class,]);
-
+            EnfantSeeder::class,]);
         // Create animateurs
-        Animateur::factory()->count(5)->create();
-
-        // Create tuteurs
-        Tuteur::factory()->count(10)->create();
-
-        // Create enfants
-        Enfant::factory()->count(20)->create();
-
-        // Create packs
-        Pack::factory()->count(5)->create();
-
-        // Create demande inscriptions
-        DemandeInscription::factory()->count(15)->create();
-
-        // Create devis
-        Devis::factory()->count(10)->create();
-
-        // Create factures
-        Facture::factory()->count(10)->create();
-
-        // Create notifications
-        Notification::factory()->count(20)->create();
-
-        // Create activites
-        // Activite::factory()->count(8)->create();
         $this->call([
-            ActiviteSeeder::class,]);
+            AllPivotsSeeder::class,]);
+        // Create tuteurs
+    //     Tuteur::factory()->count(10)->create();
+
+    //     // Create enfants
+    //     Enfant::factory()->count(20)->create();
+
+    //     // Create packs
+    //     Pack::factory()->count(5)->create();
+
+    //     // Create demande inscriptions
+    //     DemandeInscription::factory()->count(15)->create();
+
+    //     // Create devis
+    //     Devis::factory()->count(10)->create();
+
+    //     // Create factures
+    //     Facture::factory()->count(10)->create();
+
+    //     // Create notifications
+    //     Notification::factory()->count(20)->create();
+
+    //     // Create activites
+    //     // Activite::factory()->count(8)->create();
+    //     $this->call([
+    //         ActiviteSeeder::class,]);
     }
 }
 

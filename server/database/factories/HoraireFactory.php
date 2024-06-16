@@ -17,8 +17,8 @@ class HoraireFactory extends Factory
     public function definition()
     {
         return [
-            'jour' => $this->faker->dayOfWeek(), // Utilisation de Faker pour générer un jour de la semaine aléatoire
-            'heureDebut' => $this->faker->time('H:i'), // Utilisation de Faker pour générer une heure de début aléatoire
+            'jour' => $this->faker->dayOfWeek(),
+            'heureDebut' => $this->faker->time('H:i'),
             'heureFin' => $this->faker->time('H:i'),
         ];
     }

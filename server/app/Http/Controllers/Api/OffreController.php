@@ -26,9 +26,38 @@ class OffreController extends Controller
      */
     public function index()
     {
-        $offreactivites = offreActivite::all();
-        return response()->json($activites);
-    }
+        try {
+           
+            $offres = Offre::all();
+        foreach($offres as $offre)
+        $idOffre= $offre->idOffre;
+        $activite = DB::table('activites')
+        ->whereIn('idActivite',function($query) use ($offre){
+            $query->select('idActivite')
+            ->from('offreactivites')
+            ->where('idOffre',$offre->idOffre);
+        })
+        ->get();
+        $result[] = [
+            'offre' => $offre,
+            'activites' => $activite,
+            'offreactivites' => $offre->offreActivite  
+        ];
+            return response()->json([
+                'status' => 200,
+                'data' =>$result   
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Offre non trouvée'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Erreur serveur : ' . $e->getMessage()
+            ], 500);
+        }
 
     /**
      * Store a newly created resource in storage.
@@ -43,7 +72,7 @@ class OffreController extends Controller
          $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
         
          if ($validator->fails()) {
-             return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors()], 422);
          }
         //  dd('1');
          DB::beginTransaction();
@@ -139,13 +168,13 @@ class OffreController extends Controller
     public function show($id)
     {
         try {
-            // Charger l'offre avec ses activités associées grâce à la méthode with()
+        
             $offre = Offre::with('offreActivite')->findOrFail($id);
             // dd($offre);
             return response()->json([
                 'status' => 200,
                 'offre' => $offre,
-                'activites' => $offre->offreActivite  // Inclure les activités dans la réponse
+                'activites' => $offre->offreActivite  
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([

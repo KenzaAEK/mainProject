@@ -15,6 +15,6 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         // Crée 10 utilisateurs avec les données fictives
-        User::factory()->count(10)->create();
+        // User::factory()->count(15)->create();
     }
 }

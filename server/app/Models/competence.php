@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Competence extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'id_competence';
+    protected $primaryKey = 'idCompetence';
     protected $table = 'competences';
     public $timestamps = false;
     protected $fillable = ['nom_competence'];

@@ -1,61 +1,71 @@
 <template>
     <section class="package" id="offres" v-if="user">
-        <h1><span>Nos</span> Offres</h1>
-        <div class="offre">Offre Inventeurs du Futur <span>     valable jusqu'au le 01/04/2024</span></div>
-        <p>Plongez vos enfants dans une aventure technologique complète avec notre atelier "Inventeurs du Futur" ! Nous combinons la programmation, la robotique et les échecs pour développer leurs compétences techniques tout en stimulant leur créativité et leur esprit stratégique.</p>
-        <div class="box-container">
-            <div class="box">
-                <div class="image">
+      <h1><span>Nos</span> Offres</h1>
+      <div class="offre">Offre Inventeurs du Futur <span>valable jusqu'au 01/04/2024</span></div>
+      <p>Plongez vos enfants dans une aventure technologique complète avec notre atelier "Inventeurs du Futur" ! Nous combinons la programmation, la robotique et les échecs pour développer leurs compétences techniques tout en stimulant leur créativité et leur esprit stratégique.</p>
+      
+      <div class="box-container">
+        <div class="box" v-for="activite in activites" :key="activite.idActivite">
+            <div class="image">
                     <img src="@/assets/images/offre1.png" alt="">
                 </div>
-                <h3>Atelier de Programmation</h3>
-                <p> Les enfants peuvent apprendre les bases de la programmation à travers des projets créatifs, comme la création de jeux, d'animations ou d'histoires interactives.</p>
-                 <div class="age">Plage d’age : <span>8 ans-12 ans </span></div>
-                 <a class="btnn ">programme</a>
-            </div>
-    
-            <div class="box">
-                <div class="image">
-                    <img src="@/assets/images/offre2.png" alt="">
-                </div>
-                <h3>Atelier de Fabrication</h3>
-                <p>  Les enfants deviennent de véritables créateurs en utilisant des outils de pointe tels que les imprimantes 3D, les découpeuses laser et les kits électroniques pour donner vie à leurs idées !</p>
-                 <div class="age">Plage d’age : <span>8 ans-12 ans </span></div>
-                 <a class="btnn ">programme</a>
-            </div>
-    
-            <div class="box">
-                <div class="image">
-                    <img src="@/assets/images/offre3.png" alt="">
-                </div>
-                <h3>Atelier de robotiques</h3>
-                <p>les enfants explorent la technologie en construisant et en programmant des robots, stimulant ainsi leur créativité et leur pensée logique</p>
-                 <div class="age">Plage d’age : <span>8 ans-12 ans </span></div>
-                 <a class="btnn ">programme</a>
-            </div>
+          <h3>{{ activite.titre }}</h3>
+          <p>{{ activite.description }}</p>
+          <p class="sm:text-sm ">Objectif de cette atelier : {{ activite.objectif }}</p>
+          <div class="age">Plage d’âge : <span>8 ans - 12 ans</span></div>
+          <a href="#" class="btnn">Programme </a>
         </div>
-        <a class="btn1 btn" onclick="my_modal_2.showModal()">Inscrivez votre enfant</a>
-                <dialog id="my_modal_2" class="modal">
-                    <AjouterOffre/>
-                  </dialog>
-        
+      </div>
+  
+      <a href="#" class="btn1 btn" @click.prevent="showModal">Inscrivez votre enfant</a>
+      <dialog id="my_modal_2" class="modal">
+        <AjouterOffre />
+      </dialog>
     </section>
-    
-    
-</template>
-<script>
-import AjouterOffre from './AjouterOffre.vue';
-import { mapGetters } from 'vuex';
-export default {
+  </template>
+  
+  <script>
+  import AjouterOffre from './AjouterOffre.vue';
+  import { mapGetters } from 'vuex';
+  import axios from 'axios';
+  
+  export default {
     name: 'Offre',
-    components: { 
-        AjouterOffre
+    components: {
+      AjouterOffre
+    },
+    data() {
+      return {
+        activites: []
+      };
     },
     computed: {
       ...mapGetters(['user'])
+    },
+    mounted() {
+      this.getActivites();
+    },
+    methods: {
+      async getActivites() {
+        try {
+          const response = await axios.get('http://127.0.0.1:8000/api/activites');
+          this.activites = response.data; // Assurez-vous que les données sont correctement affectées ici
+        } catch (error) {
+          console.error('Erreur lors de la récupération des activités :', error);
+        }
+      },
+      showModal() {
+        const modal = document.getElementById('my_modal_2');
+        modal.showModal();
+      }
     }
-  }
-</script>
+  };
+  </script>
+  
+  <style scoped>
+  /* Ajoutez vos styles CSS personnalisés ici */
+  </style>
+  
 <style scoped>
 .btn1{
     margin-top: 1rem;

@@ -19,8 +19,9 @@ class ActiviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getAtelier() // j'ai utulisé cette methode pour recuperer le nom des ateliers disponible 
+    public function index() // j'ai utulisé cette methode pour recuperer le nom des ateliers disponible 
     {
+        // dd('1');
         $activites = Activite::all();
         return response()->json($activites);
     }
@@ -33,13 +34,26 @@ class ActiviteController extends Controller
      */
     public function store(StoreActiviteRequest $request)
     {
+        // dd('1');
         $typeId = typeActivite::getIdByType($request->validated()['type']);
     
         if (!$typeId) {
-            return response()->json(['error' => 'TypeActivite not found'], 404);
+            return response()->json(['error' => 'TypeActivite non trouvée'], 404);
         }
     
         $activiteData = $request->validated();
+        if ($request->hasFile('programmePdf')) {
+            $file = $request->file('programmePdf');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('programmePdfs', $filename, 'public');
+            $activiteData['programmePdf'] = $path;
+        }
+        if ($request->hasFile('imagePub')) {
+            $image = $request->file('imagePub');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('publiciteImages', $imageName, 'public');
+            $activiteData['imagePub'] = $imagePath;
+        }
         $activiteData['idTypeActivite'] = $typeId;
     
         $activite = Activite::create($activiteData);
@@ -57,15 +71,19 @@ class ActiviteController extends Controller
      */
     public function show($id)
     {
-        
+        // dd('2');
         $activite = Activite::find($id);
-        return $activite
+        // dd($activite);
+        return isset($activite)
             ? response()->json(['status' => 200, 'activite' => $activite], 200)
             : response()->json(['status' => 404, 'message' => "Aucune activité trouvée"], 404);
     
 
         
     }
+
+
+
 
     /**
      * Update the specified resource in storage.
@@ -78,19 +96,40 @@ class ActiviteController extends Controller
     {
         try {
             $activite = Activite::findOrFail($id);
-            $type = $request->validated()['type'];
-            $idTypeActivite = TypeActivite::getIdByType($type);
-
-            if (!$idTypeActivite) {
-                return response()->json(['status' => 404, 'message' => 'TypeActivite non trouvé'], 404);
+    
+            $activiteData = $request->validated();
+            if (isset($activiteData['type'])) {
+                $idTypeActivite = TypeActivite::getIdByType($activiteData['type']);
+    
+                if (!$idTypeActivite) {
+                    return response()->json(['status' => 404, 'message' => 'TypeActivite non trouvé'], 404);
+                }
+    
+                $activiteData['idTypeActivite'] = $idTypeActivite;
             }
-            $activite->update(array_merge($request->validated(), ['idTypeActivite' => $idTypeActivite]));
-
+    
+            if ($request->hasFile('programmePdf')) {
+                $file = $request->file('programmePdf');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('programmePdfs', $filename, 'public');
+                $activiteData['programmePdf'] = $path;
+            }
+    
+            if ($request->hasFile('imagePub')) {
+                $image = $request->file('imagePub');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = $image->storeAs('publiciteImages', $imageName, 'public');
+                $activiteData['imagePub'] = $imagePath;
+            }
+    
+            $activite->update($activiteData);
+    
             return response()->json(['status' => 200, 'message' => 'Activité mise à jour avec succès', 'activite' => $activite], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['status' => 404, 'message' => 'Activité non trouvée'], 404);
         }
     }
+    
 
 
     /**
@@ -110,3 +149,4 @@ class ActiviteController extends Controller
         return response()->json(['status' => 200, 'message' => "Activité supprimée avec succès"], 200);
     }
 }
+

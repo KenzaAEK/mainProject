@@ -263,6 +263,9 @@ export default {
   computed: {
     ...mapGetters(['user']),
   },
+  mounted() {
+      this.getEnfants();
+    },
   methods: {
     async getEnfants() {
       try {
