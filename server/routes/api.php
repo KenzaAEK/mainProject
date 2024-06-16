@@ -90,6 +90,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         // Route::get('/animateurs', [GroupeController::class, 'index']);
         // traitement de l'offres :
         Route::post('/offres',[OffreController::class,'store']);
+        Route::get('/offres',[OffreController::class,'index']);
         Route::get('/offres/{offres}',[OffreController::class,'show']);
         Route::put('/offres/{offres}',[OffreController::class,'update']);
         Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
