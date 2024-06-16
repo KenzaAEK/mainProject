@@ -278,11 +278,12 @@ class DemandeInscriptionController extends Controller
             $prixT = [];
             $prixHT = 0;
             $count = 0;
+            $idActivites = [];
            
             foreach ($ateliers as $AteliersData) {
-                $activite = Activite::where('idActivite', $AteliersData['idActivite'])->firstOrFail();
+                $activite = Activite::where('titre', $AteliersData['titreActivite'])->firstOrFail();
                 $idActivite = $activite->idActivite;
-
+                $idActivites[] = $idActivite;
                 $prix = $offreActivite->where('idActivite', $idActivite)->firstOrFail();
                 $tarif = $prix->tarif;
 
@@ -290,7 +291,7 @@ class DemandeInscriptionController extends Controller
                 $prixHT += $tarif;
                 $count++; // Calculer le nombre d'ateliers
             }
-            
+           
 
             $prixTot = 0;
             $c = 0;
@@ -302,6 +303,7 @@ class DemandeInscriptionController extends Controller
                 }
                 $c++;
             }
+            
             $dmInscription->save();
             $idoffre = $offreActivite->idOffre;
             $idActivite = $offreActivite->idActivite;
@@ -317,26 +319,29 @@ class DemandeInscriptionController extends Controller
                     break;
                 case 'semestre':
                     $prixTot = $prixTot * 6;
-                    $prixHT= $prixHT* 3;
+                    $prixHT= $prixHT* 6;
                     break;
                 case 'annee':
                     $prixTot = $prixTot * 12;
-                    $prixHT= $prixHT* 3;
+                    $prixHT= $prixHT* 12;
                     break;
             }
+          
+     
+            foreach($idActivites as $idActivite){
 
-
-            $dmInscription->enfantss()->attach($enfant['idEnfant'], [
-                'idDemande' => $iddemande,
-                'idTuteur' => $idTuteur,
-                'idOffre' => $idoffre,
-                'idActivite' => $idActivite,
-                'PixtotalRemise' => $prixTot,
-                'Prixbrute' => $prixHT 
-            ]);
+                    $dmInscription->enfantss()->attach($enfant['idEnfant'], [
+                        'idDemande' => $iddemande,
+                        'idTuteur' => $idTuteur,
+                        'idOffre' => $idoffre,
+                        'idActivite' => $idActivite,
+                        'PixtotalRemise' => $prixTot,
+                        'Prixbrute' => $prixHT 
+                    ]);
+                }
         }
     }
-
+     // il faut modifier maintenant l entrer utuliser le nom de l enfant 
     private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur,$optiondepay)
     {
         $remise = $pack->remise;
