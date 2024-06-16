@@ -199,7 +199,7 @@ export default {
         if (response.status === 200) {
           this.$emit('offreAdded');
           this.closeModal('modelConfirm');
-          alert('Offre added ');
+          alert('Offre ajoutée avec succès ');
         } else {
           console.error('Erreur lors de l\'ajout de l\'offre:', response.data);
           alert('Erreur lors de l\'ajout de l\'offre. Veuillez réessayer.');
