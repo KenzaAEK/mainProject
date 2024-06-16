@@ -29,7 +29,9 @@ class OffreController extends Controller
         try {
            
             $offres = Offre::all();
+           
         foreach($offres as $offre)
+        {
         $idOffre= $offre->idOffre;
         $activite = DB::table('activites')
         ->whereIn('idActivite',function($query) use ($offre){
@@ -43,6 +45,7 @@ class OffreController extends Controller
             'activites' => $activite,
             'offreactivites' => $offre->offreActivite  
         ];
+    }
             return response()->json([
                 'status' => 200,
                 'data' =>$result   
