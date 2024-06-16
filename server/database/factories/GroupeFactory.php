@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\OffreActivite;
+use App\Models\offreActivite;
 use App\Models\Animateur;
 // use App\Models\typeActivite;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,7 +19,7 @@ class GroupeFactory extends Factory
      */
     public function definition()
     {
-        $offreactivite = OffreActivite::factory()->create();
+        $offreactivite = offreActivite::factory()->create();
         return [
             'Nomgrp' => $this->faker->word(), // Utilisation de Faker pour générer un mot aléatoire
             'idOffre' =>$offreactivite->idOffre, // Crée une offre activité si elle n'existe pas

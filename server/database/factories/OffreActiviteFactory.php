@@ -7,7 +7,7 @@ use App\Models\Offre;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Offreactivite>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\offreactivite>
  */
 class OffreActiviteFactory extends Factory
 {
