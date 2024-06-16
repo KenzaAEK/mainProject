@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/enfants', function () {
-    return  "Hello World";
-});
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+// Route::get('/enfants', function () {
+//     return  "Hello World";
+// });
+// Route::get('/', function () {
+//     return view('home');
+// })->name('home');

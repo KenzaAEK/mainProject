@@ -13,6 +13,6 @@ class GroupeSeeder extends Seeder
      */
     public function run()
     {
-        Groupe::factory()->count(10)->create(); // Crée 10 groupes, ajustez le nombre selon vos besoins
+        Groupe::factory()->count(50)->create(); // Crée 10 groupes, ajustez le nombre selon vos besoins
     }
 }

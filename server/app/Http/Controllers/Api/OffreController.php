@@ -84,7 +84,7 @@ class OffreController extends Controller
          $validator = Validator::make($request->all(), (new StoreOffresRequest)->rules());
         
          if ($validator->fails()) {
-             return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors()], 422);
          }
         //  dd('1');
          DB::beginTransaction();
@@ -180,13 +180,13 @@ class OffreController extends Controller
     public function show($id)
     {
         try {
-            // Charger l'offre avec ses activités associées grâce à la méthode with()
+        
             $offre = Offre::with('offreActivite')->findOrFail($id);
             // dd($offre);
             return response()->json([
                 'status' => 200,
                 'offre' => $offre,
-                'activites' => $offre->offreActivite  // Inclure les activités dans la réponse
+                'activites' => $offre->offreActivite  
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
@@ -260,6 +260,7 @@ class OffreController extends Controller
     
 
 
+   
     public function deleteOffreActiviteById($idOffre, $idActivite)
     {
         try {
