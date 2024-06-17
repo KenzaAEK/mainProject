@@ -14,6 +14,7 @@ use App\Models\Activite;
 use App\Models\offreActivite;
 use App\Models\Offre;
 use App\Models\Pack;
+use App\Models\Enfant;
 use Illuminate\Support\Facades\DB;
 
 class DemandeInscriptionController extends Controller
@@ -246,12 +247,10 @@ class DemandeInscriptionController extends Controller
             $pack = Pack::where('type', $request->type)->firstOrFail();
             $dmInscription->idPack = $pack->idPack;
             $offreActivite = OffreActivite::where('idOffre', $request->idOffre)->firstOrFail();
-            
-            $ateliers = $request->Ateliers;
             $prixTot = 0;
 
             if ($pack->type == 'PackAtelier') {
-                $this->handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $ateliers, $idTuteur,$dmInscription->optionsPaiement);
+                $this->handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur,$dmInscription->optionsPaiement);
 
             } elseif ($pack->type == 'PackEnfant' && $nbrEnfants > 2) {
                 $this->handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur,$dmInscription->optionsPaiement);
@@ -265,20 +264,24 @@ class DemandeInscriptionController extends Controller
             DB::rollback();
             return response()->json(['error' => 'Échec de la création de la demande. ' . $e->getMessage()], 422);
         }
+    
     }
 
-    private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $ateliers, $idTuteur,$optiondepay)
+    private function handlePackAtelier($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur,$optiondepay)
     {
         $i = 0;
         $limite = $pack->limite;
         $remise = $pack->remise;
         $prixTot = 0;
+       
+        foreach ($Secenfants as $enfantData) {
+            $enfant = Enfant::where('nom',$enfantData['nomEnfant'])->where('prenom', $enfantData['prenomEnfant'])->firstOrFail();
         
-        foreach ($Secenfants as $enfant) {
             $prixT = [];
             $prixHT = 0;
             $count = 0;
             $idActivites = [];
+            $ateliers = $enfantData['Ateliers']??[];
            
             foreach ($ateliers as $AteliersData) {
                 $activite = Activite::where('titre', $AteliersData['titreActivite'])->firstOrFail();
@@ -291,8 +294,8 @@ class DemandeInscriptionController extends Controller
                 $prixHT += $tarif;
                 $count++; // Calculer le nombre d'ateliers
             }
-           
-
+          
+          
             $prixTot = 0;
             $c = 0;
             foreach ($prixT as $prixTA) {
@@ -340,21 +343,26 @@ class DemandeInscriptionController extends Controller
                     ]);
                 }
         }
+       
     }
      // il faut modifier maintenant l entrer utuliser le nom de l enfant 
     private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur,$optiondepay)
     {
+        $idoffre = $offreActivite->idOffre;
+        
         $remise = $pack->remise;
         $limite = $pack->limite;
         $enfantsSorted = collect($Secenfants)->sortBy(function ($enfant) use ($offreActivite) {
-            return $offreActivite->where('idOffre', $enfant['idOffre'])->count();
+            $idoffre = $offreActivite->idOffre;
+            return $offreActivite->where('idOffre', $idoffre)->count();
         });
+        
 
-        $childWithMinActivities = $enfantsSorted->first();
-        $enfantsSorted = $enfantsSorted->slice(1);
+        $childWithMinActivities = $enfantsSorted->last();
+        $enfantsSorted = $enfantsSorted->slice(0,-1);//suppr le dernier elm
         $prixTot = 0;
         foreach ($enfantsSorted as $key => $enfant) {
-            $tarifs = $offreActivite->where('idOffre', $enfant['idOffre'])->pluck('tarif');
+            $tarifs = $offreActivite->where('idOffre', $idoffre)->pluck('tarif');
 
             $i = 0;
             foreach ($tarifs as $tarif) {
@@ -366,6 +374,7 @@ class DemandeInscriptionController extends Controller
                 $i++;
             }
         }
+       
 
         $dmInscription->save();
         switch ($optiondepay) {
@@ -382,23 +391,27 @@ class DemandeInscriptionController extends Controller
                 $prixTot = $prixTot * 12;
                 break;
         }
-
+        $iddemande = $dmInscription->idDemande;
+        dd($enfantsSorted['Ateliers']);
         foreach ($enfantsSorted as $key => $enfant) {
-            $idoffre = $enfant['idOffre'];
-            $idActivite = $offreActivite->where('idOffre', $idoffre)->first()->idActivite;
-            $iddemande = $dmInscription->idDemande;
 
-            $dmInscription->enfantss()->attach($enfant['idEnfant'], [
-                'idDemande' => $iddemande,
-                'idTuteur' => $idTuteur,
-                'idOffre' => $idoffre,
-                'idActivite' => $idActivite,
-                'PixtotalRemise' => $prixTot,
-                'Prixbrute' => $prixTot
-            ]);
+            $enfant = Enfant::where('nom',$enfant['nomEnfant'])->where('prenom', $enfant['prenomEnfant'])->firstOrFail();
+       
+            foreach ($enfant['Ateliers'] as $atelierData) {
+                $activite = Activite::where('titre', $atelierData['titreActivite'])->firstOrFail();
+                $dmInscription->enfantss()->attach($enfant->idEnfant, [
+                    'idDemande' => $iddemande,
+                    'idTuteur' => $idTuteur,
+                    'idOffre' => $idoffre,
+                    'idActivite' => $activite->idActivite, // Utilisation de l'objet $activite pour obtenir l'id de l'activité
+                    'PixtotalRemise' => $prixTot,
+                    'Prixbrute' => $prixTot
+                ]);
+            }
+        
         }
 
-        $childOffre = $childWithMinActivities['idOffre'];
+        $childOffre = $idoffre;
         $childActivite = $offreActivite->where('idOffre', $childOffre)->first()->idActivite;
         $dmInscription->enfantss()->attach($childWithMinActivities['idEnfant'], [
             'idDemande' => $dmInscription->idDemande,
