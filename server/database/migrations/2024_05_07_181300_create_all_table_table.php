@@ -58,7 +58,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-
         Schema::create('typeactivites', function (Blueprint $table) {
             $table->id('idTypeActivite');
             $table->string('type', 50)->unique();
@@ -109,7 +108,6 @@ return new class extends Migration
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
             $table->timestamps();
         }); 
-
         Schema::create('enfants', function (Blueprint $table) {
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');

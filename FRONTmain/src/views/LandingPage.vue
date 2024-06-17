@@ -12,10 +12,8 @@
               <li><a href="#contact">Contact Us</a></li>
             </ul>
           </div>
-          <div class="image" style="width: 130px; height: 30px;">
-                <img src="@/assets/images/logobg.png" alt="">
-                
-              </div>        </div>
+          <a href="#home" class="btn btn-ghost text-xl">LOGO</a>
+        </div>
         <div class="navbar-center hidden lg:flex">
           <ul class="menu menu-horizontal px-1">
             <li><a href="#home">Home</a></li>
@@ -97,7 +95,7 @@
              <a class="btnn ">programme</a>
         </div>
     </div>
-    <a class="btnnn ">voir plus</a>
+    <a class="btnnn "><router-link to="/login">voir plus </router-link></a>
 </section>
 
 <!--About us section starts-->

@@ -29,7 +29,9 @@ class OffreController extends Controller
         try {
            
             $offres = Offre::all();
+           
         foreach($offres as $offre)
+        {
         $idOffre= $offre->idOffre;
         $activite = DB::table('activites')
         ->whereIn('idActivite',function($query) use ($offre){
@@ -43,6 +45,7 @@ class OffreController extends Controller
             'activites' => $activite,
             'offreactivites' => $offre->offreActivite  
         ];
+    }
             return response()->json([
                 'status' => 200,
                 'data' =>$result   
@@ -54,11 +57,11 @@ class OffreController extends Controller
             ], 404);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 500,
+                'status'         => 500,
                 'message' => 'Erreur serveur : ' . $e->getMessage()
             ], 500);
         }
-
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -248,6 +251,7 @@ class OffreController extends Controller
     
 
 
+   
     public function deleteOffreActiviteById($idOffre, $idActivite)
     {
         try {
@@ -269,6 +273,3 @@ class OffreController extends Controller
         }
     }
 }
-
-
-

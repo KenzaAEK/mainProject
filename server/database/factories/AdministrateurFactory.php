@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AdministrateurFactory extends Factory
 {
+    protected $model = Administrateur::class;
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    // protected $model = Administrateur::class;
     /**
      * Define the model's default state.
      *

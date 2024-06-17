@@ -86,7 +86,7 @@
           this.activites = response.data.data;
           this.groupActivites();
         } catch (error) {
-          console.error('Error fetching activites:', error);
+          console.error('Error fetching datas:', error);
         }
       },
       calculateAge(dateNaissance) {

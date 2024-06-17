@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 // use App\Http\Controllers\Api\AdministrateurController;
 use App\Http\Controllers\Api\OffreController;
+
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\EnfantController;
@@ -15,7 +16,7 @@ use App\Http\Controllers\Api\TypeActiviteController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\FactureController;
-//use App\Http\Controllers\AnimateurController;
+use App\Http\Controllers\api\password\UpdatePasswordController;
 
 /*
 ╔==========================================================================╗
@@ -23,14 +24,15 @@ use App\Http\Controllers\FactureController;
 ╚==========================================================================╝
 */
 
+Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/password/reset', [PasswordResetController::class, 'reset']);
 
-/* Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('/password/reset', [PasswordResetController::class, 'reset']); */
-Route::get('/activites', [ActiviteController::class, 'index']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::get('/users', [AuthController::class, 'index']);
 Route::get('/offres',[OffreController::class,'index']);
 /*
 ╔==========================================================================╗
@@ -40,10 +42,11 @@ Route::get('/offres',[OffreController::class,'index']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
     Route::get('/login', [AuthController::class, 'index']);// pas encore tester pour corriger les porbleme  de production de projet
+    Route::apiResource('demande-Inscriptions', DemandeInscriptionController::class);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/refresh', [AuthController::class, 'refreshToken']);
     Route::apiResource('activites', ActiviteController::class);
-    Route::get('/ateliers',[ActiviteController::class ,'getAtelier' ]);// cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
+    Route::get('/ateliers', [ActiviteController::class, 'getAtelier']); // cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::get('/users', [AuthController::class, 'index']);
 
 Route::apiResource('enfants', EnfantController::class);
@@ -67,7 +70,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
     // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
-
+    Route::get('/offres',[OffreController::class,'index']);
 
 /*
 ╔==========================================================================╗
@@ -75,9 +78,8 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 ╚==========================================================================╝
 */
     Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
-        
+  
         Route::apiResource('activites', ActiviteController::class);
-        //Route::post('activites', ActiviteController::class,'store' );
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
         Route::post('/reject-demande/{id}', [AdministrateurController::class, 'rejectDemande']);
@@ -93,6 +95,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::put('/offres/{offres}',[OffreController::class,'update']);
         Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
         Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
+        
         // Route::get('/animateurs', [GroupeController::class, 'index']);
     // for admins only and authenticated  
     //add middlewear check role 
@@ -113,12 +116,17 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 
 
         Route::apiResource('enfants', EnfantController::class);
-        // Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
+        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
         Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
         Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
         Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
-        
+        Route::apiResource('enfants', EnfantController::class);
+        // Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+        // Route::get('api/parent/facture-download/{id}', [FactureController::class, 'downloadPdf']);
+        Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
+        Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
+        Route::post('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);

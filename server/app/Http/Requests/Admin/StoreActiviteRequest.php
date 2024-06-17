@@ -21,20 +21,20 @@ class StoreActiviteRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
-    {
+    function rules() {
         return [
             'titre' => 'required|string|max:255',
             'description' => 'required|string|max:2048',
             'objectif' => 'required|string|max:1024',
             'ageMin' => 'sometimes|integer|between:1,100',
             'ageMax' => 'sometimes|integer|between:1,100|gte:ageMin',
-            'imagePub' => 'sometimes|file|mimes:jpg,jpeg,png|max:5000', // 5MB max size
+            'imagePub' => 'sometimes|file|mimes:jpg,jpeg,png|max:5000',
             'lienYtb' => 'required|string|max:255',
-            'programmePdf' => 'sometimes|file|mimes:pdf|max:10000', // 10MB max size 
-            'type' => 'required|exists:typeactivites,type'
+            'programmePdf' => 'required|string|max:255',
+            'type' => 'required|exists:type_activites,type'
         ];
     }
+    
     public function messages()
     {
         return [
