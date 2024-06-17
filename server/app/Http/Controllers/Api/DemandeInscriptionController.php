@@ -273,6 +273,7 @@ class DemandeInscriptionController extends Controller
         $limite = $pack->limite;
         $remise = $pack->remise;
         $prixTot = 0;
+        
        
         foreach ($Secenfants as $enfantData) {
             $enfant = Enfant::where('nom',$enfantData['nomEnfant'])->where('prenom', $enfantData['prenomEnfant'])->firstOrFail();
@@ -349,6 +350,7 @@ class DemandeInscriptionController extends Controller
     private function handlePackEnfant($dmInscription, $pack, $offreActivite, $Secenfants, $idTuteur,$optiondepay)
     {
         $idoffre = $offreActivite->idOffre;
+        $prixmTot = 0;
         
         $remise = $pack->remise;
         $limite = $pack->limite;
@@ -359,6 +361,7 @@ class DemandeInscriptionController extends Controller
         
 
         $childWithMinActivities = $enfantsSorted->last();
+        
         $enfantsSorted = $enfantsSorted->slice(0,-1);//suppr le dernier elm
         $prixTot = 0;
         foreach ($enfantsSorted as $key => $enfant) {
@@ -392,13 +395,17 @@ class DemandeInscriptionController extends Controller
                 break;
         }
         $iddemande = $dmInscription->idDemande;
-        dd($enfantsSorted['Ateliers']);
-        foreach ($enfantsSorted as $key => $enfant) {
+        
+        foreach ($enfantsSorted as  $enfantst) {
 
-            $enfant = Enfant::where('nom',$enfant['nomEnfant'])->where('prenom', $enfant['prenomEnfant'])->firstOrFail();
-       
-            foreach ($enfant['Ateliers'] as $atelierData) {
+            $enfant = Enfant::where('nom',$enfantst['nomEnfant'])->where('prenom', $enfantst['prenomEnfant'])->firstOrFail();
+             
+            foreach ($enfantst['Ateliers'] as $atelierData) {
+                
                 $activite = Activite::where('titre', $atelierData['titreActivite'])->firstOrFail();
+                $idenfant = $enfant->idEnfant;
+                
+                
                 $dmInscription->enfantss()->attach($enfant->idEnfant, [
                     'idDemande' => $iddemande,
                     'idTuteur' => $idTuteur,
@@ -410,16 +417,47 @@ class DemandeInscriptionController extends Controller
             }
         
         }
+        
+        $enfantmin = Enfant::where('nom',$childWithMinActivities['nomEnfant'])->where('prenom', $childWithMinActivities['prenomEnfant'])->firstOrFail();
+        $idenfantmin = $enfantmin->idEnfant;
+        foreach($childWithMinActivities['Ateliers'] as $atData)
+           {
+                $activitemin = Activite::where('titre', $atData['titreActivite'])->firstOrFail();
+                $idactmin = $activitemin->idActivite;
+                $prixm = $offreActivite->where('idActivite', $idactmin)->firstOrFail();
+                $tarifm = $prixm->tarif;
+                $prixmT[] = $tarifm;
+                    foreach($prixmT as $prixmt)
+                       {
+                          $prixmTot += $prixmTot+$prixmt;
+                       }
+                       switch ($optiondepay) {
+                        case 'mois':
+                            $prixmTot = $prixmTot;
+                            break;
+                        case 'trimestre':
+                            $prixmTot= $prixmTot* 3;
+                            break;
+                        case 'semestre':
+                            $prixmTot = $prixmTot * 6;
+                            break;
+                        case 'annee':
+                            $prixmTot = $prixmTot * 12;
+                            break;
+                    }
+                    
+                       
+                    
 
-        $childOffre = $idoffre;
-        $childActivite = $offreActivite->where('idOffre', $childOffre)->first()->idActivite;
-        $dmInscription->enfantss()->attach($childWithMinActivities['idEnfant'], [
-            'idDemande' => $dmInscription->idDemande,
-            'idTuteur' => $idTuteur,
-            'idOffre' => $childOffre,
-            'idActivite' => $childActivite,
-            'PixtotalRemise' => $prixTot*0.4,
-            'Prixbrute' => $prixTot*0.4
-        ]);
+                    $dmInscription->enfantss()->attach($idenfantmin, [
+                        'idDemande' => $dmInscription->idDemande,
+                        'idTuteur' => $idTuteur,
+                        'idOffre' => $idoffre,
+                        'idActivite' => $idactmin,
+                        'PixtotalRemise' => $prixmTot*0.4,
+                        'Prixbrute' => $prixmTot*0.4
+        
+                    ]);
+            }
     }
 }
