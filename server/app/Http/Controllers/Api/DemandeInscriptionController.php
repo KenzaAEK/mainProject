@@ -27,34 +27,7 @@ class DemandeInscriptionController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-        $idTuteur = $user->tuteur->idTuteur;
-        $demandes = DB::table('demande_inscriptions')
-                     ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
-                     ->join('offreactivites', function($join) {
-                      $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
-                     ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
-            })
-                    ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
-                    ->join('enfants', function ($join) {
-                     $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
-                    ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
-            })
-                    ->join('disponibilite_offreactivite', function ($join) {
-                     $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
-                     ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
-            })
-            ->join('horaires', 'disponibilite_offreactivite.idHoraire', '=', 'horaires.idHoraire')
-            ->select(
-                'offres.titre as nomOffre',
-                'enfants.prenom as nomEnfant',
-                'horaires.jour',
-                'horaires.heureDebut',
-                'horaires.heureFin'
-            )
-            ->where('demande_inscriptions.idTuteur', $idTuteur)
-            ->get();
-    
+        $demandes = DemandeInscription::all();
         return response()->json($demandes);
     }
     
