@@ -30,7 +30,7 @@ Route::post('/password/reset', [PasswordResetController::class, 'reset']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name("login");
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/users', [AuthController::class, 'index']);
 Route::get('/offres',[OffreController::class,'index']);
@@ -91,6 +91,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         // Route::get('/animateurs', [GroupeController::class, 'index']);
         // traitement de l'offres :
         Route::post('/offres',[OffreController::class,'store']);
+        Route::get('/offres',[OffreController::class,'index']);
         Route::get('/offres/{offres}',[OffreController::class,'show']);
         Route::put('/offres/{offres}',[OffreController::class,'update']);
         Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 

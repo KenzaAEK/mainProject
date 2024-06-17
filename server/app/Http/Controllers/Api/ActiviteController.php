@@ -33,33 +33,71 @@ class ActiviteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreActiviteRequest $request)
-    {
-        // dd('1');
-        $typeId = typeActivite::getIdByType($request->validated()['type']);
+{
+    $typeId = typeActivite::getIdByType($request->validated()['type']);
     
-        if (!$typeId) {
-            return response()->json(['error' => 'TypeActivite non trouvée'], 404);
-        }
-    
-        $activiteData = $request->validated();
-        if ($request->hasFile('programmePdf')) {
-            $file = $request->file('programmePdf');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('programmePdfs', $filename, 'public');
-            $activiteData['programmePdf'] = $path;
-        }
-        if ($request->hasFile('imagePub')) {
-            $image = $request->file('imagePub');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('publiciteImages', $imageName, 'public');
-            $activiteData['imagePub'] = $imagePath;
-        }
-        $activiteData['idTypeActivite'] = $typeId;
-    
-        $activite = Activite::create($activiteData);
-    
-        return $this->success($activite, 'Activité ajoutée avec succès', 201);
+    if (!$typeId) {
+        return response()->json(['error' => 'TypeActivite non trouvée'], 404);
     }
+    
+    $activiteData = $request->validated();
+    
+    // Traiter et stocker le fichier PDF du programme
+    if ($request->hasFile('programmePdf')) {
+        $file = $request->file('programmePdf');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('programmePdfs', $filename, 'public');
+        $activiteData['programmePdf'] = asset('storage/' . $path);
+    }
+    
+    // Traiter et stocker l'image de publicité
+    if ($request->hasFile('imagePub')) {
+        $image = $request->file('imagePub');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $imagePath = $image->storeAs('publiciteImages', $imageName, 'public');
+        $activiteData['imagePub'] = asset('storage/' . $imagePath);
+    }
+    
+    $activiteData['idTypeActivite'] = $typeId;
+    
+    // Créer l'activité avec les données traitées
+    $activite = Activite::create($activiteData);
+    
+    // Ajouter les URLs complètes pour les fichiers dans la réponse JSON
+    $activite['programmePdfUrl'] = isset($activiteData['programmePdfUrl']) ? $activiteData['programmePdfUrl'] : null;
+    $activite['imagePubUrl'] = isset($activiteData['imagePubUrl']) ? $activiteData['imagePubUrl'] : null;
+    
+    return $this->success($activite, 'Activité ajoutée avec succès', 201);
+}
+
+    // public function store(StoreActiviteRequest $request)
+    // {
+    //     // dd('1');
+    //     $typeId = typeActivite::getIdByType($request->validated()['type']);
+    
+    //     if (!$typeId) {
+    //         return response()->json(['error' => 'TypeActivite non trouvée'], 404);
+    //     }
+    
+    //     $activiteData = $request->validated();
+    //     if ($request->hasFile('programmePdf')) {
+    //         $file = $request->file('programmePdf');
+    //         $filename = time() . '_' . $file->getClientOriginalName();
+    //         $path = $file->storeAs('programmePdfs', $filename, 'public');
+    //         $activiteData['programmePdf'] = $path;
+    //     }
+    //     if ($request->hasFile('imagePub')) {
+    //         $image = $request->file('imagePub');
+    //         $imageName = time() . '_' . $image->getClientOriginalName();
+    //         $imagePath = $image->storeAs('publiciteImages', $imageName, 'public');
+    //         $activiteData['imagePub'] = $imagePath;
+    //     }
+    //     $activiteData['idTypeActivite'] = $typeId;
+    
+    //     $activite = Activite::create($activiteData);
+    
+    //     return $this->success($activite, 'Activité ajoutée avec succès', 201);
+    // }
     
 
 
