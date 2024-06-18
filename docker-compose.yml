@@ -1,0 +1,53 @@
+version: "3.8"  
+
+services:
+  server:
+    container_name: server
+    build:
+      context: ./server  
+      dockerfile: Dockerfile  
+    env_file:
+      - server/.env 
+    ports:
+      - "8000:8000"  
+    networks:
+      - backend  
+    depends_on:
+      - db  
+
+  app:
+    container_name: app
+    build:
+      context: .  
+      dockerfile: Dockerfile  
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - frontend  
+    depends_on:
+      - server  
+
+
+  db:
+    image: postgres:13
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+    driver: bridge  
+  frontend:
+    driver: bridge 

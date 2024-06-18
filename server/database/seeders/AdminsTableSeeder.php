@@ -24,7 +24,18 @@ class AdminsTableSeeder extends Seeder
         // mdp : passadmin
         Administrateur::create([
             'idUser' => User::factory()->create(["role"=>2,"email"=>"sy@nf","password"=>Hash::make("passadmin")])->idUser,
-            // Autres colonnes si nécessaire
+        ]);
+        // Administrateur de 
+        // mail : md@ensa
+        // mdp : passadmin
+        Administrateur::create([
+            'idUser' => User::factory()->create(["role"=>2,"email"=>"md@ensa","password"=>Hash::make("passadmin")])->idUser,
+        ]);
+        // Administrateur de 
+        // mail : mh@ensa
+        // mdp : passadmin
+        Administrateur::create([
+            'idUser' => User::factory()->create(["role"=>2,"email"=>"mh@ensa","password"=>Hash::make("passadmin")])->idUser,
         ]);
     }
 }

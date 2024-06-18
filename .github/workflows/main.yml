@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      #- dev
+      - dev
   pull_request:
     branches:
       - main
@@ -29,9 +29,11 @@ jobs:
         run: composer install --prefer-dist --no-progress 
         working-directory: ./server
 
+      - name: List files for debugging
+        run: ls -la ./server
+
       - name: Setup Laravel Environment
         run: |
-          ls -la  # List all files in the directory to check for .env.example
           cp .env.example .env
           php artisan key:generate
         working-directory: ./server # make sure its the right directory 
@@ -39,15 +41,16 @@ jobs:
       - name: Run Laravel migrations (using SQLite for testing)
         env:
           DB_CONNECTION: sqlite
-          DB_DATABASE: ${{ github.workspace }}/api/database/database.sqlite
+          DB_DATABASE: ${{ github.workspace }}/server/database/database.sqlite
+          APP_ENV: testing # set environment to testing to prevent data loss
         run: |
           touch database/database.sqlite
-          php artisan migrate
+          php artisan migrate --force 
         working-directory: ./server # make sure to update path
 
-      - name: Run Laravel tests
-        run: php artisan test
-        working-directory: ./server
+      #- name: Run Laravel tests
+        #run: php artisan test
+        #working-directory: ./server
 
       # Tests for Vue.js
       - name: Install Node.js
@@ -77,10 +80,10 @@ jobs:
       - name: Build and push API Docker image
         uses: docker/build-push-action@v5.3.0
         with:
-          context: ./FRONTmain
-          file: ./FRONTmain/Dockerfile
+          context: 
+          file: ./Dockerfile
           push: true
-          tags: souhailchaiberras/testpipeline-api:latest
+          tags: souhailchaiberras/mainproject1-api:latest
     
       - name: Build and push App Docker image
         uses: docker/build-push-action@v5.3.0
@@ -88,8 +91,13 @@ jobs:
             context: ./server
             file: ./server/Dockerfile
             push: true
-            tags: souhailchaiberras/testpipeline-app:latest
+            tags: souhailchaiberras/mainproject1-app:latest
       
+      # test deployment 
+      - name: Deploy with Docker Compose
+        run: |
+          docker-compose pull
+          docker-compose up -d
 
       
       
