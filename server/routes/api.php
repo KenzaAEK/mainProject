@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\api\password\UpdatePasswordController;
+use App\Http\Controllers\Api\PackController;
 
 /*
 ╔==========================================================================╗
@@ -50,37 +51,15 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('activites', ActiviteController::class);
     Route::get('/ateliers', [ActiviteController::class, 'getAtelier']); // cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::get('/users', [AuthController::class, 'index']);
+    
+    
+    /*
+    ╔==========================================================================╗
+    ║                           Admin Routes                                   ║
+    ╚==========================================================================╝
+    */
+    Route::group(['middleware' => 'role:1', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
 
-Route::apiResource('enfants', EnfantController::class);
-Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
-
-Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
-Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
-
-
-    // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
-    // Route::post('/profile', [ProfileController::class, 'profile']);
-    // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); //gate for animateur**** email 
-    // Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
-
-    // // Manage notifications
-    // Route::get('/notifications', [NotificationController::class, 'index']);
-    // Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
-    // Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
-    // Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
-    // Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
-    // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
-    // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
-
-    Route::get('/offres',[OffreController::class,'index']);
-
-/*
-╔==========================================================================╗
-║                           Admin Routes                                   ║
-╚==========================================================================╝
-*/
-    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
-  
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
@@ -98,7 +77,8 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::put('/offres/{offres}',[OffreController::class,'update']);
         Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
         Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
-        
+        Route::get('/offres',[OffreController::class,'index']);
+        Route::apiResource('packs', PackController::class);
         // Route::get('/animateurs', [GroupeController::class, 'index']);
     // for admins only and authenticated  
     //add middlewear check role 
