@@ -15,6 +15,7 @@ use App\Http\Controllers\api\password\UpdatePasswordController;
 use App\Http\Controllers\Api\TypeActiviteController;
 use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\Api\DemandeInscriptionController;
+use App\Http\Controllers\Api\PackController;
 
 /*
 ╔==========================================================================╗
@@ -46,7 +47,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('activites', ActiviteController::class);
     Route::get('/ateliers', [ActiviteController::class, 'getAtelier']); // cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::get('/users', [AuthController::class, 'index']);
-
+    Route::apiResource('packs', PackController::class);// je dois le metre dans admin
+    
     /*
     ╔==========================================================================╗
     ║                           Admin Routes                                   ║
@@ -65,5 +67,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::put('/offres/{offres}', [OffreController::class, 'update']);
         Route::delete('/offres/{offres}/{activites}', [OffreController::class, 'deleteOffreActiviteById']); // suppr une activite lier a une offre 
         Route::delete('/offres/{offres}', [OffreController::class, 'deleteOffreActivitesByIdOffre']); // supprimer l'offre et tous  ces activites 
+        Route::apiResource('packs', PackController::class);
     });
 });
