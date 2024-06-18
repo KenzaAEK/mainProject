@@ -8,7 +8,7 @@ use App\Models\Activite;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Admin\StoreActiviteRequest;
 use App\Http\Requests\Admin\UpdateActiviteRequest;
-use App\Models\typeActivite;
+use App\Models\TypeActivite;
 use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ActiviteController extends Controller
