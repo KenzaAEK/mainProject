@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-use App\Models\OffreActivite;
+use App\Models\offreActivite;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;

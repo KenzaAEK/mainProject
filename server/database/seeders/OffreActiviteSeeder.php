@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\OffreActivite; 
+use App\Models\offreActivite; 
 class OffreActiviteSeeder extends Seeder
 {
     /**
@@ -15,6 +15,6 @@ class OffreActiviteSeeder extends Seeder
     public function run()
     {
         
-        OffreActivite::factory()->count(50)->create();
+        offreActivite::factory()->count(50)->create();
     }
 }

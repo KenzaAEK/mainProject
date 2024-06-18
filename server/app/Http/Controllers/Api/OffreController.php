@@ -133,7 +133,7 @@ class OffreController extends Controller
                  }
                 //  dd($idAdmin);
                  // Créer l'activité pour l'offre
-                 $offreActivite = OffreActivite::create([
+                 $offreActivite = offreActivite::create([
                      'idOffre' => $offre->idOffre,
                      'idActivite' => $activite->idActivite,
                      'tarif' => $activiteData['tarif'],

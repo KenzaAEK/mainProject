@@ -136,7 +136,7 @@ export default {
       return lienYtb;
     },
     getImageSrc(imagePub) {
-      return `/${imagePub}`;
+      return imagePub;
     },
     openModal(modalId) {
       document.getElementById(modalId).style.display = 'block';

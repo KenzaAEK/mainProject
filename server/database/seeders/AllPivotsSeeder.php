@@ -8,7 +8,7 @@ use App\Models\Animateur;
 use App\Models\Groupe;
 use App\Models\Administrateur;
 use App\Models\Competence;
-use App\Models\demandeInscription;
+use App\Models\DemandeInscription;
 use App\Models\Horaire;
 use App\Models\offreActivite;
 use App\Models\Activite;
@@ -36,7 +36,7 @@ class AllPivotsSeeder extends Seeder
         $admins = Administrateur::all();
         $groupes = Groupe::all();
         $enfants = Enfant::all();
-        $inscptions = demandeInscription::all();
+        $inscptions = DemandeInscription::all();
         
         $n = Horaire::count();
         if ($animateurs->isEmpty() || $horaires->isEmpty()) {
@@ -82,7 +82,7 @@ class AllPivotsSeeder extends Seeder
             $generatedNumbers = [];
             for ($i=0;$i<5; $i++) {
                 do {
-                    $randomNumber = rand(1, demandeInscription::count()); // Génère un nombre aléatoire entre 1 et 100
+                    $randomNumber = rand(1, DemandeInscription::count()); // Génère un nombre aléatoire entre 1 et 100
                 } while (in_array($randomNumber, $generatedNumbers));
                 DB::table('admin_traiter')->insert([
                     'idAdmin' => $admin->idAdmin,
@@ -90,7 +90,7 @@ class AllPivotsSeeder extends Seeder
                     'motifRefus'=>$faker->sentence(10),
                     'statut'=> $statuts[array_rand($statuts)],
                     'dateTraitement'=>now(),
-                    // 'idHoraire' => rand(1, demandeInscription::count())
+                    // 'idHoraire' => rand(1, DemandeInscription::count())
                 ]);
                 $generatedNumbers[] = $randomNumber; 
             }
@@ -116,7 +116,7 @@ class AllPivotsSeeder extends Seeder
                     'idActivite'=>$ofac->idActivite,
                     'Prixbrute'=>$faker->randomFloat(5, 10, 1000),
                     'PixtotalRemise'=>$faker->randomFloat(5, 10, 1000),
-                    // 'idHoraire' => rand(1, demandeInscription::count())
+                    // 'idHoraire' => rand(1, DemandeInscription::count())
                 ]);
                 $generatedNumbers[] = $val;
             }
@@ -136,7 +136,7 @@ class AllPivotsSeeder extends Seeder
                     'idTuteur' => $enfant->idTuteur,
                     'idGroupe' => $grp->idGroupe,
                     'idEnfant'=>$enfant->idEnfant,
-                    // 'idHoraire' => rand(1, demandeInscription::count())
+                    // 'idHoraire' => rand(1, DemandeInscription::count())
                 ]);
                 $generatedNumbers[] = $grp->idGroupe;
             }
@@ -156,7 +156,7 @@ class AllPivotsSeeder extends Seeder
                     'idCompetence' => $cmpt->idCompetence,
                     'idAnimateur' => $animateur->idAnimateur,
                     'Maitrise'=>$faker->numberBetween(30, 90),
-                    // 'idHoraire' => rand(1, demandeInscription::count())
+                    // 'idHoraire' => rand(1, DemandeInscription::count())
                 ]);
                 $generatedNumbers[] = $cmpt->idCompetence;
             }
@@ -175,7 +175,7 @@ class AllPivotsSeeder extends Seeder
                     'idCompetence' => $cmpt->idCompetence,
                     'idTypeActivite' => $activite->idTypeActivite,
                     'Niveau_requis'=>$faker->numberBetween(30, 90),
-                    // 'idHoraire' => rand(1, demandeInscription::count())
+                    // 'idHoraire' => rand(1, DemandeInscription::count())
                 ]);
                 $generatedNumbers[] = $cmpt->idCompetence;
             }
