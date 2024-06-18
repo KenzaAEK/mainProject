@@ -3,17 +3,19 @@
     <h1><span>Nos</span> Offres</h1>
     <div v-if="offres.length > 0">
       <div v-for="offre in offres" :key="offre.offre.idOffre" class="offre">
-        <div class="offre"> {{ offre.offre.titre }} <span>valable jusqu'au {{ new Date(offre.offre.dateFinOffre).toLocaleDateString() }}</span></div>
+        <div class="offre"> 
+          {{ offre.offre.titre }} 
+          <span>valable jusqu'au {{ new Date(offre.offre.dateFinOffre).toLocaleDateString() }}</span>
+        </div>
         <p>{{ offre.offre.description }}</p>
         <div class="box-container">
-          <div class="box" v-for="activite in offre.activites" :key="activite.idActivite">
+          <div class="box" v-for="activite in offre.activities" :key="activite.idActivite">
             <div class="image">
               <img src="@/assets/images/offre1.png" alt="">
             </div>
             <h3>{{ activite.titre }}</h3>
             <p>{{ activite.description }}</p>
             <p class="sm:text-sm">Objectif de cette atelier : {{ activite.objectif }}</p>
-  
             <div class="age">
               <template v-for="offreActivite in offre.offre.offre_activite" :key="offreActivite.idOffre">
                 <span v-if="offreActivite.idActivite === activite.idActivite">
@@ -24,7 +26,6 @@
             <a :href="activite.programmePdf" class="btnn">Programme</a>
           </div>
         </div>
-    
         <a href="#" class="btn1 btn" @click.prevent="showModal(offre)">Inscrivez votre enfant</a>
         <dialog id="my_modal_2" class="modal">
           <AjouterOffre :offre="selectedOffre"/>
@@ -61,7 +62,7 @@ export default {
       try {
         const response = await axios.get('/offres');
         this.offres = response.data.data;
-        console.log(response.data.data);
+        console.log('Offres data:', this.offres); // Log the data
       } catch (error) {
         console.error('Error fetching Ateliers:', error);
       }
@@ -73,6 +74,9 @@ export default {
   }
 };
 </script>
+
+
+
 
 <style scoped>
 

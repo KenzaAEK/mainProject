@@ -277,7 +277,6 @@ class DemandeInscriptionController extends Controller
        
         foreach ($Secenfants as $enfantData) {
             $enfant = Enfant::where('nom',$enfantData['nomEnfant'])->where('prenom', $enfantData['prenomEnfant'])->firstOrFail();
-        
             $prixT = [];
             $prixHT = 0;
             $count = 0;
@@ -344,6 +343,7 @@ class DemandeInscriptionController extends Controller
                     ]);
                 }
         }
+        
        
     }
      // il faut modifier maintenant l entrer utuliser le nom de l enfant 
@@ -366,7 +366,7 @@ class DemandeInscriptionController extends Controller
         $prixTot = 0;
         foreach ($enfantsSorted as $key => $enfant) {
             $tarifs = $offreActivite->where('idOffre', $idoffre)->pluck('tarif');
-
+            
             $i = 0;
             foreach ($tarifs as $tarif) {
                 if ($i < $limite) {
@@ -377,7 +377,7 @@ class DemandeInscriptionController extends Controller
                 $i++;
             }
         }
-       
+      
 
         $dmInscription->save();
         switch ($optiondepay) {
@@ -446,7 +446,7 @@ class DemandeInscriptionController extends Controller
                             break;
                     }
                     
-                       
+                    dd($prixmTot);    
                     
 
                     $dmInscription->enfantss()->attach($idenfantmin, [

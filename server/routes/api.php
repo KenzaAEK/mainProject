@@ -34,6 +34,8 @@ Route::post('/login', [AuthController::class, 'login'])->name("login");
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/users', [AuthController::class, 'index']);
 Route::get('/offres',[OffreController::class,'index']);
+Route::get('/activites', [ActiviteController::class, 'index']);
+Route::get('/activites/{id}', [ActiviteController::class, 'show']);
 /*
 ╔==========================================================================╗
 ║                           All Users authenticated                        ║

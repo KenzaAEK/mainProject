@@ -31,15 +31,14 @@
             <div class="flex group-open:animate-fadeIn mt-3 text-neutral-600">
               <div class="w-full  px-2">
                 <label for="product-name" class="flex items-center gap-2 custom">Choisir enfant</label>
-                <select  v-model="idEnfant" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
-                  <option value="None" selected>None</option>
-                  <option value="Enfant1"  v-for="enfant in enfants" :key="enfant.id">{{ enfant.nom }} {{ enfant.prenom }}</option>
+                <select v-model="workshop.prenomEnfant" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
+                  <option value="None" disabled selected>None</option>
+                  <option v-for="enfant in enfants" :key="enfant.id" :value="enfant.id">{{ enfant.nom }} {{enfant.prenom}}</option>
                 </select>
               </div>
-              
             </div>
             <div class="flex group-open:animate-fadeIn mt-3 text-neutral-600">
-              <div class="w-full  px-2">
+              <div class="w-full px-2">
                 <div class="flex">
                   <label for="product-name" class="flex items-center gap-2 custom">Ajouter atelier</label>
                   <button @click.prevent="addSession(index)">
@@ -51,22 +50,21 @@
                   </button>
                 </div>
                 <div v-for="(session, sIndex) in workshop.sessions" :key="sIndex" class="mt-2">
-                    
-                    <div class="flex group-open:animate-fadeIn mt-3 text-neutral-600">
-                        <div class="w-full px-2">
-                          <div class="flex">
-                            <label for="session-day" class="flex items-center gap-2 custom">Atelier</label>
-                            <button @click.prevent="removeSession(index, sIndex)">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-3 h-5 w-5 text-black hover:text-black" style="margin-left: 3px; margin-top: 1px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                            </button>
-                          </div>                            
-                          <select v-model="session.day" id="session-day" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
-                            <option v-for="activite in offre.activites" :key="activite.idActivite" :value="activite.titre">{{ activite.titre }}</option>
-                          </select>
-                        </div>
+                  <div class="flex group-open:animate-fadeIn mt-3 text-neutral-600">
+                    <div class="w-full px-2">
+                      <div class="flex">
+                        <label for="session-day" class="flex items-center gap-2 custom">Atelier</label>
+                        <button @click.prevent="removeSession(index, sIndex)">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-3 h-5 w-5 text-black hover:text-black" style="margin-left: 3px; margin-top: 1px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>                            
+                      <select v-model="session.titreActivite" id="session-day" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
+                        <option v-for="activite in offre.activities" :key="activite.idActivite" :value="activite.titre">{{ activite.titre }}</option>
+                      </select>
                     </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -75,23 +73,23 @@
       </div>
     </form>
     <label class="flex items-center gap-2 custom">Packs d’inscription :</label>
-    <select v-model="type" id="session-day" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
+    <select v-model="form.type" id="session-day" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
       <option value="None" disabled selected>Pack--</option>
-      <option value="Pack 1">PackEnfant </option>
+      <option value="Pack 1">PackEnfant</option>
       <option value="Pack 2">PackAtelier</option>
     </select>
 
     <label class="flex items-center gap-2 custom">Options de paiement :</label>
-    <select id="session-day" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
+    <select id="session-day" v-model="form.optionsPaiement" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
       <option value="" disabled selected>Option de paiement --</option>
-      <option value="primaire">mensuel</option>
-      <option value="collège">trimestriel</option>
-      <option value="secondaire">annuel</option>
+      <option value="mensuel">mensuel</option>
+      <option value="trimestriel">trimestriel</option>
+      <option value="annuel">annuel</option>
     </select>
     <div class="modal-action">
       <form method="dialog" class="inline-flex justify-end gap-4">
-        <button class="btn1 btn btn-info ">Ajouter</button>
-        <button class="btn">Close</button>
+        <button type="submit" class="btn1 btn btn-info" @click="submitForm()">Ajouter</button>
+        <button  class="btn">Close</button>
       </form>
     </div>
   </div>
@@ -110,8 +108,12 @@ export default {
   data() {
     return {
       form: {
-        workshops: []
+        type: '',
+        idOffre: '',
+        optionsPaiement: '',
+        workshops: [],
       },
+      showForm: true,
       enfants: [],
     };
   },
@@ -127,17 +129,36 @@ export default {
         console.error('Error fetching children:', error);
       }
     },
+    async submitForm() {
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/demande-Inscriptions', this.form);
+    if (response.status === 200) {
+      this.$emit('demandeEffectuee');
+      alert('La demande a été ajoutée avec succès');
+    } else {
+      console.error('Erreur lors de l\'ajout de la demande:', response.data);
+      alert('Erreur lors de l\'ajout de la demande. Veuillez réessayer.');
+    }
+  } catch (error) {
+    console.error('Erreur de réseau ou serveur:', error);
+    if (error.response && error.response.status === 422) {
+      console.error('Détails de validation:', error.response.data); // Affiche les détails de validation
+      alert('Erreur de validation. Veuillez vérifier vos données.');
+    } else {
+      alert('Erreur de réseau ou serveur. Veuillez réessayer.');
+    }
+  }
+},
     addWorkshop() {
       this.form.workshops.push({
-        type: '',
-        ageRange: '',
+        //nomEnfant: '',
+        prenomEnfant: '',
         sessions: []
       });
     },
     addSession(workshopIndex) {
       this.form.workshops[workshopIndex].sessions.push({
-        day: '',
-        time: ''
+        titreActivite: '',
       });
     },
     removeWorkshop(index) {
@@ -146,6 +167,7 @@ export default {
     removeSession(workshopIndex, sessionIndex) {
       this.form.workshops[workshopIndex].sessions.splice(sessionIndex, 1);
     },
+    
   }
 }
 </script>
