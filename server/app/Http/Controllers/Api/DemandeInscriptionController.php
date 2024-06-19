@@ -231,7 +231,7 @@ class DemandeInscriptionController extends Controller
 
 
 
-     public function store(Request $request) // il faut testerrrrrrrrr!!!!!!! les nouvelles fonctionalites option de payement ;(
+     public function store(Request $request) 
     {
         DB::beginTransaction();
         try {
@@ -276,7 +276,9 @@ class DemandeInscriptionController extends Controller
         
        
         foreach ($Secenfants as $enfantData) {
-            $enfant = Enfant::where('nom',$enfantData['nomEnfant'])->where('prenom', $enfantData['prenomEnfant'])->firstOrFail();
+            $enfant = Enfant::where('prenom', $enfantData['prenomEnfant'])->firstOrFail();
+           
+        
             $prixT = [];
             $prixHT = 0;
             $count = 0;
@@ -398,8 +400,12 @@ class DemandeInscriptionController extends Controller
         
         foreach ($enfantsSorted as  $enfantst) {
 
-            $enfant = Enfant::where('nom',$enfantst['nomEnfant'])->where('prenom', $enfantst['prenomEnfant'])->firstOrFail();
-             
+            
+            
+            $prenomEnfant = trim($enfantst['prenomEnfant']);
+            
+            $enfant = Enfant::where('prenom', $prenomEnfant)->first();   
+            
             foreach ($enfantst['Ateliers'] as $atelierData) {
                 
                 $activite = Activite::where('titre', $atelierData['titreActivite'])->firstOrFail();
@@ -417,8 +423,9 @@ class DemandeInscriptionController extends Controller
             }
         
         }
+        $prenomEnfantMin = trim($childWithMinActivities['prenomEnfant']);// trim est utuliser pour regler le probleme de saut de ligne qui cause probleme 
+        $enfantmin = Enfant::where('prenom', $prenomEnfantMin)->firstOrFail();
         
-        $enfantmin = Enfant::where('nom',$childWithMinActivities['nomEnfant'])->where('prenom', $childWithMinActivities['prenomEnfant'])->firstOrFail();
         $idenfantmin = $enfantmin->idEnfant;
         foreach($childWithMinActivities['Ateliers'] as $atData)
            {

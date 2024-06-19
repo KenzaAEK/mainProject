@@ -51,13 +51,35 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('activites', ActiviteController::class);
     Route::get('/ateliers', [ActiviteController::class, 'getAtelier']); // cette methode sera tres utile pour recuperer les atelier present !!![il faut appeler cette api en premier ] pour le store 
     Route::get('/users', [AuthController::class, 'index']);
-    
-    
-    /*
-    ╔==========================================================================╗
-    ║                           Admin Routes                                   ║
-    ╚==========================================================================╝
-    */
+
+Route::apiResource('enfants', EnfantController::class);
+
+
+Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
+Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
+
+
+    // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
+    // Route::post('/profile', [ProfileController::class, 'profile']);
+    // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); //gate for animateur**** email 
+    // Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
+
+    // // Manage notifications
+    // Route::get('/notifications', [NotificationController::class, 'index']);
+    // Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
+    // Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    // Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
+    // Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
+    // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
+    // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+
+    Route::get('/offres',[OffreController::class,'index']);
+
+/*
+╔==========================================================================╗
+║                           Admin Routes                                   ║
+╚==========================================================================╝
+*/
     Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
 
         Route::apiResource('activites', ActiviteController::class);
@@ -113,6 +135,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
+        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
     });      
     
 /*
