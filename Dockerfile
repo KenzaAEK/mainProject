@@ -3,19 +3,19 @@ FROM node:18-alpine as builder
 
 WORKDIR /vue-ui
 
-# Copier les fichiers package.json et package-lock.json pour une meilleure gestion des caches
+
 COPY FRONTmain/package*.json ./
 
-# Installer les dépendances en utilisant npm ci, qui est mieux pour les builds de production
+
 RUN npm ci
 
-# Copier le reste du code source de l'application
+
 COPY FRONTmain/ ./
 
-# Construire l'application
+
 RUN npm run build
 
-# Serveur NGINX pour servir l'application Vue.js
+
 FROM nginx:latest
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf

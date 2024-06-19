@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 use Illuminate\Support\Facades\DB;
 use App\Models\Offre;
-use App\Models\offreActivite;
+use App\Models\OffreActivite;
 use Illuminate\Support\Facades\Log;
 use App\Models\Administrateur;
-use App\Models\horaire;
+use App\Models\Horaire;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
