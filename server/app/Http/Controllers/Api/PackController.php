@@ -40,7 +40,7 @@ class PackController extends Controller
         
         $validatedData = $request->validate([
             'type' => 'required|string|max:255',
-            'remise' => 'required|integer',
+            'remise' => 'required|numeric',
             'limite' => 'required|date'
         ]);
     

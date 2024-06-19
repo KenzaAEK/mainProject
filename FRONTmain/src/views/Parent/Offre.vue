@@ -26,7 +26,7 @@
             <a :href="activite.programmePdf" class="btnn">Programme</a>
           </div>
         </div>
-        <a href="#" class="btn1 btn" @click.prevent="showModal(offre)">Inscrivez votre enfant</a>
+        <a href="#" class="btn1 btn" @click.prevent="showModal(offre.offre.idOffre)">Inscrivez votre enfant</a>
         <dialog id="my_modal_2" class="modal">
           <AjouterOffre :offre="selectedOffre"/>
         </dialog>
@@ -67,10 +67,10 @@ export default {
         console.error('Error fetching Ateliers:', error);
       }
     },
-    showModal(offre) {
-      this.selectedOffre = offre;
+    showModal(idOffre) {
+      this.selectedOffreId = idOffre; // Set the selected offre ID
       document.getElementById('my_modal_2').showModal();
-    }
+    },
   }
 };
 </script>

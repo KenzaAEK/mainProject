@@ -142,7 +142,7 @@ export default {
   } catch (error) {
     console.error('Erreur de réseau ou serveur:', error);
     if (error.response && error.response.status === 422) {
-      console.error('Détails de validation:', error.response.data); // Affiche les détails de validation
+      console.error('Détails de validation:', error.response.data); 
       alert('Erreur de validation. Veuillez vérifier vos données.');
     } else {
       alert('Erreur de réseau ou serveur. Veuillez réessayer.');
