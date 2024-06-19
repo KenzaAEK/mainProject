@@ -49,7 +49,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/users', [AuthController::class, 'index']);
 
 Route::apiResource('enfants', EnfantController::class);
-Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+
 
 Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
 Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
@@ -130,6 +130,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
+        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
     });      
     
 /*
