@@ -235,13 +235,15 @@ class DemandeInscriptionController extends Controller
     {
         DB::beginTransaction();
         try {
+            // dd(1);
             $dmInscription = new DemandeInscription();
             $dmInscription->optionsPaiement = $request->optionsPaiement;
             $user = $request->user();
             $idTuteur = $user->tuteur->idTuteur;
             $Secenfants = $request->enfants;
+            // dd($request);
             $nbrEnfants = is_array($Secenfants) ? count($Secenfants) : 0;
-            
+            // dd($nbrEnfants);
             $dmInscription->idTuteur = $idTuteur;
 
             $pack = Pack::where('type', $request->type)->firstOrFail();
