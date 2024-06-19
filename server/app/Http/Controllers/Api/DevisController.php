@@ -7,124 +7,122 @@ use App\Models\Devis;
 use App\Models\Facture;
 use App\Models\Notification;
 use App\Traits\HttpResponses;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class DevisController extends Controller
 {
     use HttpResponses;
-   // le parent peut
-   public function acceptDevis(Request $request, $id)
-   {
-       $devis = Devis::findOrFail($id);
-       $devis->update(['status' => 'accepté']);
-       $totalHT = $devis->totalHT;  // add calculation
-       $totalTTC = $devis->totalTTC;  // add calculation
-       
-       // create facture 
-       $facture = Facture::create([
-           'totalHT' => $totalHT,
-           'totalTTC' => $totalTTC,
-           'idNotification' => $this->createNotification($devis)  
-       ]);
-       //create notification
+     
+    // Le parent peut accepter son devis seulement
+    public function acceptDevis(Request $request, $id)
+    {
+        $devis = Devis::with('demandeInscription.tuteur.user')->findOrFail($id);
 
-   return response()->json(['message' => 'Devis accepted, facture generated.']);
-   // return response()->json(['$this->createNotification($devis)  ' => $this->createNotification($devis)  ]);
-       
-   }
+        if (Gate::denies('manage-devis', $devis)) {
+            return response()->json(['message' => 'ACCES INTERDIT'], 403);
+        }
+        $devis->update(['status' => 'accepté']);  
 
-   // le parent peut
-   public function rejectDevis(Request $request, $id)
-   {
-       // $devis = Devis::findOrFail($id);
-       // $reason = $request->input('reason', 'No specific reason provided.');
-       // $devis->update(['status' => 'rejected', 'rejection_reason' => $reason]);
+        $notification = Notification::create([
+            'idUser' => $devis->demandeInscription->tuteur->user->idUser,
+            'contenu' => 'Votre devis a été accepté. La facture a été générée et envoyée à votre adresse email.',
+        ]);   
 
-       // Notification::create([
-       //     'idUser' => $devis->demandeInscription->tuteur->user->id,
-       //     'contenu' => 'Votre devis a été refusé. Raison: ' . $reason,
-       // ]);
+        $facture = $devis->facture;
+        $userEmail = $devis->demandeInscription->tuteur->user->email;
+        $this->sendFactureEmail($facture, $userEmail);
 
-       // return response()->json(['message' => 'Devis rejected']);
-   }
-   protected function createNotification($devis)
+        return response()->json([
+            'message' => 'Devis accepté et facture envoyée par email',
+            //'notification' => $notification,
+            'facture' => $devis->facture, 
+        ], 200);        
+    }
+
+    // Le parent peut refuser son devis
+    public function rejectDevis(Request $request, $id)
+    {
+        $devis = Devis::with('demandeInscription.tuteur.user', 'facture')->findOrFail($id);
+        // $dd($devis);
+        if (Gate::denies('manage-devis', $devis)) {
+            return response()->json(['message' => 'ACCES INTERDIT'], 403);
+        }
+
+
+
+        $validator = Validator::make($request->all(), [
+            'reason' => 'sometimes|string|max:255',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+    
+        $devis = Devis::with('demandeInscription.tuteur.user', 'facture')->findOrFail($id);
+        // dd($devis);
+        if ($devis->status=='refusé') {
+            $devis->update([
+                'rejection_reason' => 'Already rejected.',
+            ]);
+            
+            return response()->json([
+                'message' => 'Already rejected.',
+            ], 200);
+        }
+        $reason = $request->input('reason', 'Aucune raison spécifiée.');
+        $devis->update([
+            'status' => 'refusé',
+            'rejection_reason' => $reason,
+        ]);
+    
+        $notification = Notification::create([
+            'idUser' => $devis->demandeInscription->tuteur->user->idUser,
+            'contenu' => 'Votre devis a été refusé. Raison : ' . $reason,
+        ]);
+    
+        return response()->json([
+            'message' => 'Devis refusé',
+            'notification' => $notification,
+        ], 200);
+    }
+
+    protected function sendFactureEmail($facture, $emailDestination)
 {
-   if (!$devis->demandeInscription) {
-       Log::warning('DemandeInscription not found for Devis', ['devis_id' => $devis->id]);
-       return null;
-   }
+    $factureData = [
+        'facture' => $facture,
+    ];
+    $idFacture = $facture->idFacture;
+    
+    $pdfContent = $this->generatePdfContent($facture);
+    
+    try {
+        Mail::send('emails.facture', [], function ($message) use ($emailDestination, $pdfContent, $idFacture) {
+            $message->to($emailDestination);
+            $message->subject('Votre facture');
+            $message->attachData($pdfContent, 'facture_' . $idFacture . '.pdf', ['mime' => 'application/pdf']);
+        });
+    } catch (\Exception $e) {
+        Log::error('Error sending email: ' . $e->getMessage());
+        return response()->json(['error' => 'Failed to send email', 'details' => $e->getMessage()], 500);
+    }
+    
 
-   if (!$devis->demandeInscription->tuteur) {
-       Log::warning('Tuteur not found for DemandeInscription', ['demande_id' => $devis->demandeInscription->id]);
-       return null;
-   }
-
-   if (!$devis->demandeInscription->tuteur->user) {
-       Log::warning('User not found for Tuteur', ['tuteur_id' => $devis->demandeInscription->tuteur->id]);
-       return null;
-   }
-
-   $notification = Notification::create([
-       'contenu' => 'Votre devis a été accepté.',
-       'idUser' => $devis->demandeInscription->tuteur->user->idUser,
-   ]);
-
-   return $notification->idNotification;
 }
 
-   /**
-    * Display a listing of the resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
-   public function index()
-   {
-       
-   }
 
-   /**
-    * Store a newly created resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
-   public function store(Request $request)
-   {
-       //
-   }
+protected function generatePdfContent($facture)
+    {
+        $data = [
+            'facture' => $facture,
+        ];
 
-   /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function show($id)
-   {
-       //
-   }
-
-   /**
-    * Update the specified resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function update(Request $request, $id)
-   {
-       //
-   }
-
-   /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function destroy($id)
-   {
-       //
-   }
+        $pdf = PDF::loadView('pdf.facture', $data);
+        return $pdf->output();
+        
+    }
 }

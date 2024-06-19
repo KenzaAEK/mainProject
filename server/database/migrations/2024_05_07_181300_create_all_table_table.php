@@ -103,12 +103,11 @@ return new class extends Migration
             $table->text('objectif');
             $table->string('imagePub', 255)->nullable();
             $table->string('lienYtb',255);
-            $table->string('programmePdf',255)->nullable();
+            $table->longText('programmePdf',255)->nullable();
             $table->unsignedBigInteger('idTypeActivite');
             $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
-        });
-
+        }); 
         Schema::create('enfants', function (Blueprint $table) {
             $table->unsignedBigInteger('idTuteur');
             $table->unsignedBigInteger('idEnfant');
@@ -118,7 +117,7 @@ return new class extends Migration
             $table->string('nom', 100);
             $table->primary(['idTuteur', 'idEnfant']);
             $table->foreign('idTuteur')->references('idTuteur')->on('tuteurs');
-          
+
         });
 
         Schema::create('devis', function (Blueprint $table) {
@@ -261,14 +260,13 @@ return new class extends Migration
             $table->integer('idActivite');
             $table->decimal('PixtotalRemise', 10, 3);
             $table->decimal('Prixbrute', 10, 3);
+            // $table->decimal('PixtotalRemise', 10, 3);
+            // $table->decimal('Prixbrute', 10, 3);
             $table->primary(['idDemande', 'idTuteur', 'idEnfant', 'idOffre', 'idActivite']);
-            
             $table->foreign('idDemande')->references('idDemande')->on('demande_inscriptions');
             $table->foreign(['idTuteur', 'idEnfant'])->references(['idTuteur', 'idEnfant'])->on('enfants');
             $table->foreign(['idOffre', 'idActivite'])->references(['idOffre', 'idActivite'])->on('offreactivites');
         });
-
-        
     }
 
         

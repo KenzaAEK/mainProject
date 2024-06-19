@@ -76,7 +76,7 @@ class CreateAllTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('type_activites', function (Blueprint $table) {
+        Schema::create('typeactivites', function (Blueprint $table) {
             $table->id();
             $table->string('type', 50);
             $table->string('domaine', 50);
@@ -126,7 +126,7 @@ class CreateAllTables extends Migration
             $table->string('lienYtb', 50);
             $table->string('programmePdf', 50);
             $table->unsignedBigInteger('id_Activit');
-            $table->foreign('id_Activit')->references('id_Activit')->on('Type_Activit');
+            $table->foreign('id_Activit')->references('id_Activit')->on('ctivit');
             $table->primary(['idActivite']);
         });
 
@@ -285,7 +285,7 @@ class CreateAllTables extends Migration
             $table->string('Niveau_requis', 50);
             $table->primary(['id_Activit', 'Id_competence']);
 
-            $table->foreign('id_Activit')->references('id_Activit')->on('Type_Activit');
+            $table->foreign('id_Activit')->references('id_Activit')->on('TypeActivit');
             $table->foreign('Id_competence')->references('Id_competence')->on('Competence');
         });
 
@@ -313,7 +313,7 @@ class CreateAllTables extends Migration
     {
         Schema::dropIfExists('administrateurs');
         Schema::dropIfExists('competences');
-        Schema::dropIfExists('type_activites');
+        Schema::dropIfExists('typeactivites');
         Schema::dropIfExists('tuteurs');
         Schema::dropIfExists('factures');
         Schema::dropIfExists('packs');
