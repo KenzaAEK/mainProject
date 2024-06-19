@@ -1,5 +1,5 @@
 <template>
-    <div class="card1 bg-custom-color dark:bg-gray-800 h-screen overflow-hidden flex items-center justify-center">
+    <div class="card1 bg-custom-color dark:bg-gray-800  overflow-hidden flex items-center justify-center">
       <div class="card bg-custom-color lg:w-5/12 md:w-6/12 w-10/12 shadow-lg rounded-xl">
         <div class="shadow shadow-gray-400 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full p-4 md:p-8">
           <svg height="120" viewBox="0 0 24 24" width="120" xmlns="http://www.w3.org/2000/svg">
