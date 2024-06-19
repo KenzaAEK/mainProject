@@ -14,6 +14,7 @@ use App\Http\Controllers\password\PasswordResetController;
 use App\Http\Controllers\Api\TypeActiviteController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\FactureController;
 
 /*
@@ -65,7 +66,9 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
     // Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
-
+    //email verification
+    Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail']);
+Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
 
 
 /*
