@@ -142,7 +142,7 @@ protected function generatePdfContent($facture)
         return $pdf->output();
         
     }
-    public function show($id)
+    public function show2($id)
 {
     $devis = Devis::with(['demandeInscription.tuteur.user', 'facture'])->findOrFail($id);
 
