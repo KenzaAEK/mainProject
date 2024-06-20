@@ -1,7 +1,7 @@
 <template>
-    <div class="modal-box w-11/12 max-w-5xl">
-        <h3 class="font-bold text-lg">Notification</h3>
-        <h4 onclick="my_modal_8.showModal()">devis : Le nom de l’offre </h4>
+    <div class="modal-box w-11/12 max-w-5xl" v-if="user">
+        <h3 class="font-bold text-lg">Notifications</h3>
+        <h4 v-for="notif in notifications" :key="notif.id" onclick="my_modal_8.showModal()">{{ notif.contenu }} </h4>
         <dialog id="my_modal_8" class="modal" >
             <devis/>
           </dialog>
@@ -20,14 +20,34 @@
 
 import devis from './Devis.vue'
 import { mapGetters } from 'vuex';
+import axios from 'axios';
 
 export default {
     name: 'NotifBar',
     components: { 
         devis
     },
+    data() {
+    return {
+        notifications: []
+    }
+   },
+   mounted() {
+    this.getNotifications();
+   },
     computed: {
       ...mapGetters(['user'])
+    },
+    methods: {
+        async getNotifications() {
+        try {
+            const response = await axios.get('/notifications');
+            this.notifications = response.data.data;
+            console.log(response.data.data)
+        } catch (error) {
+            console.error('Error fetching notifivation:', error);
+        }
+        }
     }
 }
 

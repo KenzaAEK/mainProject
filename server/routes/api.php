@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\api\password\UpdatePasswordController;
+use App\Http\Controllers\User\NotificationController;
 
 /*
 ╔==========================================================================╗
@@ -61,13 +62,13 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
     // Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
 
     // // Manage notifications
-    // Route::get('/notifications', [NotificationController::class, 'index']);
-    // Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
-    // Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
-    // Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
-    // Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
-    // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
-    // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+     Route::get('/notifications', [NotificationController::class, 'index']);
+     Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
+     Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
+     Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
+     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
+     Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
+     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
     Route::get('/offres',[OffreController::class,'index']);
 
