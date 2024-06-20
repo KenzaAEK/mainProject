@@ -316,7 +316,7 @@ public function test_store_invalid_activity_error()
 
     $response->assertStatus(422);
     // dd($response->error);
-    // $response->assertJsonValidationErrors(['Échec de la création de la demande. No query results for model']);
+    $response->assertJsonValidationErrors(['Échec de la création de la demande. No query results for model']);
 }
 
 public function test_store_with_valid_data()

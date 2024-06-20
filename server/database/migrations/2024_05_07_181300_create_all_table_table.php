@@ -85,7 +85,7 @@ return new class extends Migration
 
         Schema::create('demande_inscriptions', function (Blueprint $table) {
             $table->id('idDemande');
-            $table->enum('optionsPaiement', ['mois', 'trimestre', 'semestre', 'annee']);
+            $table->enum('optionsPaiement', ['mensuel', 'trimestriel', 'annuel']);
             $table->enum('status', ['en attente', 'acceptée', 'refusée'])->default('en attente');
             $table->date('dateDemande')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->unsignedBigInteger('idPack');
@@ -105,7 +105,7 @@ return new class extends Migration
             $table->string('lienYtb',255);
             $table->longText('programmePdf',255)->nullable();
             $table->unsignedBigInteger('idTypeActivite');
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
             $table->timestamps();
         }); 
         Schema::create('enfants', function (Blueprint $table) {
@@ -304,7 +304,7 @@ return new class extends Migration
         Schema::dropIfExists('horaires');
         Schema::dropIfExists('administrateurs');
         Schema::dropIfExists('activites');
-        Schema::dropIfExists('type_activites');
+        Schema::dropIfExists('typeactivites');
 
         
     }
