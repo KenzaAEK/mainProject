@@ -29,7 +29,7 @@ class Devis extends Model
 
 
     public function facture() {
-        return $this->belongsTo(Facture::class, 'idDevis');
+        return $this->belongsTo(Facture::class, 'idFacture');
     }
     public function demandeInscription() {
         return $this->belongsTo(DemandeInscription::class,'idDemande');
