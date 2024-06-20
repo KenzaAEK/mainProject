@@ -31,7 +31,7 @@ class StoreActiviteRequest extends FormRequest
             'imagePub' => 'sometimes|file|mimes:jpg,jpeg,png|max:5000',
             'lienYtb' => 'required|string|max:255',
             'programmePdf' => 'required|string|max:255',
-            'type' => 'required|exists:type_activites,type'
+            'type' => 'required|exists:typeactivites,type'
         ];
     }
     

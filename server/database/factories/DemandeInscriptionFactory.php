@@ -19,7 +19,7 @@ class DemandeInscriptionFactory extends Factory
     public function definition()
     {
         return [
-            'optionsPaiement' => $this->faker->randomElement(['mois', 'trimestre', 'semestre', 'annee']),
+            'optionsPaiement' => $this->faker->randomElement(['mensuel', 'trimestriel', 'annuel']),
             'status' => $this->faker->randomElement(['en attente', 'acceptée', 'refusée']),
             'dateDemande' => $this->faker->date(),
             'idPack' => Pack::factory()->create()->idPack,

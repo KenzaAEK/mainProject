@@ -75,8 +75,8 @@
     <label class="flex items-center gap-2 custom">Packs d’inscription :</label>
     <select v-model="form.type" id="session-day" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
       <option value="None" disabled selected>Pack--</option>
-      <option value="Pack 1">PackEnfant</option>
-      <option value="Pack 2">PackAtelier</option>
+      <option value="PackEnfant">PackEnfant</option>
+      <option value="PackAtelier">PackAtelier</option>
     </select>
 
     <label class="flex items-center gap-2 custom">Options de paiement :</label>
@@ -100,12 +100,11 @@ import axios from 'axios';
 export default {
   name: 'ajouterOffre',
   props: {
-  offre: {
-    type: Object,
-    required: true
-  }
-},
-
+    offre: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       form: {
@@ -131,42 +130,54 @@ export default {
       }
     },
     async submitForm() {
-  try {
-    this.form.type = 'PackAtelier'; 
-    this.form.idOffre = 1; 
-    console.log(this.form); 
+      try {
+        // Transformation des données du formulaire en l'objet désiré
+        const transformedData = {
+          optionsPaiement: this.form.optionsPaiement,
+          type: this.form.type,
+          idOffre: this.offre.offre.idOffre, // Assigner la valeur de l'offre
+          enfants: this.form.workshops.map(workshop => {
+            const enfant = this.enfants.find(e => e.id === workshop.prenomEnfant);
+            return {
+              nomEnfant: enfant ? enfant.nom : '',
+              prenomEnfant: enfant ? enfant.prenom : '',
+              Ateliers: workshop.sessions.map(session => ({
+                titreActivite: session.titreActivite
+              }))
+            };
+          })
+        };
+        
+        // Envoi des données transformées
+        console.log(transformedData);
+        const response = await axios.post('http://127.0.0.1:8000/api/parent/demande-Inscriptions', transformedData);
 
-    const response = await axios.post('http://127.0.0.1:8000/api/demande-Inscriptions', this.form);
-
-    if (response.status === 201) {
-      this.$emit('demandeEffectuee');
-      alert('La demande a été ajoutée avec succès');
-      
-    } else {
-      console.error('Erreur lors de l\'ajout de la demande:', response.data);
-      alert('Erreur lors de l\'ajout de la demande. Veuillez réessayer.');
-    }
-  } catch (error) {
-    console.error('Erreur de réseau ou serveur:', error);
-    if (error.response && error.response.status === 422) {
-      console.error('Détails de validation:', error.response.data); 
-      alert('Erreur de validation. Veuillez vérifier vos données.');
-    } else {
-      alert('Erreur de réseau ou serveur. Veuillez réessayer.');
-    }
-  }
-},
-
+        if (response.status === 201) {
+          this.$emit('demandeEffectuee');
+          alert('La demande a été ajoutée avec succès');
+        } else {
+          console.error('Erreur lors de l\'ajout de la demande:', response.data);
+          alert('Erreur lors de l\'ajout de la demande. Veuillez réessayer.');
+        }
+      } catch (error) {
+        console.error('Erreur de réseau ou serveur:', error);
+        if (error.response && error.response.status === 422) {
+          console.error('Détails de validation:', error.response.data);
+          alert('Erreur de validation. Veuillez vérifier vos données.');
+        } else {
+          alert('Erreur de réseau ou serveur. Veuillez réessayer.');
+        }
+      }
+    },
     addWorkshop() {
       this.form.workshops.push({
-        //nomEnfant: '',
         prenomEnfant: '',
         sessions: []
       });
     },
     addSession(workshopIndex) {
       this.form.workshops[workshopIndex].sessions.push({
-        titreActivite: '',
+        titreActivite: ''
       });
     },
     removeWorkshop(index) {
@@ -174,24 +185,23 @@ export default {
     },
     removeSession(workshopIndex, sessionIndex) {
       this.form.workshops[workshopIndex].sessions.splice(sessionIndex, 1);
-    },
-    
+    }
   }
 }
 </script>
 
-<style scoped>
-h3{
+<style>
+h3 {
   color: #A3B18A;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 1.7rem;
 }
-.btn1{
-  background-color: #A3B18A;
-  border: #A3B18A;
-}
-.custom{
+.custom {
   color: rgba(67, 65, 65, 0.874);
   font-weight: bold;
+}
+.btn1 {
+  background-color: #A3B18A;
+  border: #A3B18A;
 }
 </style>

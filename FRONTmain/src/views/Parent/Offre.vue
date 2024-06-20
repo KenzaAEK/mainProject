@@ -61,6 +61,7 @@ export default {
     async getOffres() {
       try {
         const response = await axios.get('/offres');
+        // console.log(response);
         this.offres = response.data.data;
         console.log('Offres data:', this.offres); // Log the data
       } catch (error) {
@@ -69,6 +70,7 @@ export default {
     },
     showModal(idOffre) {
       this.selectedOffre = this.offres.find(offre => offre.offre.idOffre === idOffre);
+      console.log(this.selectedOffre);
       document.getElementById('my_modal_2').showModal();
     },
 
