@@ -18,6 +18,8 @@ use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\api\password\UpdatePasswordController;
 use App\Http\Controllers\User\NotificationController;
+use App\Http\Controllers\PhoneVerificationController;
+
 
 /*
 ╔==========================================================================╗
@@ -37,6 +39,7 @@ Route::post('/register', [AuthController::class, 'register']);
 /*
 ╔==========================================================================╗
 ║                           All Users authenticated                        ║
+╚==========================================================================╝
 */
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
@@ -69,6 +72,9 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
     Route::get('/offres',[OffreController::class,'index']);
+    //phone verification 
+    Route::post('/send-code', [PhoneVerificationController::class, 'sendCode']);
+    Route::post('/verify-code', [PhoneVerificationController::class, 'verifyCode']);
 
 /*
 ╔==========================================================================╗
