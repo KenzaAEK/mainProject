@@ -95,7 +95,7 @@
              <a class="btnn ">programme</a>
         </div>
     </div>
-    <a class="btnnn ">voir plus</a>
+    <a class="btnnn "><router-link to="/login">voir plus </router-link></a>
 </section>
 
 <!--About us section starts-->

@@ -32,16 +32,51 @@ class DemandeInscriptionController extends Controller
         $demandes = DB::table('demande_inscriptions')
                      ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
                      ->join('offreactivites', function($join) {
-                      $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
+                         $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
+                         ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
+                     })
+                     ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
+                     ->join('enfants', function ($join) {
+                         $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
+                         ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
+                     })
+                     ->join('disponibilite_offreactivite', function ($join) {
+                         $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
+                         ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
+                     })
+                     ->join('horaires', 'disponibilite_offreactivite.idHoraire', '=', 'horaires.idHoraire')
+                     ->select(
+                         'offres.titre as nomOffre',
+                         'enfants.prenom as nomEnfant',
+                         'horaires.jour',
+                         'horaires.heureDebut',
+                         'horaires.heureFin',
+                         'demande_inscriptions.status' // Ajout de la colonne status
+                     )
+                     ->where('demande_inscriptions.idTuteur', $idTuteur)
+                     ->get();
+    
+        return response()->json($demandes);
+    }
+    
+   
+    public function mesOffres()
+    {
+        $user = auth()->user();
+        $idTuteur = $user->tuteur->idTuteur;
+        $demandes = DB::table('demande_inscriptions')
+            ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
+            ->join('offreactivites', function ($join) {
+                $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
                      ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
             })
-                    ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
-                    ->join('enfants', function ($join) {
-                     $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
-                    ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
+            ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
+            ->join('enfants', function ($join) {
+                $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
+                     ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
             })
-                    ->join('disponibilite_offreactivite', function ($join) {
-                     $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
+            ->join('disponibilite_offreactivite', function ($join) {
+                $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
                      ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
             })
             ->join('horaires', 'disponibilite_offreactivite.idHoraire', '=', 'horaires.idHoraire')
@@ -53,10 +88,15 @@ class DemandeInscriptionController extends Controller
                 'horaires.heureFin'
             )
             ->where('demande_inscriptions.idTuteur', $idTuteur)
+            ->where('demande_inscriptions.status', 'acceptée')
             ->get();
     
         return response()->json($demandes);
     }
+    
+    
+    
+    
     
 
     /**
@@ -231,7 +271,7 @@ class DemandeInscriptionController extends Controller
 
 
 
-     public function store(Request $request) // il faut testerrrrrrrrr!!!!!!! les nouvelles fonctionalites option de payement ;(
+     public function store(Request $request) 
     {
         DB::beginTransaction();
         try {
@@ -276,7 +316,9 @@ class DemandeInscriptionController extends Controller
         
        
         foreach ($Secenfants as $enfantData) {
-            $enfant = Enfant::where('nom',$enfantData['nomEnfant'])->where('prenom', $enfantData['prenomEnfant'])->firstOrFail();
+            $enfant = Enfant::where('prenom', $enfantData['prenomEnfant'])->where('idTuteur', $idTuteur)->firstOrFail();
+            
+           
         
             $prixT = [];
             $prixHT = 0;
@@ -398,8 +440,13 @@ class DemandeInscriptionController extends Controller
         
         foreach ($enfantsSorted as  $enfantst) {
 
-            $enfant = Enfant::where('nom',$enfantst['nomEnfant'])->where('prenom', $enfantst['prenomEnfant'])->firstOrFail();
-             
+            
+            
+            $prenomEnfant = trim($enfantst['prenomEnfant']);
+            
+            $enfant = Enfant::where('prenom', $prenomEnfant)->where('idTuteur', $idTuteur)->first();  
+            
+            
             foreach ($enfantst['Ateliers'] as $atelierData) {
                 
                 $activite = Activite::where('titre', $atelierData['titreActivite'])->firstOrFail();
@@ -417,8 +464,9 @@ class DemandeInscriptionController extends Controller
             }
         
         }
+        $prenomEnfantMin = trim($childWithMinActivities['prenomEnfant']);// trim est utuliser pour regler le probleme de saut de ligne qui cause probleme 
+        $enfantmin = Enfant::where('prenom', $prenomEnfantMin)->where('idTuteur', $idTuteur)->firstOrFail();
         
-        $enfantmin = Enfant::where('nom',$childWithMinActivities['nomEnfant'])->where('prenom', $childWithMinActivities['prenomEnfant'])->firstOrFail();
         $idenfantmin = $enfantmin->idEnfant;
         foreach($childWithMinActivities['Ateliers'] as $atData)
            {

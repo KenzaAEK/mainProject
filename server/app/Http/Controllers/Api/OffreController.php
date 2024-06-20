@@ -282,6 +282,3 @@ class OffreController extends Controller
         }
     }
 }
-
-
-

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/Login.vue'
-import LoginAdmin from '@/views/LoginAdmin.vue'
+import reset from '@/views/reset.vue'
+import forgotpassword from '@/views/forgotpassword.vue'
 import LandingPage from '@/views/LandingPage.vue'
 import InterfaceParent from '@/views/Parent/InterfaceParent.vue'
 import sideBar from '@/views/admin/sideBar.vue'
@@ -21,6 +22,11 @@ const router = createRouter({
       component: InterfaceParent
     },
     {
+      path: '/reset/:token',
+      name: 'reset',
+      component: reset
+    },
+    {
       path: '/signup',
       name: 'signup',
       // route level code-splitting
@@ -34,9 +40,9 @@ const router = createRouter({
       component: Login
     },
     {
-      path: '/loginadmin',
-      name: 'LoginAdmin',
-      component: LoginAdmin
+      path: '/forgotpassword',
+      name: 'forgotpassword',
+      component: forgotpassword
     },
     {
       path: '/test',
@@ -84,12 +90,20 @@ const router = createRouter({
               name: 'supprimerAtelier',
               component: () => import('../views/admin/supprimerAtelier.vue')
             },
+            
           ]
         },
         {
           path: '/inscription',
           // name: 'inscription',
           component: () => import('../views/admin/inscription.vue'),
+          children :[
+            {
+              path: '/status',
+              name: 'status',
+              component: () => import('../views/admin/status.vue')
+            },
+          ]
         },
         {
           path: '/packs',        
@@ -99,6 +113,16 @@ const router = createRouter({
               path: '/ajouterPacks',
               name: 'ajouterPacks',
               component: () => import('../views/admin/ajouterPacks.vue')
+            },
+            {
+              path: '/modifierPack',
+              name: 'modifierPack',
+              component: () => import('../views/admin/modifierPack.vue')
+            },
+            {
+              path: '/supprimerPack',
+              name: 'supprimerPack',
+              component: () => import('../views/admin/supprimerPack.vue')
             },
           ]
         },
@@ -126,11 +150,7 @@ const router = createRouter({
           name: 'atelierAssocie',
           component: () => import('../views/animateur/atelierAssocie.vue')
         },
-        {
-          path: '/liste',
-          name: 'liste',
-          component: () => import('../views/animateur/liste.vue')
-        },
+        
       ]
     }
     
