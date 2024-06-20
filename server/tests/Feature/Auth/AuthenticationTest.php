@@ -337,7 +337,6 @@ public function test_registration_with_invalid_inputs($data, $expectedErrorField
     $response = $this->postJson('/api/register', $data);
     $response->assertStatus(422);
     $response->assertJsonValidationErrors($expectedErrorFields);
-    // dd('1');
 }
 
 public function invalidRegistrationDataProvider()
