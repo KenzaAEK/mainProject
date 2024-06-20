@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/Login.vue'
-import LoginAdmin from '@/views/LoginAdmin.vue'
+import reset from '@/views/reset.vue'
+import forgotpassword from '@/views/forgotpassword.vue'
 import LandingPage from '@/views/LandingPage.vue'
 import InterfaceParent from '@/views/Parent/InterfaceParent.vue'
 import sideBar from '@/views/admin/sideBar.vue'
@@ -21,6 +22,11 @@ const router = createRouter({
       component: InterfaceParent
     },
     {
+      path: '/reset/:token',
+      name: 'reset',
+      component: reset
+    },
+    {
       path: '/signup',
       name: 'signup',
       // route level code-splitting
@@ -34,9 +40,9 @@ const router = createRouter({
       component: Login
     },
     {
-      path: '/loginadmin',
-      name: 'LoginAdmin',
-      component: LoginAdmin
+      path: '/forgotpassword',
+      name: 'forgotpassword',
+      component: forgotpassword
     },
     {
       path: '/test',
