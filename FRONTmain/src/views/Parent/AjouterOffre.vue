@@ -33,7 +33,7 @@
                 <label for="product-name" class="flex items-center gap-2 custom">Choisir enfant</label>
                 <select v-model="workshop.prenomEnfant" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
                   <option value="None" disabled selected>None</option>
-                  <option v-for="enfant in enfants" :key="enfant.id" :value="enfant.id">{{ enfant.nom }} {{enfant.prenom}}</option>
+                  <option v-for="enfant in enfants" :key="enfant.id" :value="enfant.id">{{enfant.prenom}}</option>
                 </select>
               </div>
             </div>
@@ -61,7 +61,7 @@
                         </button>
                       </div>                            
                       <select v-model="session.titreActivite" id="session-day" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
-                        <option v-for="activite in offre.activities" :key="activite.idActivite" :value="activite.titre">{{ activite.titre }}</option>
+                        <option v-for="activity in offre.activities" :key="activity.idActivite" :value="activity.titre">{{ activity.titre }}</option>
                       </select>
                     </div>
                   </div>
@@ -100,11 +100,12 @@ import axios from 'axios';
 export default {
   name: 'ajouterOffre',
   props: {
-    offre: {
-      type: Object,
-      required: true
-    }
-  },
+  offre: {
+    type: Object,
+    required: true
+  }
+},
+
   data() {
     return {
       form: {
@@ -131,10 +132,17 @@ export default {
     },
     async submitForm() {
   try {
+    // Assurez-vous que form.type est défini correctement avant la soumission
+    this.form.type = 'PackAtelier'; // À ajuster selon la logique de votre application
+    this.form.idOffre = 1; 
+    console.log(this.form); // Vérifiez ici que les données sont correctement définies
+
     const response = await axios.post('http://127.0.0.1:8000/api/demande-Inscriptions', this.form);
-    if (response.status === 200) {
+
+    if (response.status === 201) {
       this.$emit('demandeEffectuee');
       alert('La demande a été ajoutée avec succès');
+      this.resetForm(); // Réinitialiser le formulaire après une soumission réussie
     } else {
       console.error('Erreur lors de l\'ajout de la demande:', response.data);
       alert('Erreur lors de l\'ajout de la demande. Veuillez réessayer.');
@@ -149,6 +157,7 @@ export default {
     }
   }
 },
+
     addWorkshop() {
       this.form.workshops.push({
         //nomEnfant: '',

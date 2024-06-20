@@ -99,7 +99,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::put('/offres/{offres}',[OffreController::class,'update']);
         Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
         Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
-        Route::get('/offres',[OffreController::class,'index']);
+        //Route::get('/offres',[OffreController::class,'index']);
         Route::apiResource('packs', PackController::class);
         // Route::get('/animateurs', [GroupeController::class, 'index']);
     // for admins only and authenticated  

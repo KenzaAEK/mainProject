@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       offres: [],
-      selectedOffre: null,
+      selectedOffre: '',
     };
   },
   computed: {
@@ -68,9 +68,10 @@ export default {
       }
     },
     showModal(idOffre) {
-      this.selectedOffreId = idOffre; // Set the selected offre ID
+      this.selectedOffre = this.offres.find(offre => offre.offre.idOffre === idOffre);
       document.getElementById('my_modal_2').showModal();
     },
+
   }
 };
 </script>

@@ -423,9 +423,10 @@ class DemandeInscriptionController extends Controller
             }
         
         }
+        
         $prenomEnfantMin = trim($childWithMinActivities['prenomEnfant']);// trim est utuliser pour regler le probleme de saut de ligne qui cause probleme 
         $enfantmin = Enfant::where('prenom', $prenomEnfantMin)->firstOrFail();
-        
+       
         $idenfantmin = $enfantmin->idEnfant;
         foreach($childWithMinActivities['Ateliers'] as $atData)
            {
@@ -453,7 +454,7 @@ class DemandeInscriptionController extends Controller
                             break;
                     }
                     
-                    dd($prixmTot);    
+                       
                     
 
                     $dmInscription->enfantss()->attach($idenfantmin, [
