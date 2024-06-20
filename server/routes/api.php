@@ -6,18 +6,24 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 use App\Http\Controllers\Api\OffreController;
+
 use App\Http\Controllers\Api\TypeActiviteController;
+
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\FactureController;
+
+use App\Http\Controllers\PhoneVerificationController;
+
 use App\Http\Controllers\Api\password\UpdatePasswordController;
 use App\Http\Controllers\Password\PasswordResetController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Api\PackController;
+
 
 
 /*
@@ -57,10 +63,12 @@ Route::apiResource('enfants', EnfantController::class);
 
 
 
+
     Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
     Route::post('/profile', [ProfileController::class, 'profile']);
     Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
     Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
+
 
     // Manage notifications
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -70,7 +78,15 @@ Route::apiResource('enfants', EnfantController::class);
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+
+
+    Route::get('/offres',[OffreController::class,'index']);
+    //phone verification 
+    Route::post('/send-code', [PhoneVerificationController::class, 'sendCode']);
+    Route::post('/verify-code', [PhoneVerificationController::class, 'verifyCode']);
+
     Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);
+
 
   
     Route::get('/offres',[OffreController::class,'index']);
