@@ -20,33 +20,38 @@ class DevisController extends Controller
      
     // Le parent peut accepter son devis seulement
     public function acceptDevis(Request $request, $id)
-    {
-        $devis = Devis::with('demandeInscription.tuteur.user')->findOrFail($id);
+{
+    $devis = Devis::with('demandeInscription.tuteur.user')->findOrFail($id);
 
-        if (Gate::denies('manage-devis', $devis)) {
-            return response()->json(['message' => 'ACCES INTERDIT'], 403);
-        }
-        $devis->update(['status' => 'accepté']);  
+    if (Gate::denies('manage-devis', $devis)) {
+        return response()->json(['message' => 'ACCES INTERDIT'], 403);
+    }
+    $devis->update(['status' => 'accepté']);  
 
-        $notification = Notification::create([
-            'idUser' => $devis->demandeInscription->tuteur->user->idUser,
-            'contenu' => 'Votre devis a été accepté. La facture a été générée et envoyée à votre adresse email.',
-        ]);   
-
-        $facture = $devis->facture;
-        $userEmail = $devis->demandeInscription->tuteur->user->email;
+    $facture = $devis->facture;
+    $userEmail = $devis->demandeInscription->tuteur->user->email;
+    
+    try {
         $this->sendFactureEmail($facture, $userEmail);
 
-        return response()->json([
-            'message' => 'Devis accepté et facture envoyée par email',
-            //'notification' => $notification,
-            'facture' => $devis->facture, 
-        ], 200);        
+        Notification::create([
+            'idUser' => $devis->demandeInscription->tuteur->user->idUser,
+            'contenu' => 'Votre devis a été accepté. La facture a été générée et envoyée à votre adresse email.',
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Failed to send facture email: ' . $e->getMessage());
+        return response()->json(['error' => 'Failed to send email', 'details' => $e->getMessage()], 500);
     }
-
+       
+    return response()->json([
+        'message' => 'Devis accepté et facture envoyée par email',
+        'facture' => $devis->facture, 
+    ], 200);        
+}
     // Le parent peut refuser son devis
     public function rejectDevis(Request $request, $id)
     {
+        
         $devis = Devis::with('demandeInscription.tuteur.user', 'facture')->findOrFail($id);
         // $dd($devis);
         if (Gate::denies('manage-devis', $devis)) {
@@ -92,27 +97,20 @@ class DevisController extends Controller
     }
 
     protected function sendFactureEmail($facture, $emailDestination)
-{
-    $factureData = [
-        'facture' => $facture,
-    ];
-    $idFacture = $facture->idFacture;
-    
-    $pdfContent = $this->generatePdfContent($facture);
-    
-    try {
+    {
+        $factureData = [
+            'facture' => $facture,
+        ];
+        $idFacture = $facture->idFacture;
+        
+        $pdfContent = $this->generatePdfContent($facture);
+        
         Mail::send('emails.facture', [], function ($message) use ($emailDestination, $pdfContent, $idFacture) {
             $message->to($emailDestination);
             $message->subject('Votre facture');
             $message->attachData($pdfContent, 'facture_' . $idFacture . '.pdf', ['mime' => 'application/pdf']);
         });
-    } catch (\Exception $e) {
-        Log::error('Error sending email: ' . $e->getMessage());
-        return response()->json(['error' => 'Failed to send email', 'details' => $e->getMessage()], 500);
     }
-    
-
-}
 
 
 protected function generatePdfContent($facture)

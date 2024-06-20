@@ -30,7 +30,7 @@ class StoreActiviteRequest extends FormRequest
             'ageMax' => 'sometimes|integer|between:1,100|gte:ageMin',
             'imagePub' => 'sometimes|file|mimes:jpg,jpeg,png|max:5000',
             'lienYtb' => 'required|string|max:255',
-            'programmePdf' => 'required|string|max:255',
+            'programmePdf' => 'sometimes|file|mimes:pdf|max:10000',
             'type' => 'required|exists:typeactivites,type'
         ];
     }

@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\FactureController;
-use App\Http\Controllers\api\password\UpdatePasswordController;
+use App\Http\Controllers\Api\password\UpdatePasswordController;
 use App\Http\Controllers\Password\PasswordResetController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ProfileController;
@@ -125,6 +125,8 @@ Route::apiResource('enfants', EnfantController::class);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
         Route::get('/devis/{id}', [DevisController::class, 'show']);
+        Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
+        Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
         Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);//afficher les offres du parents dans le statut est accepté

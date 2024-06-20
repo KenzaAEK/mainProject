@@ -9,6 +9,7 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+
 class UpdatePasswordController extends Controller
 {
     use HttpResponses;
