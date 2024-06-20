@@ -45,12 +45,7 @@ class AnimateurController extends Controller
         }
         $page = $request->input('page',1);
         $parpage = 5;
-<<<<<<< HEAD
         $resultats = DB::select("SELECT * FROM getEnfantActivitesss(?)", [$idAnimateur]); 
-=======
-        // $resultats = DB::select("SELECT * FROM getEnfantActivitess(?)", [$idAnimateur]); 
-        $resultats = DB::select("SELECT * FROM getEnfantActivitesss(?)", [$idAnimateur]);
->>>>>>> 611dbe42efb288bc49060003ff4969cf88007e2a
         $collection = collect($resultats);
         $resultatPaginer = new \Illuminate\Pagination\LengthAwarePaginator(
              $collection->forPage($page,$parpage),

@@ -11,8 +11,6 @@ use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\DemandeInscriptionResource;
 use App\Models\Activite;
-use App\Models\offreActivite;
-use App\Models\Activite;
 use App\Models\OffreActivite;
 use App\Models\Offre;
 use App\Models\Pack;
@@ -347,7 +345,6 @@ class DemandeInscriptionController extends Controller
                     ]);
                 }
         }
-        
        
     }
      // il faut modifier maintenant l entrer utuliser le nom de l enfant 
@@ -370,7 +367,7 @@ class DemandeInscriptionController extends Controller
         $prixTot = 0;
         foreach ($enfantsSorted as $key => $enfant) {
             $tarifs = $offreActivite->where('idOffre', $idoffre)->pluck('tarif');
-            
+
             $i = 0;
             foreach ($tarifs as $tarif) {
                 if ($i < $limite) {
@@ -381,7 +378,7 @@ class DemandeInscriptionController extends Controller
                 $i++;
             }
         }
-      
+       
 
         $dmInscription->save();
         switch ($optiondepay) {
@@ -425,10 +422,9 @@ class DemandeInscriptionController extends Controller
             }
         
         }
-        
         $prenomEnfantMin = trim($childWithMinActivities['prenomEnfant']);// trim est utuliser pour regler le probleme de saut de ligne qui cause probleme 
         $enfantmin = Enfant::where('prenom', $prenomEnfantMin)->firstOrFail();
-       
+        
         $idenfantmin = $enfantmin->idEnfant;
         foreach($childWithMinActivities['Ateliers'] as $atData)
            {

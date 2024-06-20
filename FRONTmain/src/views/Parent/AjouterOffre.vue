@@ -132,17 +132,16 @@ export default {
     },
     async submitForm() {
   try {
-    // Assurez-vous que form.type est défini correctement avant la soumission
-    this.form.type = 'PackAtelier'; // À ajuster selon la logique de votre application
+    this.form.type = 'PackAtelier'; 
     this.form.idOffre = 1; 
-    console.log(this.form); // Vérifiez ici que les données sont correctement définies
+    console.log(this.form); 
 
     const response = await axios.post('http://127.0.0.1:8000/api/demande-Inscriptions', this.form);
 
     if (response.status === 201) {
       this.$emit('demandeEffectuee');
       alert('La demande a été ajoutée avec succès');
-      this.resetForm(); // Réinitialiser le formulaire après une soumission réussie
+      
     } else {
       console.error('Erreur lors de l\'ajout de la demande:', response.data);
       alert('Erreur lors de l\'ajout de la demande. Veuillez réessayer.');
