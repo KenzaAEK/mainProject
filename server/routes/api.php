@@ -54,7 +54,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/users', [AuthController::class, 'index']);
 
 Route::apiResource('enfants', EnfantController::class);
-Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+
 
 
 
@@ -127,6 +127,8 @@ Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class)
         Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);//afficher les offres du parents dans le statut est accepté
 
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+        Route::get('/devis/{id}', [DevisController::class, 'show']);
+
     });      
     
 /*

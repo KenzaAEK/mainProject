@@ -17,7 +17,7 @@ class PackFactory extends Factory
     public function definition()
     {
         return [
-            'type' => $this->faker->randomElement(['Basic', 'Standard', 'Premium']),
+            'type' => $this->faker->randomElement(['PackEnfant', 'PackAtelier']),
             'remise' => $this->faker->randomFloat(2, 0, 50),
             'limite' => $this->faker->date(),
         ];

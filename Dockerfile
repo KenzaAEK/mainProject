@@ -1,4 +1,5 @@
-FROM node:16-alpine as builder
+# Utiliser une version stable et spécifique de Node plutôt que la version 'latest'
+FROM node:18-alpine as builder
 
 WORKDIR /vue-ui
 
