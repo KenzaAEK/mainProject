@@ -33,42 +33,67 @@ class DemandeInscriptionController extends Controller
                      ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
                      ->join('offreactivites', function($join) {
                          $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
-                              ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
+                         ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
                      })
                      ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
                      ->join('enfants', function ($join) {
                          $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
-                              ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
+                         ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
                      })
                      ->join('disponibilite_offreactivite', function ($join) {
                          $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
-                              ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
+                         ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
                      })
                      ->join('horaires', 'disponibilite_offreactivite.idHoraire', '=', 'horaires.idHoraire')
                      ->select(
                          'offres.titre as nomOffre',
-                         DB::raw('STRING_AGG(DISTINCT enfants.prenom, \', \' ORDER BY enfants.prenom) as enfants'),
+                         'enfants.prenom as nomEnfant',
                          'horaires.jour',
                          'horaires.heureDebut',
-                         'horaires.heureFin'
+                         'horaires.heureFin',
+                         'demande_inscriptions.status' // Ajout de la colonne status
                      )
                      ->where('demande_inscriptions.idTuteur', $idTuteur)
-                     ->where('demande_inscriptions.status', 'acceptée')
-                     ->groupBy('offres.titre', 'horaires.jour', 'horaires.heureDebut', 'horaires.heureFin')
                      ->get();
     
         return response()->json($demandes);
     }
     
+   
     public function mesOffres()
     {
         $user = auth()->user();
         $idTuteur = $user->tuteur->idTuteur;
-    
-        $demandes = DB::select('SELECT * FROM get_offres_by_tuteurs(?)', [$idTuteur]);
+        $demandes = DB::table('demande_inscriptions')
+            ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
+            ->join('offreactivites', function ($join) {
+                $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
+                     ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
+            })
+            ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
+            ->join('enfants', function ($join) {
+                $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
+                     ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
+            })
+            ->join('disponibilite_offreactivite', function ($join) {
+                $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
+                     ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
+            })
+            ->join('horaires', 'disponibilite_offreactivite.idHoraire', '=', 'horaires.idHoraire')
+            ->select(
+                'offres.titre as nomOffre',
+                'enfants.prenom as nomEnfant',
+                'horaires.jour',
+                'horaires.heureDebut',
+                'horaires.heureFin'
+            )
+            ->where('demande_inscriptions.idTuteur', $idTuteur)
+            ->where('demande_inscriptions.status', 'acceptée')
+            ->get();
     
         return response()->json($demandes);
     }
+    
     
     
     
@@ -250,15 +275,13 @@ class DemandeInscriptionController extends Controller
     {
         DB::beginTransaction();
         try {
-            // dd(1);
             $dmInscription = new DemandeInscription();
             $dmInscription->optionsPaiement = $request->optionsPaiement;
             $user = $request->user();
             $idTuteur = $user->tuteur->idTuteur;
             $Secenfants = $request->enfants;
-            // dd($request);
             $nbrEnfants = is_array($Secenfants) ? count($Secenfants) : 0;
-            // dd($nbrEnfants);
+            
             $dmInscription->idTuteur = $idTuteur;
 
             $pack = Pack::where('type', $request->type)->firstOrFail();
