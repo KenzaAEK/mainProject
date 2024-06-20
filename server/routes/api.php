@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\FactureController;
 
 use App\Http\Controllers\PhoneVerificationController;
@@ -64,6 +65,12 @@ Route::apiResource('enfants', EnfantController::class);
 
 
 
+
+ 
+    //email verification
+    Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail']);
+    Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+
     Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
     Route::post('/profile', [ProfileController::class, 'profile']);
     Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
@@ -78,6 +85,7 @@ Route::apiResource('enfants', EnfantController::class);
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+
 
 
     Route::get('/offres',[OffreController::class,'index']);
