@@ -64,8 +64,8 @@ Route::apiResource('enfants', EnfantController::class);
 
 
     Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
-    Route::post('/profile', [ProfileController::class, 'profile']);
-    Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
+    Route::get('/profile', [ProfileController::class, 'profile']);
+    Route::patch('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
     Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
 
     // Manage notifications
@@ -97,7 +97,7 @@ Route::apiResource('enfants', EnfantController::class);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
         // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
         //  Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
-        // Route::get('/animateurs', [GroupeController::class, 'index']);
+        Route::get('/groupes', [GroupeController::class, 'index']);
         // traitement de l'offres :
         Route::post('/offres',[OffreController::class,'store']);
         Route::get('/offres',[OffreController::class,'index']);
@@ -107,7 +107,6 @@ Route::apiResource('enfants', EnfantController::class);
         Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
         //Route::get('/offres',[OffreController::class,'index']);
         Route::apiResource('packs', PackController::class);
-        // Route::get('/animateurs', [GroupeController::class, 'index']);
         // Route::apiResource('activites', ActiviteController::class);
  
     });
@@ -153,6 +152,7 @@ Route::apiResource('enfants', EnfantController::class);
         //Route::get('/Animateurs',[AnimateurController::class,'AffAnimConnecter']);// Afficher ici les informations de l'Animateur connecter
         //Route::get('/AnimateursEnf',[AnimateurController::class,'AffEtudAnim']);
         //Route::get('/search_students',[AnimateurController::class,'searshEtud']);
+        Route::get('/groupes', [GroupeController::class, 'index']);
     
     
     
