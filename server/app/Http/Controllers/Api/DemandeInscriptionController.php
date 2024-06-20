@@ -57,7 +57,16 @@ class DemandeInscriptionController extends Controller
     
         return response()->json($demandes);
     }
+
+    public function mesOffres()
+    {
+        $user = auth()->user();
+        $idTuteur = $user->tuteur->idTuteur;
     
+        $demandes = DB::select('SELECT * FROM get_offres_by_tuteurs(?)', [$idTuteur]);
+    
+        return response()->json($demandes);
+    }
 
     /**
      * Store a newly created resource in storage.
