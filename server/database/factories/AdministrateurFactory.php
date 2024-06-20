@@ -15,11 +15,10 @@ class AdministrateurFactory extends Factory
      *
      * @var string
      */
-    // protected $model = Administrateur::class;
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array<string, mixesd>
      */
     public function definition()
     {

@@ -11,6 +11,8 @@ use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\DemandeInscriptionResource;
 use App\Models\Activite;
+use App\Models\offreActivite;
+use App\Models\Activite;
 use App\Models\OffreActivite;
 use App\Models\Offre;
 use App\Models\Pack;
