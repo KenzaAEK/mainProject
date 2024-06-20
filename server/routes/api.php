@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ActiviteController;
 use App\Http\Controllers\Api\OffreController;
 
 use App\Http\Controllers\Api\TypeActiviteController;
+
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\Api\DevisController;
@@ -63,10 +64,19 @@ Route::apiResource('enfants', EnfantController::class);
     Route::post('/verify-code', [PhoneVerificationController::class, 'verifyCode']);
 
 
+
+
+
+ 
+    //email verification
+    Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail']);
+    Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+
     Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
     Route::get('/profile', [ProfileController::class, 'profile']);
     Route::patch('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
     Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
+
 
     // Manage notifications
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -76,7 +86,18 @@ Route::apiResource('enfants', EnfantController::class);
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+
+
+
+    Route::get('/offres',[OffreController::class,'index']);
+    //phone verification 
+    Route::post('/send-code', [PhoneVerificationController::class, 'sendCode']);
+    Route::post('/verify-code', [PhoneVerificationController::class, 'verifyCode']);
+
     Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);
+
+
+  
     Route::get('/offres',[OffreController::class,'index']);
    // Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
   //  Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
@@ -126,6 +147,7 @@ Route::apiResource('enfants', EnfantController::class);
         Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
         Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
         Route::post('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
+        Route::get('/devis/{id}', [DevisController::class, 'show']);
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);

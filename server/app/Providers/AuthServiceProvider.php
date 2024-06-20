@@ -34,8 +34,7 @@ class AuthServiceProvider extends ServiceProvider
             $facture = Facture::findOrFail($factureId);
             return $facture->notification->idUser === $user->idUser;
         });
-        
-        
+
         Gate::define('manage-devis', function ($user, Devis $devis) {
             return $user->idUser === $devis->demandeInscription->tuteur->idUser;
     });
