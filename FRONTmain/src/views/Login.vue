@@ -41,6 +41,8 @@
           <div class="mt-4 text-sm text-gray-600 text-center">
             <p>Vous n'avez pas de compte ? <router-link to="/signup" class="conn hover:underline">S'inscrire maintenant</router-link>
             </p>
+            <p> <router-link to="/forgotpassword" class="conn hover:underline" style="color: #050605;font-family: Georgia, 'Times New Roman', Times, serif;font-weight: 700;">Mot de passe oublié ?</router-link>
+            </p>
           </div>
         </div>
       </div>
@@ -134,9 +136,11 @@
   
     transform: scale(1.03);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
   }
   .conn{
     color: #A3B18A;
+    
   }
   h1.conn {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
