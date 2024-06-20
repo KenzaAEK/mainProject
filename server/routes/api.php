@@ -70,9 +70,11 @@ Route::apiResource('enfants', EnfantController::class);
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
-
+    Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);
     Route::get('/offres',[OffreController::class,'index']);
-
+   // Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
+  //  Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+    
 /*
 ╔==========================================================================╗
 ║                           Admin Routes                                   ║
@@ -122,9 +124,10 @@ Route::apiResource('enfants', EnfantController::class);
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
-        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
         Route::get('/devis/{id}', [DevisController::class, 'show']);
 
+        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+        Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);//afficher les offres du parents dans le statut est accepté
     });      
     
 /*
