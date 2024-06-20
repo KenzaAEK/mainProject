@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 use App\Http\Controllers\Api\OffreController;
+
 use App\Http\Controllers\Api\TypeActiviteController;
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Password\PasswordResetController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Api\PackController;
+use App\Http\Controllers\PhoneVerificationController;
 
 /*
 ╔==========================================================================╗
@@ -54,7 +56,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 Route::apiResource('enfants', EnfantController::class);
 
-
+    Route::get('/offres',[OffreController::class,'index']);
+    //phone verification 
+    Route::post('/send-code', [PhoneVerificationController::class, 'sendCode']);
+    Route::post('/verify-code', [PhoneVerificationController::class, 'verifyCode']);
 
 
     Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
