@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Devis;
 use App\Models\Facture;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class FactureController extends Controller
 {
     public function downloadPdf($idFacture)
     {
+        if (Gate::denies('download-facture', $idFacture)) {
+            return response()->json(['message' => 'ACCES INTERDIT'], 403);
+        }
         $facture = Facture::findOrFail($idFacture);
 
         // Generate the PDF content
@@ -27,8 +31,8 @@ class FactureController extends Controller
             'facture' => $facture,
         ];
 
-        // Use a PDF generation library like DomPDF to generate the PDF content from a view
         $pdf = PDF::loadView('pdf.facture', $data);
         return $pdf->download()->getOriginalContent();
     }
 }
+  

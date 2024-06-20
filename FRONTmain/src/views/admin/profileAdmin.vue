@@ -1,5 +1,6 @@
-<template>
-    <div class="max-w-screen-xl" style="margin-top: 10px;" v-if="user">
+
+<template >
+    <div v-if="user" class="max-w-screen-xl" style="margin-top: 10px;">
         <div class="bg-white shadow-lg p-6 rounded-lg">                
             
      <div class="flex-col">
@@ -7,12 +8,12 @@
         <div class="justify-center items-center flex">
             <div class="flex " style="width: 900px; margin-left: 80px;">
             <div class="" style="width: 150px; height: 150px;">
-                <img src="@/assets/images/malakk.jpg" alt="User Profile"
+                <img src="@/assets/images/prfl3.png" alt="User Profile"
                     class="rounded-md outline outline-2 outline-offset-2 outline-black relative" />
 
             </div>
             <div class="text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl font-serif" style="margin-top: 50px; margin-left: 20px" >
-                Malak El Bakali
+                {{user.nom}} {{user.prenom}}
             </div>
         </div>
         </div>

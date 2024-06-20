@@ -25,7 +25,7 @@ class Horaire extends Model
     
     public function offreActivites()
     {
-        return $this->belongsToMany(OffreActivite::class, 'disponibilite_offreactivite', 'idHoraire', 'idOffreActivite');
+        return $this->belongsToMany(offreActivite::class, 'disponibilite_offreactivite', 'idHoraire', 'idOffreActivite');
                     
     }
 }

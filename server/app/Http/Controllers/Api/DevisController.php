@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
 class DevisController extends Controller
@@ -21,7 +22,10 @@ class DevisController extends Controller
     public function acceptDevis(Request $request, $id)
     {
         $devis = Devis::with('demandeInscription.tuteur.user')->findOrFail($id);
-        // $this->authorize('accept', $devis);
+
+        if (Gate::denies('manage-devis', $devis)) {
+            return response()->json(['message' => 'ACCES INTERDIT'], 403);
+        }
         $devis->update(['status' => 'accepté']);  
 
         $notification = Notification::create([
@@ -43,6 +47,14 @@ class DevisController extends Controller
     // Le parent peut refuser son devis
     public function rejectDevis(Request $request, $id)
     {
+        $devis = Devis::with('demandeInscription.tuteur.user', 'facture')->findOrFail($id);
+        // $dd($devis);
+        if (Gate::denies('manage-devis', $devis)) {
+            return response()->json(['message' => 'ACCES INTERDIT'], 403);
+        }
+
+
+
         $validator = Validator::make($request->all(), [
             'reason' => 'sometimes|string|max:255',
         ]);
@@ -52,6 +64,16 @@ class DevisController extends Controller
         }
     
         $devis = Devis::with('demandeInscription.tuteur.user', 'facture')->findOrFail($id);
+        // dd($devis);
+        if ($devis->status=='refusé') {
+            $devis->update([
+                'rejection_reason' => 'Already rejected.',
+            ]);
+            
+            return response()->json([
+                'message' => 'Already rejected.',
+            ], 200);
+        }
         $reason = $request->input('reason', 'Aucune raison spécifiée.');
         $devis->update([
             'status' => 'refusé',
@@ -68,7 +90,6 @@ class DevisController extends Controller
             'notification' => $notification,
         ], 200);
     }
-    
 
     protected function sendFactureEmail($facture, $emailDestination)
 {
@@ -79,13 +100,18 @@ class DevisController extends Controller
     
     $pdfContent = $this->generatePdfContent($facture);
     
-    Mail::send('emails.facture', [], function ($message) use ($emailDestination, $pdfContent, $idFacture) {
-        $message->to($emailDestination);
-        $message->subject('Votre facture');
-        $message->attachData($pdfContent, 'facture_' . $idFacture . '.pdf', [
-            'mime' => 'application/pdf',
-        ]);
-    });
+    try {
+        Mail::send('emails.facture', [], function ($message) use ($emailDestination, $pdfContent, $idFacture) {
+            $message->to($emailDestination);
+            $message->subject('Votre facture');
+            $message->attachData($pdfContent, 'facture_' . $idFacture . '.pdf', ['mime' => 'application/pdf']);
+        });
+    } catch (\Exception $e) {
+        Log::error('Error sending email: ' . $e->getMessage());
+        return response()->json(['error' => 'Failed to send email', 'details' => $e->getMessage()], 500);
+    }
+    
+
 }
 
 
@@ -95,8 +121,8 @@ protected function generatePdfContent($facture)
             'facture' => $facture,
         ];
 
-        // Use DomPDF to generate the PDF content from a view
         $pdf = PDF::loadView('pdf.facture', $data);
         return $pdf->output();
+        
     }
 }
