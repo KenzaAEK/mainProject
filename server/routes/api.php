@@ -1,19 +1,21 @@
 <?php
 
-use App\Http\Controllers\AdministrateurController;
+use App\Http\Controllers\Api\AdministrateurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 use App\Http\Controllers\Api\OffreController;
-
+use App\Http\Controllers\Api\TypeActiviteController;
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
-use App\Http\Controllers\DevisController;
+use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\api\password\UpdatePasswordController;
+use App\Http\Controllers\Password\PasswordResetController;
+use App\Http\Controllers\User\NotificationController;
 
 /*
 ╔==========================================================================╗
@@ -48,8 +50,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::apiResource('enfants', EnfantController::class);
 Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
 
-Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
-Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 
 
     // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
