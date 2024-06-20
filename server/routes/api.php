@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\Api\password\UpdatePasswordController;
 use App\Http\Controllers\Password\PasswordResetController;
