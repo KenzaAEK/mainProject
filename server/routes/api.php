@@ -19,6 +19,7 @@ use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Api\PackController;
 
+
 /*
 ╔==========================================================================╗
 ║                           All Users Routes                               ║
@@ -56,7 +57,6 @@ Route::apiResource('enfants', EnfantController::class);
 
 
 
-
     Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
     Route::post('/profile', [ProfileController::class, 'profile']);
     Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
@@ -71,6 +71,8 @@ Route::apiResource('enfants', EnfantController::class);
     Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
     Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);
+
+  
     Route::get('/offres',[OffreController::class,'index']);
    // Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
   //  Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
@@ -121,6 +123,7 @@ Route::apiResource('enfants', EnfantController::class);
         Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
         Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
         Route::post('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
+        Route::get('/devis/{id}', [DevisController::class, 'show']);
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
