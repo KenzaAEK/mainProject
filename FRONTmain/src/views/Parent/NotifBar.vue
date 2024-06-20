@@ -7,7 +7,10 @@
         <dialog id="my_modal_8" class="modal">
             
                 <div  class="modal-box" style="background-color: #F6F5F4 ;">
-                    <div v-if="message">{{ message }}</div>
+                    <div v-if="message" class="accepter">{{ message }}</div>
+                    <div v-if="responseMessage">
+                        <p class="refuserr">{{ responseMessage }}</p>
+                      </div>
                   <div class="navbar ">
                     <div class="flex-1">
                       <a class="btn btn-ghost text-xl">{{ dateDevis }}</a>
@@ -35,7 +38,23 @@
                       <div class="btns">
                         <h5 class="valable"></h5>
                         <a  class="btn btn-success" style="border-radius: 1.2rem; margin-right:.2rem" @click="acceptDevis(devisNmr)">accepter</a>
-                        <a class="btn btn-error" style="margin-right: -18rem;border-radius: 1.2rem;" >refuser</a>
+                        <a class="btn btn-error" style="margin-right: -18rem;border-radius: 1.2rem;" @click="showRefusalModal" >refuser</a>
+                        <dialog id="my_modal_re" class="modal">
+                            <div class="modal-box flex flex-col gap-3">
+                                <h3 class="font-bold text-lg">Motif de refus</h3>
+                                <div v-if="responseMessage">
+                                    <p>{{ responseMessage }}</p>
+                                  </div>
+                                <input type="text" v-model="reason" id="reason" class="grow input input-bordered flex items-center gap-2" />
+                                <div class="modal-action">
+                                    <form   method="dialog" class="inline-flex justify-end gap-4">
+                                        <button type="submit" class="btn1 btn btn-info " @click="rejectDevis(devisNmr)" >Envoyer</button>
+                                        <button class="btn">Close</button>
+                                
+                                    </form>
+                                </div>
+                            </div>
+                          </dialog>
                         <dialog id="my_modal_re" class="modal">
                           <Refus/>
                         </dialog>
@@ -57,14 +76,14 @@
 </template>
 
 <script>
-
+import Refus from './Refus.vue';
 import { mapGetters } from 'vuex';
 import axios from 'axios';
 
 export default {
     name: 'NotifBar',
     components: { 
-        
+        Refus
     },
     data() {
         return {
@@ -78,7 +97,9 @@ export default {
             tva:'',
             ttc:'',
             dateDevis:'',
-            message: ''
+            message: '',
+            reason: '',
+            responseMessage: ''
         }
     },
     mounted() {
@@ -89,6 +110,24 @@ export default {
         ...mapGetters(['user'])
     },
     methods: {
+        async rejectDevis(devisNmr) {
+      try {
+        const response = await axios.post(`http://127.0.0.1:8000/api/parent/reject-devis/${devisNmr}`, {
+          reason: this.reason
+        }, {
+          headers: {
+            
+          }
+        });
+        this.responseMessage = response.data.message;
+      } catch (error) {
+        if (error.response) {
+          this.responseMessage = error.response.data.message || 'Erreur lors du rejet du devis';
+        } else {
+          this.responseMessage = 'Erreur lors de la connexion à l\'API';
+        }
+      }
+    },
         async acceptDevis(devisNmr) {
         try {
             const response = await axios.post(`http://127.0.0.1:8000/api/parent/accept-devis/${devisNmr}`, {}, {
@@ -167,13 +206,33 @@ export default {
                 modal.showModal();
             }
             this.getDevis(this.selectedNotif.idNotification);
+        },
+        showRefusalModal() {
+      const modal = this.$el.querySelector('#my_modal_re');
+        if (modal) {
+            modal.showModal();
         }
+        },
     }
 }
 </script>
 
 <style scoped>
-
+.refuserr{
+    color: red;
+}
+.accepter {
+    color: #479c0a;
+}
+h3{
+    color: #A3B18A;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.7rem;
+  }
+  .btn1{
+    background-color: #A3B18A;
+    border: #A3B18A;
+  }
 h4 {
     color: #FFFFFF;
     background-color: #A3B18A;
