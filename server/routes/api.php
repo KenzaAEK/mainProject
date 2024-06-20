@@ -66,9 +66,10 @@ Route::apiResource('enfants', EnfantController::class);
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
-
+    //Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);
     Route::get('/offres',[OffreController::class,'index']);
-   
+   // Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
+  //  Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
     
 /*
 ╔==========================================================================╗
