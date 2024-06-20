@@ -70,7 +70,8 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
     // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
     Route::get('/offres',[OffreController::class,'index']);
-
+   
+    
 /*
 ╔==========================================================================╗
 ║                           Admin Routes                                   ║
@@ -131,6 +132,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+        Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);//afficher les offres du parents dans le statut est accepté
     });      
     
 /*
