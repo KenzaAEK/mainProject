@@ -67,13 +67,13 @@ export default{
   methods:{
     async saveEnfant() {
       try {
-        await axios.post('/parent/enfants', {
+       const response = await axios.post('/parent/enfants', {
           prenom: this.prenom,
           nom: this.nom,
           dateNaissance: this.naissance,
           niveauEtude: this.niveau,
         });
-        this.$emit('enfantAdded');
+        this.$emit('enfantAdded', response.data.data);
       } catch (error) {
         console.error('Error adding child:', error);
       }
