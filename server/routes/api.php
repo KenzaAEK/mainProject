@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 // use App\Http\Controllers\Api\AdministrateurController;
 use App\Http\Controllers\Api\OffreController;
+
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\EnfantController;
@@ -15,6 +16,8 @@ use App\Http\Controllers\Api\TypeActiviteController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
 use App\Http\Controllers\FactureController;
+use App\Http\Controllers\api\password\UpdatePasswordController;
+use App\Http\Controllers\User\NotificationController;
 
 /*
 ╔==========================================================================╗
@@ -34,7 +37,6 @@ Route::post('/register', [AuthController::class, 'register']);
 /*
 ╔==========================================================================╗
 ║                           All Users authenticated                        ║
-╚==========================================================================╝
 */
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // for authenticated users
@@ -57,16 +59,16 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
     // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); //gate for animateur**** email 
     // Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
 
-    // // Manage notifications
-    // Route::get('/notifications', [NotificationController::class, 'index']);
-    // Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
-    // Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
-    // Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
-    // Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
-    // Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
-    // Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+    // Manage notifications
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
+    Route::put('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::put('/notifications/{notification}/mark-as-unread', [NotificationController::class, 'markAsUnread']);
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
+    Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
+    Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
 
-
+    Route::get('/offres',[OffreController::class,'index']);
 
 /*
 ╔==========================================================================╗
