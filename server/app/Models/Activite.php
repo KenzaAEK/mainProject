@@ -24,7 +24,7 @@ class Activite extends Model
 
     public function offre_activite()
     {
-        return $this->hasMany(OffreActivite::class, 'idActivite');
+        return $this->hasMany(offreActivite::class, 'idActivite');
     }
     public function typeActivite()
     {

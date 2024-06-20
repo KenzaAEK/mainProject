@@ -7,8 +7,9 @@
         <div class=" flex">
           
             <a href="#" aria-label="dashboard" class="bg group flex items-center space-x-4 rounded-full px-4 py-3 text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 15px;" viewBox="0 0 24 24" width="24px" height="24px"><path d="M 12 2.0996094 L 1 12 L 4 12 L 4 21 L 11 21 L 11 15 L 13 15 L 13 21 L 20 21 L 20 12 L 23 12 L 12 2.0996094 z M 12 4.7910156 L 18 10.191406 L 18 11 L 18 19 L 15 19 L 15 13 L 9 13 L 9 19 L 6 19 L 6 10.191406 L 12 4.7910156 z"/></svg>          
-
+              <div style="width: 37px; height: 37px; margin-top: 10px ;">
+                <img src="@/assets/images/lampe.png" alt="">
+              </div>
               <div class="image" style="width: 130px; height: 30px;">
                 <router-link to="/test"><img src="@/assets/images/LOGO.png" alt=""></router-link>
                 
@@ -16,6 +17,16 @@
             </a>
         </div>
         <ul class="mt-6 space-y-2 tracking-wide">
+          <li class="min-w-max">
+            <a href="#" class="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path class="fill-current text-gray-600 group-hover:text-selected" d="M 12 2.0996094 L 1 12 L 4 12 L 4 21 L 11 21 L 11 15 L 13 15 L 13 21 L 20 21 L 20 12 L 23 12 L 12 2.0996094 z M 12 4.7910156 L 18 10.191406 L 18 11 L 18 19 L 15 19 L 15 13 L 9 13 L 9 19 L 6 19 L 6 10.191406 L 12 4.7910156 z"/>
+                <!-- <path class="fill-current text-gray-600 group-hover:text-selected" d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
+                <path class="fill-current text-gray-300 group-hover:text-selected-h" d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" /> -->
+              </svg>
+              <router-link to="/test">Home</router-link>
+            </a>
+          </li>
           <li class="min-w-max">
             <a href="#" aria-label="dashboard" class="bg group flex items-center space-x-4 rounded-full px-4 py-3 text-gray-600">
                 <svg class="-ml-1 h-6 w-6" viewBox="0 0 24 24" fill="none">
@@ -71,7 +82,7 @@
               </span>
             </a>
           </li>
-          <li class="min-w-max">
+          <!-- <li class="min-w-max">
             <a href="#" class="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path class="fill-current text-gray-600 group-hover:text-selected" d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
@@ -79,7 +90,7 @@
               </svg>
               <span class="group-hover:text-gray-700">Paiement</span>
             </a>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="w-max -mb-3">
@@ -88,7 +99,7 @@
             <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
           </svg>
           <span class="group-hover:text-gray-700 ">
-            <router-link to="/test">Parametres</router-link>
+            <a  @click.prevent="logout">Déconnexion</a>
           </span>
         </a>
       </div>
@@ -109,7 +120,14 @@ import { mapGetters } from 'vuex';
         computed: {
       ...mapGetters(['user']),
 
+      },
+      methods:{
+      logout(){
+        localStorage.removeItem('token');
+        this.$store.dispatch('user', null);
+        this.$router.push('/');
       }
+    }
     }
     
 </script>

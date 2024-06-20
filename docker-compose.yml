@@ -1,32 +1,32 @@
-version: "3.8"  # Utiliser une version plus récente de Docker Compose pour de meilleures fonctionnalités
+#version: "3.8"  # Utiliser une version plus récente de Docker Compose pour de meilleures fonctionnalités
 
 services:
   server:
     container_name: server
     build:
-      context: ./server  # Chemin du répertoire contenant le Dockerfile de l'API
-      dockerfile: Dockerfile  # Nom du fichier Dockerfile
+      context: ./server  
+      dockerfile: Dockerfile  
     env_file:
-      - server/.env # Chemin vers le fichier .env pour l'API
+      - server/.env 
     ports:
-      - "8000:8000"  # Mapper le port 8000 du conteneur sur le port 8000 de l'hôte
+      - "8000:8000"  
     networks:
-      - backend  # Connecter l'API au réseau backend
+      - backend  
     depends_on:
-      - db  # L'API dépend de la disponibilité du service de base de données
+      - db  
 
   app:
     container_name: app
     build:
-      context: .  # Chemin du répertoire contenant le Dockerfile de l'app
-      dockerfile: Dockerfile  # Nom du fichier Dockerfile
+      context: .  
+      dockerfile: Dockerfile  
     ports:
       - "80:80"
       - "443:443"
     networks:
-      - frontend  # Connecter l'app au réseau frontend
+      - frontend  
     depends_on:
-      - server  # L'app front-end dépend de l'API
+      - server  
 
 
   db:
@@ -46,8 +46,9 @@ services:
 volumes:
   postgres_data:
 
+
 networks:
   backend:
-    driver: bridge  # Utiliser le driver bridge pour le réseau backend
+    driver: bridge  
   frontend:
-    driver: bridge  # Utiliser le driver bridge pour le réseau frontend
+    driver: bridge 

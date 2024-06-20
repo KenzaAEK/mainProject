@@ -20,6 +20,7 @@
                         </svg>
                         <span  style="margin-left: 17px;">{{ user.tel }}</span>
                       </div>
+                      
             </div>
         
             <div class="box">
@@ -262,6 +263,9 @@ export default {
   computed: {
     ...mapGetters(['user']),
   },
+  mounted() {
+      this.getEnfants();
+    },
   methods: {
     async getEnfants() {
       try {

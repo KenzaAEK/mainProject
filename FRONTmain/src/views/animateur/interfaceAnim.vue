@@ -1,8 +1,12 @@
 <template>
-  <div class="flex">
+  <div class="flex" v-if="user">
     <div class="navbar bg-base-100">
       <div class="flex-1">
-        <a class="btn btn-ghost text-xl"> LOGO</a>
+        <a class=""> 
+          <div class="image" style="width: 130px; height: 30px;">
+                <img src="@/assets/images/logobg.png" alt="">
+                
+              </div></a>
       </div>
       <div class="flex-none gap-2">
         <button class="btn btn-ghost btn-circle">
@@ -15,7 +19,7 @@
         </button>
         <div class="dropdown dropdown-end">
           <div class="navbar-end">
-            <a class="btn1 btn">Déconnexion</a>
+            <a class="btn1 btn" @click.prevent="logout">Déconnexion</a>
           </div>
         </div>
       </div>
@@ -25,13 +29,14 @@
       <div class="bg-custom-color">
         <div class="container mx-auto py-8">
           <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
-            <div class="col-span-4 sm:col-span-9">
-              <div class="bg-white shadow rounded-lg p-6">
+            <div class="bg-white col-span-4 sm:col-span-9" style="border-radius: 10px">
+              <atelierAssocie/>
+              <!-- <div class="bg-white shadow rounded-lg p-6">
                 <div class="hero-content flex-col lg:flex-row">
                   <atelierAssocie/>
                 </div>
                 <liste/>
-              </div> 
+              </div>  -->
             </div>
             <profilAnim/>
           </div>
@@ -44,14 +49,24 @@
 <script>
 import profilAnim from './profilAnim.vue'
 import atelierAssocie from './atelierAssocie.vue'
-import liste from './liste.vue'
+import { mapGetters } from 'vuex';
 
 export default{
     name :'interfaceAnim',
     components:{
         profilAnim,
         atelierAssocie,
-        liste
+        
+    },
+    methods:{
+      logout(){
+        localStorage.removeItem('token');
+        this.$store.dispatch('user', null);
+        this.$router.push('/');
+      }
+    },
+    computed: {
+      ...mapGetters(['user'])
     }
 }
 

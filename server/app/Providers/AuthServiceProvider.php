@@ -2,7 +2,13 @@
 
 namespace App\Providers;
 
+
 use Illuminate\Auth\Notifications\VerifyEmail;
+
+use App\Models\Devis;
+use App\Models\Facture;
+use App\Models\Notification;
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Gate;
@@ -27,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+// from verify email
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             $spaUrl = "http://spa.test?email_verify_url=".$url;
 
@@ -35,6 +42,16 @@ class AuthServiceProvider extends ServiceProvider
             ->line('Cliquez sur le bouton ci-dessous pour vérifier votre adresse e-mail.')
             ->action('Vérifier l\'adresse e-mail', $spaUrl);
             
+
+        Gate::define('download-facture', function ($user, $factureId) {
+            $facture = Facture::findOrFail($factureId);
+            return $facture->notification->idUser === $user->idUser;
+        });
+        
+        
+        Gate::define('manage-devis', function ($user, Devis $devis) {
+            return $user->idUser === $devis->demandeInscription->tuteur->idUser;
+
         });
     }
 }

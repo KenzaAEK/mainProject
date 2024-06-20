@@ -22,7 +22,7 @@
                 </path>
             </svg>
             <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Êtes-vous sûr de vouloir supprimer cette offre?</h3>
-            <a href="#"  onclick="closeModal('sure')"
+            <a href="#"  onclick="closeModal('sure')" @click="$emit('onDeleteConfirmed')"
                 class="text-white bg-gradient-selected  font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
                 Oui, je suis sûr
             </a>

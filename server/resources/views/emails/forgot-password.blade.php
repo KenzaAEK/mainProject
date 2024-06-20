@@ -47,7 +47,7 @@
         <h1>Réinitialisation du mot de passe</h1>
         <p>Bonjour,</p>
         <p>Vous avez demandé la réinitialisation de votre mot de passe. Veuillez cliquer sur le lien ci-dessous pour créer un nouveau mot de passe :</p>
-        <p><a href="{{ route('password.reset', ['token' => $token]) }}?email={{ urlencode($email) }}" class="button">Réinitialiser le mot de passe</a></p>
+        <p><a href="http://localhost:5174/reset/{{$token}}" class="button">Réinitialiser le mot de passe</a></p>
         <p>Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail en toute sécurité.</p>
         <p>Cordialement,<br>L'équipe de votre application</p>
     </div>
