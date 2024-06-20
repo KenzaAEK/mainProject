@@ -56,6 +56,7 @@ Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
 Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
 
 
+
     // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
     // Route::post('/profile', [ProfileController::class, 'profile']);
     // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); //gate for animateur**** email 
@@ -69,7 +70,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
      Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
      Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
      Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
-
+     
     Route::get('/offres',[OffreController::class,'index']);
 
 /*
@@ -128,6 +129,7 @@ Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
         Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
         Route::post('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
+        Route::get('/devis/{id}', [DevisController::class, 'show']);
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);

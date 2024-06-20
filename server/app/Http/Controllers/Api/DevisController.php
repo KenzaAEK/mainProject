@@ -30,7 +30,7 @@ class DevisController extends Controller
 
         $notification = Notification::create([
             'idUser' => $devis->demandeInscription->tuteur->user->idUser,
-            'contenu' => 'Votre devis a été accepté. La facture a été générée et envoyée à votre adresse email.',
+            'contenu' => 'si tu n\'a pas télécharger la facture vous pouvez le faire en cliquant sur la notification precedent.',
         ]);   
 
         $facture = $devis->facture;
@@ -90,6 +90,19 @@ class DevisController extends Controller
             'notification' => $notification,
         ], 200);
     }
+
+    public function show($id)
+{
+    $devis = Devis::with(['demandeInscription.tuteur.user', 'facture'])->findOrFail($id);
+
+    if (Gate::denies('manage-devis', $devis)) {
+        return response()->json(['message' => 'ACCES INTERDIT'], 403);
+    }
+
+    return $this->success([
+        'devis' => $devis
+    ], 'Devis récupéré avec succès.');
+}
 
     protected function sendFactureEmail($facture, $emailDestination)
 {
