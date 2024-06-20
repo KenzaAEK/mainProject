@@ -35,6 +35,27 @@
                         <h2>TVA :{{ tva }} DHS</h2> <br>
                         <h2>Total TTC :{{ ttc }} DHS</h2>
                       </div>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Ateliers</th>
+                            <th>nombre d’enfants</th>
+                            <th>Pack Ateliers</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Chess </td>
+                            <td>1</td>
+                            <td>Pack Atelier</td>
+                          </tr>
+                          <tr>
+                            <td>Programmation</td>
+                            <td>2</td>
+                            <td>Pack Ateliers</td>
+                          </tr>
+                        </tbody>
+                      </table>
                       <div class="btns">
                         <h5 class="valable"></h5>
                         <a  class="btn btn-success" style="border-radius: 1.2rem; margin-right:.2rem" @click="acceptDevis(devisNmr)">accepter</a>
@@ -59,7 +80,7 @@
                           <Refus/>
                         </dialog>
                       </div>
-                      <a class="btn" style="background-color:#3A5A40; border-radius: 1.2rem;margin-right: 17rem;margin-top: 2rem;" @click="downloadInvoice(devisNmr)">Devis PDF </a>
+                      <a class="btn" style="background-color:#3A5A40; border-radius: 1.2rem;margin-right: 12rem;margin-top: 2rem;" @click="downloadInvoice(devisNmr)">Devis PDF </a>
                       
                       <button class="btn" style="margin-top:2rem; background-color:black; color:antiquewhite;border-radius: 1.2rem;">Close</button>
                     </form>
@@ -218,6 +239,13 @@ export default {
 </script>
 
 <style scoped>
+table {
+    margin-bottom: 2rem;
+    margin-left: 5rem;
+    margin-right: 1rem;
+    width: 26rem;
+}
+
 .refuserr{
     color: red;
 }
@@ -279,7 +307,7 @@ h4 {
     background-color: #eaebe9;
     text-align: left;
     width: 8rem;
-    margin-left: 1rem;
+    margin-left: 5rem;
     margin-bottom: 1rem;
   }
 </style>
