@@ -125,4 +125,16 @@ protected function generatePdfContent($facture)
         return $pdf->output();
         
     }
+    public function show($id)
+{
+    $devis = Devis::with(['demandeInscription.tuteur.user', 'facture'])->findOrFail($id);
+
+    if (Gate::denies('manage-devis', $devis)) {
+        return response()->json(['message' => 'ACCES INTERDIT'], 403);
+    }
+
+    return $this->success([
+        'devis' => $devis
+    ], 'Devis récupéré avec succès.');
+}
 }

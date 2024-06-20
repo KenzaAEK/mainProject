@@ -1,5 +1,6 @@
 {
     "require": {
-        "barryvdh/laravel-dompdf": "^2.2"
+        "barryvdh/laravel-dompdf": "^2.2",
+        "vonage/client": "^4.0"
     }
 }

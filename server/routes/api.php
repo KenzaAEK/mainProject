@@ -16,6 +16,7 @@ use App\Http\Controllers\FactureController;
 use App\Http\Controllers\api\password\UpdatePasswordController;
 use App\Http\Controllers\Password\PasswordResetController;
 use App\Http\Controllers\User\NotificationController;
+use App\Http\Controllers\User\ProfileController;
 
 /*
 ╔==========================================================================╗
@@ -52,10 +53,10 @@ Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class)
 
 
 
-    // Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
-    // Route::post('/profile', [ProfileController::class, 'profile']);
-    // Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); //gate for animateur**** email 
-    // Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
+    Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
+    Route::post('/profile', [ProfileController::class, 'profile']);
+    Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
+    Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
 
     // Manage notifications
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -73,7 +74,7 @@ Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class)
 ║                           Admin Routes                                   ║
 ╚==========================================================================╝
 */
-    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
+    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { 
   
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
@@ -83,7 +84,7 @@ Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class)
         // Route::post('/offres',[OffreController::class,'store']);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
         // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
-       //  Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
+        //  Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
         // Route::get('/animateurs', [GroupeController::class, 'index']);
         // traitement de l'offres :
         Route::post('/offres',[OffreController::class,'store']);
@@ -94,13 +95,7 @@ Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class)
         Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
         Route::get('/offres',[OffreController::class,'index']);
         // Route::get('/animateurs', [GroupeController::class, 'index']);
-    // for admins only and authenticated  
-    //add middlewear check role 
         // Route::apiResource('activites', ActiviteController::class);
-    //add middlewear check role 
-    // for parents only and authenticated
-    //add middlewear check role 
-    // for animators only and authenticated 
  
     });
 /*
@@ -114,19 +109,16 @@ Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class)
 
         Route::apiResource('enfants', EnfantController::class);
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class); 
-        Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
-        Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
-        Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
-        Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
         Route::apiResource('enfants', EnfantController::class);
         // Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
-        // Route::get('api/parent/facture-download/{id}', [FactureController::class, 'downloadPdf']);
         Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
         Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
         Route::post('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
+        Route::get('/devis/{id}', [DevisController::class, 'show']);
+
     });      
     
 /*
