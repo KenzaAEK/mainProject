@@ -90,12 +90,20 @@ const router = createRouter({
               name: 'supprimerAtelier',
               component: () => import('../views/admin/supprimerAtelier.vue')
             },
+            
           ]
         },
         {
           path: '/inscription',
           // name: 'inscription',
           component: () => import('../views/admin/inscription.vue'),
+          children :[
+            {
+              path: '/status',
+              name: 'status',
+              component: () => import('../views/admin/status.vue')
+            },
+          ]
         },
         {
           path: '/packs',        
@@ -105,6 +113,16 @@ const router = createRouter({
               path: '/ajouterPacks',
               name: 'ajouterPacks',
               component: () => import('../views/admin/ajouterPacks.vue')
+            },
+            {
+              path: '/modifierPack',
+              name: 'modifierPack',
+              component: () => import('../views/admin/modifierPack.vue')
+            },
+            {
+              path: '/supprimerPack',
+              name: 'supprimerPack',
+              component: () => import('../views/admin/supprimerPack.vue')
             },
           ]
         },
@@ -132,11 +150,7 @@ const router = createRouter({
           name: 'atelierAssocie',
           component: () => import('../views/animateur/atelierAssocie.vue')
         },
-        {
-          path: '/liste',
-          name: 'liste',
-          component: () => import('../views/animateur/liste.vue')
-        },
+        
       ]
     }
     

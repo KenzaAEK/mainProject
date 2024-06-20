@@ -17,6 +17,7 @@ use App\Http\Controllers\api\password\UpdatePasswordController;
 use App\Http\Controllers\Password\PasswordResetController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Api\PackController;
 
 /*
 ╔==========================================================================╗
@@ -33,6 +34,9 @@ Route::post('/reset-password/{token}', [PasswordResetController::class, 'resetPa
 Route::post('/login', [AuthController::class, 'login'])->name("login");
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/users', [AuthController::class, 'index']);
+Route::get('/offres',[OffreController::class,'index']);
+Route::get('/activites', [ActiviteController::class, 'index']);
+Route::get('/activites/{id}', [ActiviteController::class, 'show']);
 /*
 ╔==========================================================================╗
 ║                           All Users authenticated                        ║
@@ -74,8 +78,8 @@ Route::apiResource('enfants', EnfantController::class);
 ║                           Admin Routes                                   ║
 ╚==========================================================================╝
 */
-    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { 
-  
+    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
+
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
@@ -93,7 +97,8 @@ Route::apiResource('enfants', EnfantController::class);
         Route::put('/offres/{offres}',[OffreController::class,'update']);
         Route::delete('/offres/{offres}/{activites}',[OffreController::class,'deleteOffreActiviteById']);// suppr une activite lier a une offre 
         Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
-        Route::get('/offres',[OffreController::class,'index']);
+        //Route::get('/offres',[OffreController::class,'index']);
+        Route::apiResource('packs', PackController::class);
         // Route::get('/animateurs', [GroupeController::class, 'index']);
         // Route::apiResource('activites', ActiviteController::class);
  

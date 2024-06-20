@@ -1,7 +1,10 @@
 <template >
         <div class="navbar bg-base-100" v-if="user">
             <div class="flex-1">
-              <a class="btn btn-ghost text-xl"> LOGO</a>
+              <div class="image" style="width: 130px; height: 30px;">
+                <img src="@/assets/images/logobg.png" alt="">
+                
+              </div>
             </div>
             <div class="navbar-center hidden lg:flex" style="margin-right: 10.5rem;">
               <ul class="menu menu-horizontal px-1">

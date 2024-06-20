@@ -105,7 +105,7 @@ return new class extends Migration
             $table->string('lienYtb',255);
             $table->longText('programmePdf',255)->nullable();
             $table->unsignedBigInteger('idTypeActivite');
-            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('typeactivites');
+            $table->foreign('idTypeActivite')->references('idTypeActivite')->on('type_activites');
             $table->timestamps();
         }); 
         Schema::create('enfants', function (Blueprint $table) {
@@ -304,7 +304,7 @@ return new class extends Migration
         Schema::dropIfExists('horaires');
         Schema::dropIfExists('administrateurs');
         Schema::dropIfExists('activites');
-        Schema::dropIfExists('typeactivites');
+        Schema::dropIfExists('type_activites');
 
         
     }
