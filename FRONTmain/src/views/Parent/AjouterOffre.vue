@@ -82,7 +82,7 @@
     <label class="flex items-center gap-2 custom">Options de paiement :</label>
     <select id="session-day" v-model="form.optionsPaiement" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-black block w-full p-2.5">
       <option value="" disabled selected>Option de paiement --</option>
-      <option value="mensuel">mensuel</option>
+      <option value="mensuel">mois</option>
       <option value="trimestriel">trimestriel</option>
       <option value="annuel">annuel</option>
     </select>

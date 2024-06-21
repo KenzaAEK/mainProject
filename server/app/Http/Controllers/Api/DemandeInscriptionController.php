@@ -33,21 +33,22 @@ class DemandeInscriptionController extends Controller
                      ->join('inscriptionEnfant_offre_Activite', 'demande_inscriptions.idDemande', '=', 'inscriptionEnfant_offre_Activite.idDemande')
                      ->join('offreactivites', function($join) {
                          $join->on('inscriptionEnfant_offre_Activite.idOffre', '=', 'offreactivites.idOffre')
-                         ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
+                              ->on('inscriptionEnfant_offre_Activite.idActivite', '=', 'offreactivites.idActivite');
                      })
                      ->join('offres', 'offreactivites.idOffre', '=', 'offres.idOffre')
                      ->join('enfants', function ($join) {
                          $join->on('inscriptionEnfant_offre_Activite.idTuteur', '=', 'enfants.idTuteur')
-                         ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
+                              ->on('inscriptionEnfant_offre_Activite.idEnfant', '=', 'enfants.idEnfant');
                      })
                      ->join('disponibilite_offreactivite', function ($join) {
                          $join->on('offreactivites.idOffre', '=', 'disponibilite_offreactivite.idOffre')
-                         ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
+                              ->on('offreactivites.idActivite', '=', 'disponibilite_offreactivite.idActivite');
                      })
                      ->join('horaires', 'disponibilite_offreactivite.idHoraire', '=', 'horaires.idHoraire')
                      ->select(
                          'offres.titre as nomOffre',
-                         'enfants.prenom as nomEnfant',
+                         'enfants.prenom as prenomEnfant',
+                         'enfants.nom as nomEnfant', // Ajout du nom de l'enfant
                          'horaires.jour',
                          'horaires.heureDebut',
                          'horaires.heureFin',
@@ -58,8 +59,6 @@ class DemandeInscriptionController extends Controller
     
         return response()->json($demandes);
     }
-    
-   
     public function mesOffres()
     {
         $user = auth()->user();
@@ -89,11 +88,11 @@ class DemandeInscriptionController extends Controller
             )
             ->where('demande_inscriptions.idTuteur', $idTuteur)
             ->where('demande_inscriptions.status', 'acceptée')
+            ->where('demande_inscriptions.status', 'acceptée')
             ->get();
     
         return response()->json($demandes);
     }
-    
     
     
     
@@ -265,7 +264,7 @@ class DemandeInscriptionController extends Controller
      
 
 
-   // my structured code vesion *****************************************************************************************************************************************************
+   // my structured code vesion ***************************************************
 
 
 
@@ -316,6 +315,8 @@ class DemandeInscriptionController extends Controller
         
        
         foreach ($Secenfants as $enfantData) {
+            $enfant = Enfant::where('prenom', $enfantData['prenomEnfant'])->where('idTuteur', $idTuteur)->firstOrFail();
+            
             $enfant = Enfant::where('prenom', $enfantData['prenomEnfant'])->where('idTuteur', $idTuteur)->firstOrFail();
             
            

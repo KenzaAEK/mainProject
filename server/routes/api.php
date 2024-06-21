@@ -23,6 +23,7 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Api\PackController;
 use App\Http\Controllers\PhoneVerificationController;
 
+
 /*
 ╔==========================================================================╗
 ║                           All Users Routes                               ║
@@ -107,8 +108,8 @@ Route::apiResource('enfants', EnfantController::class);
 ║                           Admin Routes                                   ║
 ╚==========================================================================╝
 */
-    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { // 2 !!!!!!!!!!!!!!!!!!!!!!!!!! 1 only for testing
-
+    Route::group(['middleware' => 'role:2', 'prefix' => 'admin'], function () { 
+  
         Route::apiResource('activites', ActiviteController::class);
         Route::apiResource('type-activites', TypeActiviteController::class);
         Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
@@ -152,8 +153,15 @@ Route::apiResource('enfants', EnfantController::class);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
         Route::get('/devis/{id}', [DevisController::class, 'show']);
+
+        Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);//afficher les offres du parents dans le statut est accepté
+
+        Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
+        Route::get('/devis/{id}', [DevisController::class, 'show']);
+
         Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
         Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
+
 
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
         Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);//afficher les offres du parents dans le statut est accepté
