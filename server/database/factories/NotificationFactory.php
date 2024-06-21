@@ -21,7 +21,7 @@ class NotificationFactory extends Factory
             'contenu' => $this->faker->sentence,
             'statut' => $this->faker->boolean,
             'idUser' => User::factory()->create()->idUser,
-            'read_at' => $this->faker->dateTime,
+            'read_at' => null,
         ];
     }
 }

@@ -6,18 +6,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ActiviteController;
 use App\Http\Controllers\Api\OffreController;
+
 use App\Http\Controllers\Api\TypeActiviteController;
+
 use App\Http\Controllers\Api\DemandeInscriptionController;
 use App\Http\Controllers\Api\EnfantController;
 use App\Http\Controllers\Api\DevisController;
 use App\Http\Controllers\Api\GroupeController;
 use App\Http\Controllers\AnimateurController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\FactureController;
-use App\Http\Controllers\api\password\UpdatePasswordController;
+use App\Http\Controllers\Api\password\UpdatePasswordController;
 use App\Http\Controllers\Password\PasswordResetController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Api\PackController;
+use App\Http\Controllers\PhoneVerificationController;
 
 
 /*
@@ -55,13 +59,25 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 Route::apiResource('enfants', EnfantController::class);
 
+    Route::get('/offres',[OffreController::class,'index']);
+    //phone verification 
+    Route::post('/send-code', [PhoneVerificationController::class, 'sendCode']);
+    Route::post('/verify-code', [PhoneVerificationController::class, 'verifyCode']);
 
 
+
+
+
+ 
+    //email verification
+    Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail']);
+    Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
 
     Route::post('/upload-image', [ProfileController::class, 'uploadImage']);
-    Route::post('/profile', [ProfileController::class, 'profile']);
-    Route::post('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
+    Route::get('/profile', [ProfileController::class, 'profile']);
+    Route::patch('/udpdate-profile', [ProfileController::class, 'updateProfile']); 
     Route::post('/password/update', [ UpdatePasswordController::class, 'UpdatePassword']);
+
 
     // Manage notifications
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -71,7 +87,18 @@ Route::apiResource('enfants', EnfantController::class);
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
     Route::put('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsread']);
     Route::put('/notifications/mark-all-as-unread', [NotificationController::class, 'markAllAsUnread']);
+
+
+
+    Route::get('/offres',[OffreController::class,'index']);
+    //phone verification 
+    Route::post('/send-code', [PhoneVerificationController::class, 'sendCode']);
+    Route::post('/verify-code', [PhoneVerificationController::class, 'verifyCode']);
+
     Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);
+
+
+  
     Route::get('/offres',[OffreController::class,'index']);
    // Route::post('/approve-demande/{id}', [AdministrateurController::class, 'approveDemande']);
   //  Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
@@ -92,7 +119,7 @@ Route::apiResource('enfants', EnfantController::class);
         // Route::get('/offres/{offres}',[OffreController::class,'show']);
         // Route::put('/offres/{offres}',[OffreController::class,'customUpdate']);
         //  Route::post('/offres/{offres}/{activites}',[OffreController::class,'destroy']);
-        // Route::get('/animateurs', [GroupeController::class, 'index']);
+        Route::get('/groupes', [GroupeController::class, 'index']);
         // traitement de l'offres :
         Route::post('/offres',[OffreController::class,'store']);
         Route::get('/offres',[OffreController::class,'index']);
@@ -102,7 +129,6 @@ Route::apiResource('enfants', EnfantController::class);
         Route::delete('/offres/{offres}',[OffreController::class,'deleteOffreActivitesByIdOffre']);// supprimer l'offre et tous  ces activites 
         //Route::get('/offres',[OffreController::class,'index']);
         Route::apiResource('packs', PackController::class);
-        // Route::get('/animateurs', [GroupeController::class, 'index']);
         // Route::apiResource('activites', ActiviteController::class);
  
     });
@@ -122,14 +148,20 @@ Route::apiResource('enfants', EnfantController::class);
         Route::post('/accept-devis/{id}', [DevisController::class, 'acceptDevis']);
         Route::post('/reject-devis/{id}', [DevisController::class, 'rejectDevis']);
         Route::post('/facture-download/{idFacture}', [FactureController::class, 'downloadPdf'])->name('facture.download');
+        Route::get('/devis/{id}', [DevisController::class, 'show']);
         // Route::get('parent/offres', [OffreController::class, 'index']);
         // Route::get('parent/offres/{offre}', [OffreController::class, 'show']);
         // Route::get('parent/offres/{offre}/details', [OffreController::class, 'showDetails']);
         Route::get('/devis/{id}', [DevisController::class, 'show']);
+
         Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);//afficher les offres du parents dans le statut est accepté
 
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
         Route::get('/devis/{id}', [DevisController::class, 'show']);
+
+        Route::post('/devis/{id}/accept', [DevisController::class, 'acceptDevis']);
+        Route::post('/devis/{id}/reject', [DevisController::class, 'rejectDevis']);
+
 
         Route::apiResource('demande-Inscriptions', DemandeInscriptionController ::class);
         Route::get('/demandeInsc', [DemandeInscriptionController ::class,'mesOffres']);//afficher les offres du parents dans le statut est accepté
@@ -150,6 +182,7 @@ Route::apiResource('enfants', EnfantController::class);
         //Route::get('/Animateurs',[AnimateurController::class,'AffAnimConnecter']);// Afficher ici les informations de l'Animateur connecter
         //Route::get('/AnimateursEnf',[AnimateurController::class,'AffEtudAnim']);
         //Route::get('/search_students',[AnimateurController::class,'searshEtud']);
+        Route::get('/groupes', [GroupeController::class, 'index']);
     
     
     
