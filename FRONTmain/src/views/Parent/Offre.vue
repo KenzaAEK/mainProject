@@ -11,7 +11,7 @@
         <div class="box-container">
           <div class="box" v-for="activite in offre.activities" :key="activite.idActivite">
             <div class="image">
-              <img src="@/assets/images/offre1.png" alt="">
+              <img :src="activite.imagePub" alt="">
             </div>
             <h3>{{ activite.titre }}</h3>
             <p>{{ activite.description }}</p>
